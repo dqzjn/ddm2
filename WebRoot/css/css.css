@@ -1,0 +1,6 @@
+@CHARSET "UTF-8";
+body{font-size:12px;}
+.td_label{font-size:12px;}
+.td_value input{width:300px;}
+.td_value select{width:300px;}
+.td_title{background-color:#b7dbf3;text-align:center;height:20px;font-size:18px;font-weight:bold;}

@@ -1,0 +1,126 @@
+body {
+	font-family: verdana,tahoma，宋体;
+	font-size: 12px;
+	margin: 0px;
+	overflow:auto;
+	background:#FFF;
+
+	background-image: url(../image/right_01.jpg);
+	background-attachment: fixed;
+	background-repeat: repeat-x;
+
+    scrollbar-face-color:#8DCED8;
+	scrollbar-highlight-color:#8DCED8;
+	scrollbar-3dlight-color:#687E99;
+	scrollbar-darkshadow-color:#DDE8F6;
+	scrollbar-shadow-color:#687E99;
+	scrollbar-arrow-color:#2E87A6;
+	scrollbar-track-color:#DDE8F6;
+}
+
+
+td{
+    font-family: verdana, "tahoma������";
+	font-size: 12px;
+
+}
+
+
+.logon_bgleft{
+	background-image: url(../image/logon_02.jpg);
+	background-repeat: repeat-x;
+	background-position: right top;
+}
+.logon_bgright{
+	background-image: url(../image/logon_02.jpg);
+	background-repeat: repeat-x;
+	background-position: left top;
+}
+.logon_input{
+	font-size: 12px;
+	color: #333333;
+	background-image: url(../image/logon_03.jpg);
+	height: 20px;
+	width: 180px;
+	border: 1px solid #B7BAC4;
+	padding: 2px;
+}
+.logon_inputshort{
+	font-size: 12px;
+	color: #333333;
+	background-image: url(../image/logon_03.jpg);
+	height: 20px;
+	width: 40px;
+	border: 1px solid #B7BAC4;
+	padding: 2px;
+}
+.logon_button1{
+	background-image: url(images/logon_04.jpg);
+	height: 25px;
+	width: 51px;
+	border:0;
+	cursor: hand;
+}
+.logon_button2{
+	background-image: url(../image/logon_05.jpg);
+	height: 25px;
+	width: 51px;
+	border:0;
+	cursor: hand;
+}
+.bottom_bg{
+	text-align: center;
+	height: 30px;
+	font-family: verdana, "tahoma������";
+	font-size: 12px;
+	color: #000000;
+	font-weight: bold;
+	background-color: #E6E7E9;
+}
+.copyrightT{
+	font-size: 12px;
+	color: #FF0000;
+	font-weight: bold;
+}
+.BroadBand_listbg{
+	font-size: 12px;
+	color: #000000;
+	background-image: url(../image/Broad-Band_01.jpg);
+	background-repeat: no-repeat;
+	background-position: top;
+	padding-top: 60px;
+	padding-left: 30px;
+	background-color: #F4F9FD;
+}
+.hand{
+	cursor: hand;
+}
+.t1 {font:12px ����;color:#000000} 
+.t2 {font:12px ����;color:#ffffff} 
+.t3 {font:12px ����;color:#ffff00} 
+.t4 {font:12px ����;color:#800000} 
+.t5 {font:12px ����;color:#191970} 
+
+.weiqun:hover{
+	Font-unline:yes;
+	font-family: "����";
+	color: #FFFFFF;
+	text-decoration: underline;
+	background-color: #CCCCCC;
+}
+td {
+	font-size: 12px;
+}
+
+a:link {
+	color: #000000;
+	text-decoration: none;
+}
+a:active {
+	color: #000000;
+	text-decoration: none;
+}
+a:visited {
+	color: #000000;
+	text-decoration: none;
+}

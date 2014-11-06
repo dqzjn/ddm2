@@ -1,0 +1,40 @@
+#dragTable{
+	width:100%;
+	border-collapse: collapse
+}
+#dragTable td{
+	border-bottom:1px dotted #d68976;
+	border-right: 1px dotted #d68976; 
+	height:25;
+	FONT-SIZE: 12px; 
+	COLOR: #000;
+	padding-left:30px;
+	padding-top:5px;
+	padding-bottom:5px;
+}
+.dragLabel{
+	width:120px;
+}
+#dragDiv{
+	cursor:move;
+	float:left;
+}
+.add16 {
+	background-image: url( ../../images/add16.gif ) !important;
+}
+.edit{
+	cursor:hand;
+}
+.selectedFiles{
+	width:100%;
+	height:200;
+	border:1px solid #d68976;
+}
+.del_file{
+	float:left;
+	width:10%;
+}
+.sel_file{
+	float:left;
+	width:80%;
+}

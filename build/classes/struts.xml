@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+      "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+      "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+<constant name="struts.custom.i18n.resources"  value="mess"/>
+<constant name="struts.i18n.encoding" value="UTF-8"/>
+<constant name="struts.enable.DynamicMethodInvocation" value="false" />
+	<package name="struts2" namespace="/" extends="struts-default">
+		<interceptors>
+			<interceptor-stack name="extStack">
+				<interceptor-ref name="autowiring">
+					<param name="autowireStrategy">2</param>
+				</interceptor-ref>
+				<interceptor-ref name="defaultStack" />
+			</interceptor-stack>
+		</interceptors>
+		
+		<action name="register" class="cn.zmdx.locker.actions.RegisterAction">
+			<result name="success">/WEB-INF/register.jsp
+			</result>
+		</action>
+		<action name= "login_*"   method= "{1}" class="cn.zmdx.locker.actions.LoginAction">
+			<result name="success">/WEB-INF/main.jsp
+			</result>
+			<result name="false">/login.jsp
+			</result>
+		</action>
+		<action name= "locker_*"   method= "{1}"  class="lockerAction">
+			<result name="editDataImg">/data/addDataImg.jsp</result>
+		</action>
+	</package>
+</struts>

@@ -1,0 +1,72 @@
+@charset "utf-8";
+/* CSS Document */
+
+/*登录页面*/
+.loginPage{
+	background:#ffffff;
+}
+.loginLogoContainer{
+	width:100%;
+	height:144px;
+	float:left;
+	display:inline;
+	overflow:hidden;
+}
+.loginLogoContainer .logo{
+	width:1090px;
+	height:144px;
+	margin:0 auto;
+	background:url() no-repeat;
+}
+.loginContainer{
+	width:100%;
+	height:397px;
+	background:url(../images/loginBg.gif) repeat-x;
+	float:left;
+	display:inline;
+	overflow:hidden;
+}
+.loginContainer .content{
+	width:1090px;
+	height:397px;
+	margin: 0 auto;
+	background:url() no-repeat;
+	position:relative;
+}
+.loginContainer .content .loginBox{
+	width:374px;
+	height:341px;
+	background:url(../images/loginBox.jpg) no-repeat;
+	position:absolute;
+	right:10px;
+	top:35px;
+} 
+.loginContainer .content .input_text{
+	background:#ffffff;
+	width:276px;
+	height:29px;
+	line-height:29px;
+	font-size:14px;
+	color:#666666;
+	border:1px #bcbcbc solid;
+}
+.loginContainer .loginTable{
+	margin:80px auto 0 auto;
+}
+.loginContainer .loginTable tr td{
+	padding:3px 0;
+	font-size:14px;
+	color:#000000;
+}
+.loginBottom{
+	width:100%;
+	height:50px;
+	line-height:50px;
+	margin-top:10px;
+	font-size:14px;
+	color:#000000;
+	text-align:center;
+	float:left;
+	display:inline;
+	overflow:hidden;
+}

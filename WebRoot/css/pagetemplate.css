@@ -1,0 +1,110 @@
+ #dragTable{
+	width:100%;
+	border-collapse: collapse
+
+}
+#dragTable td{
+	border-bottom:1px dotted #d68976;
+	height:25;
+	FONT-SIZE: 12px; 
+	COLOR: #000;
+	padding-left:30px;
+	padding-top:5px;
+	padding-bottom:5px;
+}
+.selectedFiles{
+	width:100%;
+	height:200;
+	border:1px solid #fff;
+}
+.del_file{
+	float:left;
+	width:10%;
+}
+.sel_file{
+	float:left;
+	width:80%;
+}
+TD {
+	FONT-SIZE: 12px; 
+	COLOR: #000;
+}
+.solid-bottom {
+	BORDER-BOTTOM: #a24512 1px solid;
+}
+
+#secTable .sec1  {
+	cursor:  hand;
+	border-left:  1px  dotted  #FFFFFF;
+	border-top:  1px  dotted  #FFFFFF;
+	border-bottom:  1px  dotted  #FFFFFF;
+	font:normal 11px tahoma,arial,helvetica;
+	color:#c8664d;
+	background-image: url(../resources/images/default/tabs/small_tab_2.jpg);
+	background-image:no-repeat;
+}
+#secTable .sec2  {
+	cursor:  hand;
+	font-weight:  bold;
+	color:#feefec;
+    font-weight:bold;
+    padding-top:10px;
+    padding-bottom:11px;
+	background-image: url(../resources/images/default/tabs/small_tab_1.jpg);
+	background-image:no-repeat;
+}
+.dragLabel{
+	width:120px;
+}
+#rightTop{
+	position:absolute;
+	right:20px;
+	top:0;
+}
+
+
+.btn-save {
+    background-image: url(../images/save.gif) !important;
+}
+.btn-saveas {
+    background-image: url(../images/saveas.gif) !important;
+}
+.btn-close {
+    background-image: url(../images/gunbi.gif) !important;
+}
+.btn-view {
+    background-image: url(../images/view.gif) !important;
+}
+.btn-back {
+    background-image: url(../images/back.gif) !important;
+}
+
+
+
+
+
+
+
+.href {
+   font-size:12px;
+   color:#000;
+   text-decoration:none;
+}
+.margin-left{
+	width:90px;
+	valign:center;
+	text-align:left;
+	font-size:13px;
+	margin-top:3px;
+}
+.margin-right{
+	width:150px;
+	valign:center;
+	text-align:left;
+	font-size:13px;
+	margin-top:5px;
+}
+
+
+
+

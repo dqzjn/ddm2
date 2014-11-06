@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="cn.zmdx.locker.entity.User" table="user">
+	  <id name="userid" column="userid" type="int" >
+			<generator class="native" />
+		</id>
+		<property name="username" column="username" />	
+		<property name="password" column="password"/>
+		<property name="user_org" column="user_org"/>
+		<property name="user_role" column="user_role"/>
+		<property name="state" column="state"/>
+		<property name="loginname" column="loginname"/>
+	</class>
+	
+</hibernate-mapping>
+  

@@ -1,0 +1,23 @@
+.mytd_title { 
+			    font-size:11px; 
+			    padding: 6px 6px 6px 12px; 
+			    /**color:#811a00;**/
+                background-color: #FFF3E6;
+			} 
+			.mytd{ 
+			    background: #fff; 
+			    font-size:11px; 
+			    padding: 6px 6px 6px 12px; 
+			    /**color: #4f6b72;**/ 
+			} 
+			mytd.alt { 
+			    background: #E5A97B; 
+			   /** color: #797268;**/ 
+			}
+			html>body td{ font-size:11px;} 
+.baseModeClass{
+	border-left:1px dotted #d68976;/**咖啡版原始记录单表格色值#d68976  蓝版色值 #3C546E **/
+	border-top:1px dotted #d68976;/**咖啡版原始记录单表格色值#d68976  蓝版色值 #3C546E **/
+}			
+.leftExcl{margin-right:3px; height:700px;padding-right:10px; padding-left:10px; margin-left:-3px;  }
+.rightTable{width:200px;  overflow:hidden; float:right; }

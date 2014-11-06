@@ -1,0 +1,30 @@
+*{
+    overflow:hidden; 
+	margin:0px; 
+	padding:0px; 
+	border:0px;
+}
+img{display:block;}
+body{
+    font-size:12px; 
+	font-family:Arial, Helvetica, sans-serif;
+}
+.dlbj{
+	width:301px;
+	height:263px;
+	background:url(../images/dltp_05.jpg) no-repeat;
+}
+.dl_user{
+	width:223px;
+	height:23px;
+	background:url(../images/input_1.jpg) no-repeat;
+	padding-top:3px;
+	padding-left:50px
+}
+.dl_password{
+	width:223px;
+	height:23px;
+	background:url(../images/input_2.jpg) no-repeat;
+	padding-top:3px;
+	padding-left:50px;
+}

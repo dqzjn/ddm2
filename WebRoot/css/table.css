@@ -1,0 +1,88 @@
+html>body td{ 
+	font-size:13px;
+}
+#mytable{
+    border-right:1px solid #e5a97b;
+    border-left:1px solid #e5a97b;
+}
+.mytd_title { 
+    font-size:13px; 
+    padding: 6px 6px 6px 12px; 
+	background-color: #ffdec5;
+} 
+.mytd{ 
+    background: #fff3e6; 
+    font-size:13px; 
+    padding: 6px 6px 6px 12px; 
+    color: #4f6b72; 
+} 
+mytd.alt { 
+    background: #F5FAFA; 
+    color: #797268; 
+}
+.icon-user-add {
+    background-image: url(../images/add.gif) !important;
+}
+.icon-user-delete {
+    background-image: url(../images/delete.gif) !important;
+}
+
+
+/* CSS Document */ 
+.mytable { 
+    width: 100%; 
+    padding: 0; 
+    margin: 0;
+} 
+
+caption { 
+    padding: 0 0 5px 0; 
+    width: 100%;      
+    font: italic 11px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif; 
+    text-align: right; 
+} 
+
+.mytable th { 
+    font: bold 11px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif; 
+    color: #4f6b72; 
+    border-right: 1px solid #C1DAD7; 
+    border-bottom: 1px solid #C1DAD7; 
+    border-top: 1px solid #C1DAD7; 
+    letter-spacing: 2px; 
+    text-transform: uppercase; 
+    text-align: left; 
+    padding: 6px 6px 6px 12px; 
+    background: #CAE8EA url(images/bg_header.jpg) no-repeat; 
+} 
+
+
+
+.mytable td { 
+    border-right: 1px solid #C1DAD7; 
+    border-bottom: 1px solid #C1DAD7; 
+    background: #fff; 
+    font-size:11px; 
+    padding: 6px 6px 6px 12px; 
+    color: #4f6b72; 
+    text-align: left;
+} 
+
+.spec { 
+    border-left: 1px solid #C1DAD7; 
+    border-top: 0; 
+    background: #fff url(images/bullet1.gif) no-repeat; 
+    font: bold 10px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif; 
+} 
+
+.specalt { 
+    border-left: 1px solid #C1DAD7; 
+    border-top: 0; 
+    background: #f5fafa url(images/bullet2.gif) no-repeat; 
+    font: bold 10px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif; 
+    color: #797268; 
+} 
+/*---------for IE 5.x bug*/ 
+
+.folder {
+           background-image: url(../../resources/images/default/tree/folder.gif) !important;
+       }  
