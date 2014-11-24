@@ -75,10 +75,7 @@ body {
 		if(id=='id1')
 			document.getElementById("mainframe").src = '<%=request.getContextPath()%>/data/dataList.jsp'
 		else if(id=='id2')
-			document.getElementById("mainframe").src = '<%=request.getContextPath()%>/data/dataList1.jsp'
-		else if(id=='id3'){
-			document.getElementById("mainframe").src = '<%=request.getContextPath()%>/data/dataList2.jsp'
-		}
+			document.getElementById("mainframe").src = '<%=request.getContextPath()%>/data/tagList.jsp'
 	}
 	function logout(){
 		if(!confirm("是否确认退出 ？")){
@@ -132,9 +129,7 @@ body {
 		<ul id="menu">
 			<li class="li" id="id1" onclick="li(id)"><p class="innerHTML">数据管理(线下)</p>
 			</li>
-			<li class="li" id="id2" onclick="li(id)"><p class="innerHTML">备用</p>
-			</li>
-			<li class="li" id="id3" onclick="li(id)"><p class="innerHTML">备用</p>
+			<li class="li" id="id2" onclick="li(id)"><p class="innerHTML">标签管理</p>
 			</li>
 		</ul>
 	</div>

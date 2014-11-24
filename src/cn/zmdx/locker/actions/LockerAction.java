@@ -1,7 +1,9 @@
 package cn.zmdx.locker.actions;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -9,27 +11,43 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
-import org.apache.struts2.ServletActionContext;
-import cn.zmdx.locker.entity.Data_img_table;
-import cn.zmdx.locker.entity.Data_table;
-import cn.zmdx.locker.entity.PageResult;
-import cn.zmdx.locker.service.impl.LockerServiceImpl;
-import cn.zmdx.locker.util.StringUtil;
-import com.opensymphony.xwork2.ActionSupport;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
+import org.apache.struts2.ServletActionContext;
+
+import cn.zmdx.locker.entity.Data_img_table;
+import cn.zmdx.locker.entity.Data_table;
+import cn.zmdx.locker.entity.Data_tag;
+import cn.zmdx.locker.entity.PageResult;
+import cn.zmdx.locker.entity.Tag;
+import cn.zmdx.locker.service.impl.LockerServiceImpl;
+import cn.zmdx.locker.util.MD5;
+import cn.zmdx.locker.util.StringUtil;
+
+import com.opensymphony.xwork2.ActionSupport;
+import com.tencent.cos.Cos;
+import com.tencent.cos.CosImpl;
+import com.tencent.cos.bean.CosFile;
+import com.tencent.cos.bean.Message;
+import com.tencent.cos.constant.Common;
 
 public class LockerAction extends ActionSupport {
 	Logger logger = Logger.getLogger(LockerAction.class);
 	private Data_table dataTable;
 	private LockerServiceImpl lockerService;
 	private Data_img_table dataImgTable;
+	private Tag tag;
 	private String result;
 	private String page;
 	private String rows;
 	private String sidx;
 	private String sord;
+	private String check;
+	private String imgName;
+	private File image;
 
 	public String getResult() {
 		return result;
@@ -85,6 +103,39 @@ public class LockerAction extends ActionSupport {
 
 	public void setDataImgTable(Data_img_table dataImgTable) {
 		this.dataImgTable = dataImgTable;
+	}
+
+	public Tag getTag() {
+		return tag;
+	}
+
+	public void setTag(Tag tag) {
+		this.tag = tag;
+	}
+
+	public String getCheck() {
+		return check;
+	}
+
+	public void setCheck(String check) {
+		this.check = check;
+	}
+
+	public File getImage() {
+		return image;
+	}
+
+	public void setImage(File image) {
+		this.image = image;
+	}
+
+	
+	public String getImgName() {
+		return imgName;
+	}
+
+	public void setImgName(String imgName) {
+		this.imgName = imgName;
 	}
 
 	public String getColumnJson(PageResult result, String[] viewArray) {
@@ -286,7 +337,6 @@ public class LockerAction extends ActionSupport {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	/**
@@ -319,12 +369,19 @@ public class LockerAction extends ActionSupport {
 		HttpSession session = ServletActionContext.getRequest().getSession();
 		String userOrg = (String) session.getAttribute("USER_ORG");
 		Data_img_table dataImgTable = new Data_img_table();
+		String sql = "select id,tag_name from tag ";
+		List<Tag> tagList = (List<Tag>) lockerService.queryAllBySql(sql);
+		if (tagList.size() > 0) {
+			session.setAttribute("tagList", tagList);
+		}
 		if (!"0".equals(userOrg)) {
 			dataImgTable.setCollect_website(userOrg);
-			session.setAttribute("dataImgTable", dataImgTable);
+			ServletActionContext.getRequest().setAttribute("dataImgTable",
+					dataImgTable);
 		} else {
 			session.setAttribute("userOrg", userOrg);
 		}
+		session.removeAttribute("tagIdList");
 		return "editDataImg";
 	}
 
@@ -340,6 +397,16 @@ public class LockerAction extends ActionSupport {
 		String id = ServletActionContext.getRequest().getParameter("id");
 		dataImgTable = lockerService.getDataImgById(id);
 		HttpSession session = ServletActionContext.getRequest().getSession();
+		String sql = "select id,tag_name from tag ";
+		List<Tag> tagList = (List<Tag>) lockerService.queryAllBySql(sql);
+		if (tagList.size() > 0) {
+			session.setAttribute("tagList", tagList);
+		}
+		String sqlId = "select tag_id from data_tag where data_id =" + id + "";
+		List<?> tagIdList = lockerService.queryAllBySql(sqlId);
+		if (tagIdList.size() > 0) {
+			session.setAttribute("tagIdList", tagIdList);
+		}
 		String userOrg = (String) session.getAttribute("USER_ORG");
 		session.setAttribute("userOrg", userOrg);
 		return "editDataImg";
@@ -347,6 +414,7 @@ public class LockerAction extends ActionSupport {
 
 	/**
 	 * 保存数据
+	 * 
 	 * @throws IOException
 	 * @author 张加宁
 	 */
@@ -354,10 +422,17 @@ public class LockerAction extends ActionSupport {
 		ServletActionContext.getResponse().setContentType(
 				"text/json; charset=utf-8");
 		PrintWriter out = ServletActionContext.getResponse().getWriter();
+		String checks[] = check.split(",");
 		try {
 			if (0 == dataImgTable.getId()) {
 				dataImgTable.setData_sub(0);
-				String u = lockerService.saveDataImg(dataImgTable);
+				String id = lockerService.save(dataImgTable);
+				for (String ck : checks) {
+					Data_tag dt = new Data_tag();
+					dt.setTag_id(Integer.parseInt(ck.trim()));
+					dt.setData_id(Integer.parseInt(id));
+					lockerService.save(dt);
+				}
 			} else {
 				Data_img_table entity = lockerService.getDataImgById(String
 						.valueOf(dataImgTable.getId()));
@@ -369,8 +444,17 @@ public class LockerAction extends ActionSupport {
 				entity.setData_type(dataImgTable.getData_type());
 				entity.setCollect_time(dataImgTable.getCollect_time());
 				entity.setData_sub(0);
-				lockerService.updateDataImg(entity);
+				lockerService.saveOrUpdate(entity);
+				lockerService.deleteTagByDataId(dataImgTable.getId());
+				for (String ck : checks) {
+					Data_tag dt = new Data_tag();
+					dt.setTag_id(Integer.parseInt(ck.trim()));
+					dt.setData_id(dataImgTable.getId());
+					lockerService.saveOrUpdate(dt);
+				}
 			}
+			if (image != null)
+				uploadImg();
 			out.print("{\"result\":\"success\"}");
 
 		} catch (Exception e) {
@@ -424,7 +508,7 @@ public class LockerAction extends ActionSupport {
 			try {
 				if (0 == dataImgTable.getId()) {
 					dataImgTable.setData_sub(1);
-					String u = lockerService.saveDataImg(dataImgTable);
+					lockerService.saveOrUpdate(dataImgTable);
 				} else {
 					Data_img_table entity = lockerService.getDataImgById(String
 							.valueOf(dataImgTable.getId()));
@@ -436,7 +520,7 @@ public class LockerAction extends ActionSupport {
 					entity.setData_type(dataImgTable.getData_type());
 					entity.setCollect_time(dataImgTable.getCollect_time());
 					entity.setData_sub(1);
-					lockerService.updateDataImg(entity);
+					lockerService.saveOrUpdate(entity);
 				}
 				int bl = lockerService.insertDataImg(dataImgTable);
 				if (bl > 0)
@@ -486,5 +570,127 @@ public class LockerAction extends ActionSupport {
 			e.printStackTrace();
 			out.print("{\"result\":\"error\"}");
 		}
+	}
+
+	/**
+	 * 查询标签数据
+	 * 
+	 * @author 张加宁
+	 */
+	public void queryTagTable() {
+		try {
+			ServletActionContext.getResponse().setContentType(
+					"text/json; charset=utf-8");
+			String tag_name = StringUtil.encodingUrl(ServletActionContext
+					.getRequest().getParameter("tag_name"));
+			PrintWriter out = ServletActionContext.getResponse().getWriter();
+			Map<String, String> filterMap = getPagerMap();
+			String[] viewArray = { "id", "tag_name" };
+			if (tag_name != null && !"".equals(tag_name)) {
+				filterMap.put("tag_name", tag_name);
+			}
+			PageResult result = lockerService.queryTagTable(filterMap);
+			String returnStr = getColumnJson(result, viewArray);
+			out.print(returnStr);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	/**
+	 * 修改标签数据
+	 * 
+	 * @throws IOException
+	 * @author 张加宁
+	 */
+	public String editTag() throws IOException {
+		ServletActionContext.getResponse().setContentType(
+				"text/json; charset=utf-8");
+		String id = ServletActionContext.getRequest().getParameter("id");
+		tag = lockerService.getTagById(id);
+		return "editTag";
+	}
+
+	/**
+	 * 保存标签信息
+	 * 
+	 * @throws IOException
+	 * @author 张加宁
+	 */
+	public void saveTag() throws IOException {
+		ServletActionContext.getResponse().setContentType(
+				"text/json; charset=utf-8");
+		PrintWriter out = ServletActionContext.getResponse().getWriter();
+		try {
+			if (0 == tag.getId()) {
+				lockerService.saveOrUpdate(tag);
+			} else {
+				Tag entity = lockerService.getTagById(String.valueOf(tag
+						.getId()));
+				entity.setId(tag.getId());
+				entity.setTag_name(tag.getTag_name());
+				lockerService.saveOrUpdate(entity);
+			}
+			out.print("{\"result\":\"success\"}");
+
+		} catch (Exception e) {
+			out.print("{\"result\":\"error\"}");
+			e.printStackTrace();
+		}
+
+	}
+
+	/**
+	 * 根据ID删除标签
+	 * 
+	 * @throws IOException
+	 * @author 张加宁
+	 */
+	public void deleteTagById() throws IOException {
+		PrintWriter out = ServletActionContext.getResponse().getWriter();
+		try {
+			String ids = ServletActionContext.getRequest().getParameter("ids");
+			lockerService.deleteTagById(ids);
+			out.print("{\"result\":\"success\"}");
+		} catch (Exception e) {
+			e.printStackTrace();
+			out.print("{\"result\":\"error\"}");
+		}
+	}
+
+	public String uploadImg() throws Exception {
+		// 用户定义变量
+		int accessId = 11000436; // accessId
+		String accessKey = "7OgnLklEIptHNwZCS0RDNk1rUXrxXJfP"; // accessKey
+		String bucketId = "bucket_1"; // bucket id
+		String secretId = "AKIDBvY9dcNUS2LeFTxI2ThzgrKxuWuNROIr";
+		Cos cos = null;
+		try {
+			cos = new CosImpl(accessId, accessKey, Common.COS_HOST,
+					Common.DOWNLOAD_HOST, secretId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		String imgType = "";
+		String uploadImg = "";
+		if (null != imgName && !"".equals(imgName)) {
+			imgType = imgName.substring(imgName.lastIndexOf("."));
+			uploadImg = imgName + new Date().getTime();
+			MD5 md5 = new MD5();
+			uploadImg = md5.getMD5ofStr(uploadImg);
+		}
+		// 返回消息体, 包含错误码和错误消息
+		Message msg = new Message();
+		// System.out.println("----------------------uploadFileContent----------------------\n");
+		Map<String, Object> inParams = new HashMap<String, Object>();
+		inParams.put("bucketId", bucketId);
+		inParams.put("path", "/image");
+		inParams.put("cosfile", uploadImg+imgType);
+		CosFile file = new CosFile();
+		cos.uploadFileContent(inParams, FileUtils.readFileToByteArray(image),file, msg);
+		System.out.println(file);
+		System.out.println(msg);
+		return "success";
 	}
 }

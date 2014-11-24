@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="cn.zmdx.locker.entity.Img_tag" table="Img_tag">
+		<id name="id" column="id" type="int">
+			<generator class="native" />
+		</id>
+		<property name="img_id" column="img_id" />
+		<property name="tag_id" column="tag_id" />
+	</class>
+</hibernate-mapping>
+  

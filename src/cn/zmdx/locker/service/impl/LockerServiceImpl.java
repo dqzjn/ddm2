@@ -9,6 +9,7 @@ import cn.zmdx.locker.dao.interfaces.LockerDAO;
 import cn.zmdx.locker.entity.Data_img_table;
 import cn.zmdx.locker.entity.Data_table;
 import cn.zmdx.locker.entity.PageResult;
+import cn.zmdx.locker.entity.Tag;
 import cn.zmdx.locker.service.interfaces.LockerService;
 
 public class LockerServiceImpl implements LockerService {
@@ -63,5 +64,49 @@ public class LockerServiceImpl implements LockerService {
 	@Override
 	public int saveParams(Map<String, String> filterMap) {
 		return lockerDAO.saveParams(filterMap);
+	}
+
+	@Override
+	public PageResult queryTagTable(Map<String, String> filterMap) {
+		return lockerDAO.queryTagTable(filterMap);
+	}
+	public List<?> queryAllBySql(String sql) {
+		return lockerDAO.queryAllBySql(sql);
+	}
+
+	@Override
+	public String saveTag(Tag tag) {
+		return lockerDAO.saveTag(tag);
+	}
+
+	@Override
+	public void updateTag(Tag tag) {
+		lockerDAO.updateTag(tag);
+		
+	}
+
+	@Override
+	public Tag getTagById(String id) {
+		return lockerDAO.getTagById(id);
+	}
+
+	@Override
+	public void deleteTagById(String ids) {
+		lockerDAO.deleteTagById(ids);
+	}
+	
+	@Override
+	public void saveOrUpdate(Object entity){
+		lockerDAO.saveOrUpdate(entity);
+	}
+	
+	@Override
+	public String save(Object entity){
+		return lockerDAO.save(entity);
+	}
+
+	@Override
+	public void deleteTagByDataId(int id) {
+		lockerDAO.deleteTagByDataId(id);
 	}
 }

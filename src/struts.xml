@@ -6,6 +6,11 @@
 <constant name="struts.custom.i18n.resources"  value="mess"/>
 <constant name="struts.i18n.encoding" value="UTF-8"/>
 <constant name="struts.enable.DynamicMethodInvocation" value="false" />
+	<!-- 默认的视图主题 -->
+	<constant name="struts.ui.theme" value="simple" />
+	<!-- 指定允许上传的文件最大字节数。默认值是2097152(2M) -->
+	<constant name="struts.multipart.maxSize" value="220971520" />
+	
 	<package name="struts2" namespace="/" extends="struts-default">
 		<interceptors>
 			<interceptor-stack name="extStack">
@@ -28,6 +33,11 @@
 		</action>
 		<action name= "locker_*"   method= "{1}"  class="lockerAction">
 			<result name="editDataImg">/data/addDataImg.jsp</result>
+			<result name="editTag">/data/editTag.jsp</result>
+		</action>
+		<action name= "uplaod_*"   method= "{1}"  class="cn.zmdx.locker.actions.UploadAction">
+			<param name="savePath">/image</param>
+			<result name="success">/index.jsp</result>
 		</action>
 	</package>
 </struts>

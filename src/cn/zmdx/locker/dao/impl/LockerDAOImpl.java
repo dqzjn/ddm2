@@ -13,6 +13,7 @@ import org.springframework.orm.hibernate3.HibernateTemplate;
 import cn.zmdx.locker.dao.interfaces.LockerDAO;
 import cn.zmdx.locker.entity.Data_img_table;
 import cn.zmdx.locker.entity.PageResult;
+import cn.zmdx.locker.entity.Tag;
 import cn.zmdx.locker.util.GenericsUtils;
 import cn.zmdx.locker.util.String2list2mapUtil;
 
@@ -180,6 +181,17 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 	}
 
 	@Override
+	public void saveOrUpdate(Object entity) {
+		this.getHibernateTemplate().saveOrUpdate(entity);
+
+	}
+	@Override
+	public String save(Object entity) {
+		String id = this.getHibernateTemplate().save(entity).toString();
+		return id;
+	}
+	
+	@Override
 	public Data_img_table getDataImgById(String id) {
 		Data_img_table dit = (Data_img_table) this.getHibernateTemplate().get(
 				Data_img_table.class, Integer.parseInt(id));
@@ -284,6 +296,70 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 						.toArray());
 		int count = query.executeUpdate();
 		return count;
+	}
+
+	@Override
+	public PageResult queryTagTable(Map<String, String> filterMap) {
+		StringBuffer queryString = new StringBuffer();
+		StringBuffer queryCountString = new StringBuffer();
+		queryCountString
+				.append("select count(*) from (select id,tag_name from tag  where 1=1  ");
+		queryString
+				.append("select id,tag_name from tag  where 1=1 ");
+		if (filterMap != null && !filterMap.isEmpty()) {
+			if (null != filterMap.get("tag_name")
+					&& !"".equals(filterMap.get("tag_name"))) {
+				queryCountString.append("and tag_name like '%"
+						+ filterMap.get("tag_name") + "%' ");
+				queryString.append("and tag_name like '%" + filterMap.get("tag_name")
+						+ "%' ");
+			}
+			queryCountString.append(") as t");
+			queryString.append(" order by id desc");
+		}
+		return searchBySQL(queryCountString.toString(), queryString.toString(),
+				filterMap);
+	}
+
+	@Override
+	public String saveTag(Tag tag) {
+		String id = this.getHibernateTemplate().save(tag).toString();
+		return id;
+	}
+
+	@Override
+	public void updateTag(Tag tag) {
+		this.getHibernateTemplate().update(tag);
+	}
+
+	@Override
+	public Tag getTagById(String id) {
+		Tag tag = (Tag) this.getHibernateTemplate().get(
+				Tag.class, Integer.parseInt(id));
+		return tag;
+	}
+
+	@Override
+	public void deleteTagById(String ids) {
+		String idss[] = ids.split(",");
+		for (String id : idss) {
+			Tag tag = getTagById(id);
+			this.getHibernateTemplate().delete(tag);
+		}
+	}
+
+	@Override
+	public List<?> queryAllBySql(String sql) {
+		Query query = getSession().createSQLQuery(sql);
+		return query.list();
+	}
+
+	@Override
+	public void deleteTagByDataId(int id) {
+		StringBuffer sql = new StringBuffer();
+		sql.append("delete from data_tag where data_id = "+id+"");
+		Query query = getSession().createSQLQuery(sql.toString());
+		query.executeUpdate();
 	}
 
 }

@@ -32,7 +32,6 @@
 <style type="text/css">
 body {
 	background: #ffffff;
-	background-image: url(images/);
 }
 </style>
 <script type="text/javascript">
@@ -75,6 +74,7 @@ body {
 		        return false;
 	        }
 	     });
+      	
 	 });
 
 	function checkedForm() {
@@ -155,8 +155,30 @@ body {
 			});
 		}
 	}
+	
+	function test1(){
+		var aa ='';
+		$("input[name='check']:checkbox:checked").each(function(){ 
+			aa+=$(this).val() +','
+			}) 
+			alert(aa);
+	}
+	
+	//把已选中的多选框更改成未选中 
+	function clearCheckbox(){ 
+		$("input[name='check']").each( 
+		function(){ 
+			if($(this).attr("checked",true)){ 
+			$(this).attr("checked",false); 
+			} 
+		}); 
+	} 
+	
+    function uploadImg() {
+    	var f = document.getElementById("image").files;  
+        document.getElementById("imgName").value=f[0].name;
+    };
 </script>
-
 <style type="text/css">
 html {
 	overflow-x: hidden;
@@ -286,7 +308,7 @@ html {
 </style>
 </head>
 <body>
-	<form action="" id="pageFrom" name="" method="post">
+	<form action="" id="pageFrom" name="" method="post" enctype="multipart/form-data">
 		<br />
 		<fieldset class="fieldsetStyle">
 			<legend>
@@ -295,8 +317,8 @@ html {
 			<div class="fieldsetContent">
 				<table width="100%" border="0" cellspacing="0" cellpadding="0"
 					class="infoTableSpace">
-					<input type="hidden" id="id" name="dataImgTable.id"
-						value="${dataImgTable.id}" style="width: 500px" />
+					<input type="hidden" name="imgName" id="imgName"/>
+					<input type="hidden" id="id" name="dataImgTable.id" value="${dataImgTable.id}" />
 					<tr>
 						<td align="right">标题：</td>
 						<td align="left"><input id="title" name="dataImgTable.title"
@@ -308,6 +330,12 @@ html {
 						<td align="left"><input type="text" id="url"
 							name="dataImgTable.url" value="${dataImgTable.url}"
 							style="width: 500px" />
+						</td>
+					</tr>
+					<tr>
+						<td align="right">上传图片：</td>
+						<td align="left"><input type="file" id="image"
+							name="image" value="${image}" onchange="uploadImg()" />
 						</td>
 					</tr>
 					<tr>
@@ -348,6 +376,15 @@ html {
 						</td>
 					</tr>
 					<tr>
+						<td align="right">标签：</td>
+						<td align="left">
+						<c:forEach var="tag" items="${tagList}">
+							<input style="width: 30px;border: 0px;" type="checkbox"
+								name="check"  id="${tag[0]}" value="${tag[0]}"/>${tag[1]}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <c:if test="${tag[0] % 4 == 0}"></br></c:if>
+						</c:forEach>
+						</td>
+					</tr>
+					<tr>
 						<td colspan="4" align="center">&nbsp;</td>
 					</tr>
 					<tr>
@@ -361,7 +398,7 @@ html {
 							id="submitBtn" value="保 存" class="form_bt_orange" /> 
 							<c:if test="${sessionScope.USER_ORG=='0'}"><input type="button" id="saveInsert" value="保存并入云库" class="form_bt_orange" /></c:if>
 							 <input type="button" value="取 消"
-							class="form_bt_orange" onclick="window.close();" />
+							class="form_bt_orange" onclick="window.close()" />
 						</td>
 					</tr>
 				</table>
