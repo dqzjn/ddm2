@@ -18,9 +18,11 @@ import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 
+import cn.zmdx.locker.entity.Data_img;
 import cn.zmdx.locker.entity.Data_img_table;
 import cn.zmdx.locker.entity.Data_table;
 import cn.zmdx.locker.entity.Data_tag;
+import cn.zmdx.locker.entity.Img;
 import cn.zmdx.locker.entity.PageResult;
 import cn.zmdx.locker.entity.Tag;
 import cn.zmdx.locker.service.impl.LockerServiceImpl;
@@ -39,6 +41,8 @@ public class LockerAction extends ActionSupport {
 	private Data_table dataTable;
 	private LockerServiceImpl lockerService;
 	private Data_img_table dataImgTable;
+	private Data_img dataImg;
+	private Img img;
 	private Tag tag;
 	private String result;
 	private String page;
@@ -129,13 +133,28 @@ public class LockerAction extends ActionSupport {
 		this.image = image;
 	}
 
-	
 	public String getImgName() {
 		return imgName;
 	}
 
 	public void setImgName(String imgName) {
 		this.imgName = imgName;
+	}
+
+	public Data_img getDataImg() {
+		return dataImg;
+	}
+
+	public void setDataImg(Data_img dataImg) {
+		this.dataImg = dataImg;
+	}
+
+	public Img getImg() {
+		return img;
+	}
+
+	public void setImg(Img img) {
+		this.img = img;
 	}
 
 	public String getColumnJson(PageResult result, String[] viewArray) {
@@ -422,11 +441,18 @@ public class LockerAction extends ActionSupport {
 		ServletActionContext.getResponse().setContentType(
 				"text/json; charset=utf-8");
 		PrintWriter out = ServletActionContext.getResponse().getWriter();
+		String imageName = "";
 		String checks[] = check.split(",");
 		try {
+			if (image != null) {
+				imageName = uploadImg();
+				String imgSql="insert into img(imageUrl,content) values()";
+				String dataImgSql="insert into data_img(data_id,img_id) values()";
+			}
 			if (0 == dataImgTable.getId()) {
 				dataImgTable.setData_sub(0);
 				String id = lockerService.save(dataImgTable);
+				lockerService.save(dataImgTable);
 				for (String ck : checks) {
 					Data_tag dt = new Data_tag();
 					dt.setTag_id(Integer.parseInt(ck.trim()));
@@ -453,8 +479,6 @@ public class LockerAction extends ActionSupport {
 					lockerService.saveOrUpdate(dt);
 				}
 			}
-			if (image != null)
-				uploadImg();
 			out.print("{\"result\":\"success\"}");
 
 		} catch (Exception e) {
@@ -686,11 +710,13 @@ public class LockerAction extends ActionSupport {
 		Map<String, Object> inParams = new HashMap<String, Object>();
 		inParams.put("bucketId", bucketId);
 		inParams.put("path", "/image");
-		inParams.put("cosfile", uploadImg+imgType);
+		inParams.put("cosfile", uploadImg + imgType);
 		CosFile file = new CosFile();
-		cos.uploadFileContent(inParams, FileUtils.readFileToByteArray(image),file, msg);
+		cos.uploadFileContent(inParams, FileUtils.readFileToByteArray(image),
+				file, msg);
 		System.out.println(file);
 		System.out.println(msg);
-		return "success";
+
+		return uploadImg + imgType;
 	}
 }

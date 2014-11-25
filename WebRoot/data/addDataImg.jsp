@@ -178,6 +178,20 @@ body {
     	var f = document.getElementById("image").files;  
         document.getElementById("imgName").value=f[0].name;
     };
+    
+    function addHTML(){
+    	 var d=document.getElementById('tableId').lastChild;
+    	 var a =d.cloneNode(true);
+    	 document.getElementById('tableId').appendChild(a);
+    }
+    function delHTML(){
+    	var a=document.getElementById('tableId').lastChild;
+    	var d = document.getElementById('tableId').childNodes.length;
+    	if(d == 2){
+    	}else{
+   	    document.getElementById('tableId').removeChild(a);
+    	}
+    }
 </script>
 <style type="text/css">
 html {
@@ -333,12 +347,6 @@ html {
 						</td>
 					</tr>
 					<tr>
-						<td align="right">上传图片：</td>
-						<td align="left"><input type="file" id="image"
-							name="image" value="${image}" onchange="uploadImg()" />
-						</td>
-					</tr>
-					<tr>
 						<td align="right">来源网站：</td>
 						<td align="left"><input id="collect_website"
 							name="dataImgTable.collect_website" 
@@ -370,12 +378,6 @@ html {
 						</td>
 					</tr>
 					<tr>
-						<td align="right">内容：</td>
-						<td align="left"><textarea rows="10" cols="5" id="imgUrl"
-							name="dataImgTable.imgUrl" value="${dataImgTable.imgUrl}" style="width: 270px">${dataImgTable.imgUrl}</textarea>
-						</td>
-					</tr>
-					<tr>
 						<td align="right">标签：</td>
 						<td align="left">
 						<c:forEach var="tag" items="${tagList}">
@@ -384,18 +386,27 @@ html {
 						</c:forEach>
 						</td>
 					</tr>
+					</table>
+					<table id="tableId">
 					<tr>
-						<td colspan="4" align="center">&nbsp;</td>
+						<td align="right">上传图片：</td>
+						<td align="left"><input type="file" id="image"
+							name="image" value="${image}" onchange="uploadImg()" />
+						</td>
 					</tr>
 					<tr>
-						<td colspan="4" align="center">&nbsp;</td>
+						<td align="right">内容：</td>
+						<td align="left"><textarea rows="10" cols="5" id="imgUrl"
+							name="dataImgTable.imgUrl" value="${dataImgTable.imgUrl}" style="width: 270px">${dataImgTable.imgUrl}</textarea>
+						</td>
 					</tr>
-					<tr>
-						<td colspan="4" align="center">&nbsp;</td>
-					</tr>
+				</table>
+				<table>
 					<tr>
 						<td colspan="4" align="center"><input type="button"
 							id="submitBtn" value="保 存" class="form_bt_orange" /> 
+						<input type="button" id="sdf" value="加@@" onclick="addHTML()" /> 
+						<input type="button" id="syu" value="减@@" onclick="delHTML()" /> 
 							<c:if test="${sessionScope.USER_ORG=='0'}"><input type="button" id="saveInsert" value="保存并入云库" class="form_bt_orange" /></c:if>
 							 <input type="button" value="取 消"
 							class="form_bt_orange" onclick="window.close()" />
