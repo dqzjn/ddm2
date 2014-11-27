@@ -6,6 +6,7 @@ import java.util.Map;
 import cn.zmdx.locker.entity.Data_img_table;
 import cn.zmdx.locker.entity.PageResult;
 import cn.zmdx.locker.entity.Tag;
+import cn.zmdx.locker.entity.WallPaper;
 
 public interface LockerService {
 
@@ -116,4 +117,39 @@ public interface LockerService {
 	 * 根据数据ID删除中间表中对应标签
 	 */
 	void deleteTagByDataId(int id);
+	
+	/**
+	 * 获取壁纸数据
+	 * @param filterMap
+	 * @return
+	 */
+	PageResult queryWallPaper(Map<String, String> filterMap);
+	
+	/**
+	 * 根据id获取Object对象
+	 * @param clazz
+	 * @param id
+	 * @return
+	 */
+	public Object getObjectById(Class clazz,int id);
+
+	/**
+	 * 保存壁纸到云数据库
+	 * @param wallPaper
+	 * @return
+	 */
+	public int insertWallPaper(WallPaper wallPaper);
+
+	/**
+	 * 根据id删除壁纸
+	 * @param ids
+	 */
+	public void deleteWallPaperById(String ids);
+
+	/**
+	 * 将指定id的壁纸保存至云服务器
+	 * @param ids
+	 * @return
+	 */
+	public int insertWallPaper(String ids);
 }

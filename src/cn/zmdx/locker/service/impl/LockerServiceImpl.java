@@ -10,6 +10,7 @@ import cn.zmdx.locker.entity.Data_img_table;
 import cn.zmdx.locker.entity.Data_table;
 import cn.zmdx.locker.entity.PageResult;
 import cn.zmdx.locker.entity.Tag;
+import cn.zmdx.locker.entity.WallPaper;
 import cn.zmdx.locker.service.interfaces.LockerService;
 
 public class LockerServiceImpl implements LockerService {
@@ -108,5 +109,34 @@ public class LockerServiceImpl implements LockerService {
 	@Override
 	public void deleteTagByDataId(int id) {
 		lockerDAO.deleteTagByDataId(id);
+	}
+	
+	@Override
+	public PageResult queryWallPaper(Map<String, String> filterMap) {
+		return lockerDAO.queryWallPaper(filterMap);
+	}
+
+	@Override
+	public Object getObjectById(Class clazz, int id) {
+		return lockerDAO.getObjectById(clazz, id);
+	}
+
+	@Override
+	public int insertWallPaper(WallPaper wallPaper) {
+		return lockerDAO.insertWallPaper(wallPaper);
+	}
+
+	@Override
+	public void deleteWallPaperById(String ids) {
+		String idss[] = ids.split(",");
+		for (String id : idss) {
+			WallPaper wallPaper=(WallPaper)lockerDAO.getObjectById(WallPaper.class, Integer.parseInt(id));
+			lockerDAO.delete(wallPaper);
+		}
+	}
+	
+	@Override
+	public int insertWallPaper(String ids) {
+		return lockerDAO.insertWallPaper(ids);
 	}
 }

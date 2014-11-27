@@ -10,10 +10,12 @@ import java.util.Properties;
 
 import org.hibernate.Query;
 import org.springframework.orm.hibernate3.HibernateTemplate;
+
 import cn.zmdx.locker.dao.interfaces.LockerDAO;
 import cn.zmdx.locker.entity.Data_img_table;
 import cn.zmdx.locker.entity.PageResult;
 import cn.zmdx.locker.entity.Tag;
+import cn.zmdx.locker.entity.WallPaper;
 import cn.zmdx.locker.util.GenericsUtils;
 import cn.zmdx.locker.util.String2list2mapUtil;
 
@@ -360,6 +362,139 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 		sql.append("delete from data_tag where data_id = "+id+"");
 		Query query = getSession().createSQLQuery(sql.toString());
 		query.executeUpdate();
+	}
+
+	@Override
+	public PageResult queryWallPaper(Map<String, String> filterMap) {
+		StringBuffer queryString = new StringBuffer();
+		StringBuffer queryCountString = new StringBuffer();
+		queryCountString.append("select count(*) from (select ID,p_name,p_desc,p_author,thumbURL,imageURL,imageNAME,imageEXT,publishDATE,data_sub from wallpaper as t where 1=1  ");
+		queryString.append("select ID,p_name,p_desc,p_author,thumbURL,imageURL,imageNAME,imageEXT,publishDATE,data_sub from wallpaper as t where 1=1");
+		if (filterMap != null && !filterMap.isEmpty()) {
+			if(null != filterMap.get("p_name")
+					&& !"".equals(filterMap.get("p_name"))){
+				queryCountString.append(" and p_name='"+filterMap.get("p_name")+"'");
+				queryString.append(" and p_name='"+filterMap.get("p_name")+"'");
+			}
+			if (null != filterMap.get("start_date")
+					&& !"".equals(filterMap.get("start_date"))) {
+				queryCountString.append("and publishDATE > '"
+						+ filterMap.get("start_date") + "' ");
+				queryString.append("and publishDATE > '"
+						+ filterMap.get("start_date") + "' ");
+			}
+			if (null != filterMap.get("end_date")
+					&& !"".equals(filterMap.get("end_date"))) {
+				queryCountString.append("and publishDATE < '"
+						+ filterMap.get("end_date") + "' ");
+				queryString.append("and publishDATE < '"
+						+ filterMap.get("end_date") + "' ");
+			}
+			if(null != filterMap.get("imageEXT")
+					&& !"".equals(filterMap.get("imageEXT"))){
+				queryCountString.append(" and imageEXT='"+filterMap.get("imageEXT")+"'");
+				queryString.append(" and imageEXT='"+filterMap.get("imageEXT")+"'");
+			}
+			if(null != filterMap.get("data_sub")
+					&& !"".equals(filterMap.get("data_sub"))){
+				queryCountString.append(" and data_sub='"+filterMap.get("data_sub")+"'");
+				queryString.append(" and data_sub='"+filterMap.get("data_sub")+"'");
+			}
+			queryCountString.append(") as a");
+			queryString.append(" order by id desc");
+		}
+		return searchBySQL(queryCountString.toString(), queryString.toString(),
+				filterMap);
+	}
+
+	@Override
+	public Object getObjectById(Class clazz, int id) {
+		return this.getHibernateTemplate().get(clazz, id);
+	}
+
+	@Override
+	public int insertWallPaper(WallPaper wallPaper) {
+		GenericsUtils genericsUtils = new GenericsUtils();
+		PreparedStatement pstmt = null;
+		Connection dbConn = null;
+		StringBuffer sql = new StringBuffer();
+		sql.append("insert into wallpaper (p_name,p_desc,p_author,thumbURL,imageURL,imageNAME,imageEXT,publishDATE,data_sub) VALUES ");
+		sql.append("('"+wallPaper.getP_name()+"','"+wallPaper.getP_desc()+"','"+wallPaper.getP_author()+"','"
+		+wallPaper.getThumbURL()+"','"+wallPaper.getImageURL()+"','"+wallPaper.getImageNAME()+"','"+wallPaper.getImageEXT()+"','"+wallPaper.getPublishDATE()+"',"+wallPaper.getData_sub()+")");
+		try {
+			Properties p = genericsUtils.loadProperty("c3p0.properties");
+			String url = p.getProperty("c3p0.cloudTestUrl");
+			String driverName = p.getProperty("c3p0.cloudTestDriverClassName");
+			String userName = p.getProperty("c3p0.cloudTestUsername");
+			String password = p.getProperty("c3p0.cloudTestPassword");
+			Class.forName(driverName).newInstance();
+			dbConn = DriverManager.getConnection(url, userName, password);
+			pstmt = (PreparedStatement) dbConn.prepareStatement(String
+					.valueOf(sql));
+			return pstmt.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return 0;
+		} finally {
+
+			try {
+				if (dbConn != null)
+					pstmt.close();
+				dbConn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+				return 0;
+			}
+		}
+	}
+
+	@Override
+	public void delete(Object obj) {
+		this.getHibernateTemplate().delete(obj);
+	}
+
+	@Override
+	public int insertWallPaper(String ids) {
+		GenericsUtils genericsUtils = new GenericsUtils();
+		PreparedStatement pstmt = null;
+		Connection dbConn = null;
+		StringBuffer sql = new StringBuffer();
+		sql.append("insert into wallpaper (p_name,p_desc,p_author,thumbURL,imageURL,imageNAME,imageEXT,publishDATE,data_sub) VALUES ");
+		String [] idss=ids.split(",");
+		for (String id : idss) {
+			WallPaper wallPaper =(WallPaper)getObjectById(WallPaper.class, Integer.parseInt(id));
+			wallPaper.setData_sub(1);
+			saveOrUpdate(wallPaper);//将壁纸修改为已发布
+			sql.append("('"+wallPaper.getP_name()+"','"+wallPaper.getP_desc()+"','"+wallPaper.getP_author()+"','"
+					+wallPaper.getThumbURL()+"','"+wallPaper.getImageURL()+"','"+wallPaper.getImageNAME()+"','"+wallPaper.getImageEXT()+"','"+wallPaper.getPublishDATE()+"',"+wallPaper.getData_sub()+"),");
+		}
+		try {
+			Properties p = genericsUtils.loadProperty("c3p0.properties");
+			String url = p.getProperty("c3p0.cloudTestUrl");
+			String driverName = p.getProperty("c3p0.cloudTestDriverClassName");
+			String userName = p.getProperty("c3p0.cloudTestUsername");
+			String password = p.getProperty("c3p0.cloudTestPassword");
+			Class.forName(driverName).newInstance();
+			dbConn = DriverManager.getConnection(url, userName, password);
+			pstmt = (PreparedStatement) dbConn.prepareStatement(String
+					.valueOf(sql.substring(0, sql.length() - 1)));
+			return pstmt.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return 0;
+		} finally {
+
+			try {
+				if (dbConn != null)
+					pstmt.close();
+				dbConn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+				return 0;
+			}
+		}
 	}
 
 }

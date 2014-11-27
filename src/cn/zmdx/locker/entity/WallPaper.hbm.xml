@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="cn.zmdx.locker.entity.WallPaper" table="wallpaper">
+		<id name="id" column="id" type="int">
+			<generator class="native" />
+		</id>
+		<property name="p_name" column="p_name" />
+		<property name="p_desc" column="p_desc" />
+		<property name="p_author" column="p_author" />
+		<property name="thumbURL" column="thumbURL" />
+		<property name="imageURL" column="imageURL" />
+		<property name="imageNAME" column="imageNAME" />
+		<property name="imageEXT" column="imageEXT" />
+		<property name="publishDATE" column="publishDATE" />
+		<property name="data_sub" column="data_sub" />
+	</class>
+
+</hibernate-mapping>
+  

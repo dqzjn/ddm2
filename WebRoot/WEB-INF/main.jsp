@@ -76,6 +76,8 @@ body {
 			document.getElementById("mainframe").src = '<%=request.getContextPath()%>/data/dataList.jsp'
 		else if(id=='id2')
 			document.getElementById("mainframe").src = '<%=request.getContextPath()%>/data/tagList.jsp'
+		else if(id=='id3')
+			document.getElementById("mainframe").src = '<%=request.getContextPath()%>/data/wallPaperList.jsp'
 	}
 	function logout(){
 		if(!confirm("是否确认退出 ？")){
@@ -130,6 +132,8 @@ body {
 			<li class="li" id="id1" onclick="li(id)"><p class="innerHTML">数据管理(线下)</p>
 			</li>
 			<li class="li" id="id2" onclick="li(id)"><p class="innerHTML">标签管理</p>
+			</li>
+			<li class="li" id="id3" onclick="li(id)"><p class="innerHTML">壁纸管理</p>
 			</li>
 		</ul>
 	</div>

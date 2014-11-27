@@ -25,6 +25,7 @@ import cn.zmdx.locker.entity.Data_tag;
 import cn.zmdx.locker.entity.Img;
 import cn.zmdx.locker.entity.PageResult;
 import cn.zmdx.locker.entity.Tag;
+import cn.zmdx.locker.entity.WallPaper;
 import cn.zmdx.locker.service.impl.LockerServiceImpl;
 import cn.zmdx.locker.util.MD5;
 import cn.zmdx.locker.util.StringUtil;
@@ -41,6 +42,7 @@ public class LockerAction extends ActionSupport {
 	private Data_table dataTable;
 	private LockerServiceImpl lockerService;
 	private Data_img_table dataImgTable;
+	private WallPaper wallPaper;
 	private Data_img dataImg;
 	private Img img;
 	private Tag tag;
@@ -155,6 +157,14 @@ public class LockerAction extends ActionSupport {
 
 	public void setImg(Img img) {
 		this.img = img;
+	}
+
+	public WallPaper getWallPaper() {
+		return wallPaper;
+	}
+
+	public void setWallPaper(WallPaper wallPaper) {
+		this.wallPaper = wallPaper;
 	}
 
 	public String getColumnJson(PageResult result, String[] viewArray) {
@@ -718,5 +728,262 @@ public class LockerAction extends ActionSupport {
 		System.out.println(msg);
 
 		return uploadImg + imgType;
+	}
+	
+	/**
+	 * 查询壁纸数据
+	 * 
+	 * @throws IOException
+	 * @author louxiaojian
+	 */
+	public void queryWallPaper() throws IOException {
+		try {
+			ServletActionContext.getResponse().setContentType("text/json; charset=utf-8");
+			String p_name = StringUtil.encodingUrl(ServletActionContext
+					.getRequest().getParameter("p_name"));
+			String start_date = StringUtil.encodingUrl(ServletActionContext
+					.getRequest().getParameter("start_date"));
+			String end_date = StringUtil.encodingUrl(ServletActionContext
+					.getRequest().getParameter("end_date"));
+			String imageEXT = StringUtil.encodingUrl(ServletActionContext
+					.getRequest().getParameter("imageEXT"));
+			String data_sub = StringUtil.encodingUrl(ServletActionContext
+					.getRequest().getParameter("data_sub"));
+			PrintWriter out = ServletActionContext.getResponse().getWriter();
+			Map<String, String> filterMap = getPagerMap();
+			String[] viewArray = {"ID","name","desc","author","thumbURL","imageURL", "imageNAME" , "imageEXT" , "publishDATE","data_sub:[{'0':'未发布','1':'已发布'}]" };
+			if (p_name != null && !"".equals(p_name)) {
+				filterMap.put("p_name", p_name);
+			}
+			if (start_date != null && !"".equals(start_date)) {
+				filterMap.put("start_date", start_date);
+			}
+			if (end_date != null && !"".equals(end_date)) {
+				filterMap.put("end_date", end_date);
+			}
+			if (imageEXT != null && !"".equals(imageEXT)) {
+				filterMap.put("imageEXT", imageEXT);
+			}
+			if (data_sub != null && !"".equals(data_sub)) {
+				filterMap.put("data_sub", data_sub);
+			}
+			
+			PageResult result = lockerService.queryWallPaper(filterMap);
+			String returnStr = getColumnJson(result, viewArray);
+			out.print(returnStr);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * 跳转至编辑壁纸页
+	 * @return
+	 * @throws IOException
+	 */
+	public String editWallPaper() throws IOException {
+		ServletActionContext.getResponse().setContentType(
+				"text/json; charset=utf-8");
+		String id=ServletActionContext.getRequest().getParameter("id");
+		if(!"".equals(id)&&id!=null){
+			wallPaper=(WallPaper)lockerService.getObjectById(WallPaper.class, Integer.parseInt(id));
+		}
+		return "editWallPaper";
+	}
+	
+	/**
+	 * 保存壁纸到本地
+	 * @throws IOException
+	 */
+	public void saveWallPaper() throws IOException {
+		ServletActionContext.getResponse().setContentType(
+				"text/json; charset=utf-8");
+		PrintWriter out = ServletActionContext.getResponse().getWriter();
+		try {
+			String imageName ="";
+			if(image!=null){
+				imageName = uploadWallPaper();
+			}
+			if (0 == wallPaper.getId()) {
+				if(image!=null){
+					wallPaper.setImageURL("http://cos.myqcloud.com/11000436/wallpaper/image/"+imageName);
+					wallPaper.setThumbURL("http://cos.myqcloud.com/11000436/wallpaper/thumb/"+imageName);
+					String imageNAME=imgName.substring(0, imgName.lastIndexOf("."));
+					wallPaper.setImageNAME(imageNAME);
+					String imageEXT=imgName.substring(imgName.lastIndexOf("."));
+					wallPaper.setImageEXT(imageEXT);
+				}
+				wallPaper.setData_sub(0);//保存至本地
+				lockerService.save(wallPaper);
+			} else {
+				WallPaper wPaper=(WallPaper)lockerService.getObjectById(WallPaper.class, wallPaper.getId());
+				if(image!=null){
+					wPaper.setImageURL("http://cos.myqcloud.com/11000436/wallpaper/image/"+imageName);
+					wPaper.setThumbURL("http://cos.myqcloud.com/11000436/wallpaper/thumb/"+imageName);
+					wPaper.setImageNAME(imgName);
+					wPaper.setImageEXT(imgName.substring(imgName.lastIndexOf(".")));
+				}
+				wPaper.setP_author(wallPaper.getP_author());
+				wPaper.setP_desc(wallPaper.getP_desc());
+				wPaper.setP_name(wallPaper.getP_name());
+				wPaper.setPublishDATE(wallPaper.getPublishDATE());
+				wPaper.setData_sub(0);//保存至本地
+				lockerService.saveOrUpdate(wPaper);
+			}
+			out.print("{\"result\":\"success\"}");
+
+		} catch (Exception e) {
+			out.print("{\"result\":\"error\"}");
+			e.printStackTrace();
+		}
+
+	}
+	
+	
+	/**
+	 * 保存壁纸到云数据库
+	 * @throws IOException
+	 */
+	public void saveInsertWallPaper() throws IOException {
+		ServletActionContext.getResponse().setContentType(
+				"text/json; charset=utf-8");
+		PrintWriter out = ServletActionContext.getResponse().getWriter();
+		try {
+			String imageName ="";
+			if(image!=null){
+				imageName = uploadWallPaper();
+			}
+			int flag=0;
+			if (0 == wallPaper.getId()) {
+				if(image!=null){
+					wallPaper.setImageURL("http://cos.myqcloud.com/11000436/wallpaper/image/"+imageName);
+					wallPaper.setThumbURL("http://cos.myqcloud.com/11000436/wallpaper/thumb/"+imageName);
+					String imageNAME=imgName.substring(0, imgName.lastIndexOf("."));
+					wallPaper.setImageNAME(imageNAME);
+					String imageEXT=imgName.substring(imgName.lastIndexOf("."));
+					wallPaper.setImageEXT(imageEXT);
+				}
+				wallPaper.setData_sub(1);//已上传至云服务器
+				lockerService.save(wallPaper);
+				flag=lockerService.insertWallPaper(wallPaper);
+			} else {
+				WallPaper wPaper=(WallPaper)lockerService.getObjectById(WallPaper.class, wallPaper.getId());
+				if(image!=null){
+					wPaper.setImageURL("http://cos.myqcloud.com/11000436/wallpaper/image/"+imageName);
+					wPaper.setThumbURL("http://cos.myqcloud.com/11000436/wallpaper/thumb/"+imageName);
+					wPaper.setImageNAME(imgName);
+					wPaper.setImageEXT(imgName.substring(imgName.lastIndexOf(".")));
+				}
+				wPaper.setP_author(wallPaper.getP_author());
+				wPaper.setP_desc(wallPaper.getP_desc());
+				wPaper.setP_name(wallPaper.getP_name());
+				wPaper.setPublishDATE(wallPaper.getPublishDATE());
+				wPaper.setData_sub(1);//已上传至云服务器
+				lockerService.saveOrUpdate(wPaper);
+				flag=lockerService.insertWallPaper(wPaper);
+				
+			}
+			if(flag>0){
+				out.print("{\"result\":\"success\"}");
+			}else{
+				out.print("{\"result\":\"error\"}");
+			}
+
+		} catch (Exception e) {
+			out.print("{\"result\":\"error\"}");
+			e.printStackTrace();
+		}
+
+	}
+	/**
+	 * 上传壁纸并生成缩略图
+	 * @return
+	 * @throws Exception
+	 */
+	public String uploadWallPaper() throws Exception {
+		// 用户定义变量
+		int accessId = 11000436; // accessId
+		String accessKey = "7OgnLklEIptHNwZCS0RDNk1rUXrxXJfP"; // accessKey
+		String bucketId = "wallpaper"; // bucket id
+		String secretId = "AKIDBvY9dcNUS2LeFTxI2ThzgrKxuWuNROIr";
+		Cos cos = null;
+		try {
+			cos = new CosImpl(accessId, accessKey, Common.COS_HOST,
+					Common.DOWNLOAD_HOST, secretId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		String imgType = "";
+		String uploadImg = "";
+		if (null != imgName && !"".equals(imgName)) {
+			imgType = imgName.substring(imgName.lastIndexOf("."));
+			uploadImg = imgName + new Date().getTime();
+			MD5 md5 = new MD5();
+			uploadImg = md5.getMD5ofStr(uploadImg);
+		}
+		// 返回消息体, 包含错误码和错误消息
+		Message msg = new Message();
+		// System.out.println("----------------------uploadFileContent----------------------\n");
+		Map<String, Object> inParams = new HashMap<String, Object>();
+//		inParams.put("bucketId", bucketId);
+		String fileName=uploadImg + imgType;
+		inParams.put("uploadBucketId", bucketId);
+		inParams.put("compressBucketId", bucketId);
+		inParams.put("uploadFilePath", "/image/"+fileName);
+		inParams.put("compressFilePath", "/thumb/"+fileName);
+		inParams.put("zoomType", 1);//等比缩放
+		inParams.put("width", 180);//缩放后宽度
+		inParams.put("height", 324);//缩放后高度
+		Map<String, CosFile> files = new HashMap<String, CosFile>();
+		files.put("uploadFile", new CosFile());
+		files.put("compressFile", new CosFile());
+		cos.uploadFileContentWithCompress(inParams, FileUtils.readFileToByteArray(image),
+				files, msg);
+		System.out.println(files);
+		System.out.println(msg);
+
+		return fileName;
+	}
+	
+	/**
+	 * 根据id删除壁纸
+	 * @throws IOException
+	 */
+	public void deleteWallPaperById() throws IOException {
+		PrintWriter out = ServletActionContext.getResponse().getWriter();
+		try {
+			String ids = ServletActionContext.getRequest().getParameter("ids");
+			lockerService.deleteWallPaperById(ids);
+			out.print("{\"result\":\"success\"}");
+		} catch (Exception e) {
+			e.printStackTrace();
+			out.print("{\"result\":\"error\"}");
+		}
+	}
+	
+	/**
+	 * 将制定id的壁纸保存至云服务器中
+	 * @throws IOException
+	 */
+	public void insertWallPaper() throws IOException {
+		HttpSession session = ServletActionContext.getRequest().getSession();
+		String userOrg = (String) session.getAttribute("USER_ORG");
+		if ("0".equals(userOrg)) {
+			ServletActionContext.getResponse().setContentType(
+					"text/json; charset=utf-8");
+			PrintWriter out = ServletActionContext.getResponse().getWriter();
+			try {
+				String ids = ServletActionContext.getRequest().getParameter(
+						"ids");
+				int bl = lockerService.insertWallPaper(ids);
+				if (bl > 0)
+					out.print("{\"result\":\"success\"}");
+				else
+					out.print("{\"result\":\"error\"}");
+			} catch (Exception e) {
+				e.printStackTrace();
+				out.print("{\"result\":\"error\"}");
+			}
+		}
 	}
 }
