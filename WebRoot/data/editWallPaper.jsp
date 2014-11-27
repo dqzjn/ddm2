@@ -64,12 +64,18 @@ body {
     	}};
       	$('#submitBtn').click(function(){
 	    	if(checkedForm()){
+	    		$("#submitBtn").attr("disabled", true);  
+	    		$("#saveInsert").attr("disabled", true);  
+	    		$("#exit").attr("disabled", true);  
 			    $('#pageFrom').ajaxSubmit(optionsSubmit);
 		        return false;
 	        }
 	     });
       	$('#saveInsert').click(function(){
 	    	if(checkedForm()){
+	    		$("#submitBtn").attr("disabled", true);  
+	    		$("#saveInsert").attr("disabled", true);  
+	    		$("#exit").attr("disabled", true);  
 			    $('#pageFrom').ajaxSubmit(optionsSubmitInsert);
 		        return false;
 	        }
@@ -331,7 +337,7 @@ html {
 						<td colspan="4" align="center"><input type="button"
 							id="submitBtn" value="保 存" class="form_bt_orange" /> 
 							<c:if test="${sessionScope.USER_ORG=='0'}"><input type="button" id="saveInsert" value="保存并入云库" class="form_bt_orange" /></c:if>
-							 <input type="button" value="取 消"
+							 <input id="exit" type="button" value="取 消"
 							class="form_bt_orange" onclick="window.close()" />
 						</td>
 					</tr>
