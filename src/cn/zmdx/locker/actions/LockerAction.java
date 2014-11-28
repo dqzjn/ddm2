@@ -439,7 +439,7 @@ public class LockerAction extends ActionSupport {
 			session.setAttribute("userOrg", userOrg);
 		}
 		session.removeAttribute("tagIdList");
-		return "editDataImg";
+		return "addDataImg";
 	}
 
 	/**
@@ -464,6 +464,9 @@ public class LockerAction extends ActionSupport {
 		if (tagIdList.size() > 0) {
 			session.setAttribute("tagIdList", tagIdList);
 		}
+		String sqlImgs="select t.imageUrl,t.content from img t left join data_img di on di.img_id=t.id where di.data_id= "+id;
+		List<?> imgList=lockerService.queryAllBySql(sqlImgs);
+		ServletActionContext.getRequest().setAttribute("imgList", imgList);
 		String userOrg = (String) session.getAttribute("USER_ORG");
 		session.setAttribute("userOrg", userOrg);
 		return "editDataImg";
@@ -859,11 +862,11 @@ public class LockerAction extends ActionSupport {
 		PrintWriter out = ServletActionContext.getResponse().getWriter();
 		try {
 			String imageName = "";
-			if (image != null) {
+			if (image[0] != null) {
 				imageName = uploadWallPaper();
 			}
 			if (0 == wallPaper.getId()) {
-				if (image != null) {
+				if (image[0] != null) {
 					wallPaper
 							.setImageURL("http://cos.myqcloud.com/11000436/wallpaper/image/"
 									+ imageName);
@@ -882,7 +885,7 @@ public class LockerAction extends ActionSupport {
 			} else {
 				WallPaper wPaper = (WallPaper) lockerService.getObjectById(
 						WallPaper.class, wallPaper.getId());
-				if (image != null) {
+				if (image[0] != null) {
 					wPaper.setImageURL("http://cos.myqcloud.com/11000436/wallpaper/image/"
 							+ imageName);
 					wPaper.setThumbURL("http://cos.myqcloud.com/11000436/wallpaper/thumb/"
@@ -918,12 +921,12 @@ public class LockerAction extends ActionSupport {
 		PrintWriter out = ServletActionContext.getResponse().getWriter();
 		try {
 			String imageName = "";
-			if (image != null) {
+			if (image[0] != null) {
 				imageName = uploadWallPaper();
 			}
 			int flag = 0;
 			if (0 == wallPaper.getId()) {
-				if (image != null) {
+				if (image[0] != null) {
 					wallPaper
 							.setImageURL("http://cos.myqcloud.com/11000436/wallpaper/image/"
 									+ imageName);
@@ -943,7 +946,7 @@ public class LockerAction extends ActionSupport {
 			} else {
 				WallPaper wPaper = (WallPaper) lockerService.getObjectById(
 						WallPaper.class, wallPaper.getId());
-				if (image != null) {
+				if (image[0] != null) {
 					wPaper.setImageURL("http://cos.myqcloud.com/11000436/wallpaper/image/"
 							+ imageName);
 					wPaper.setThumbURL("http://cos.myqcloud.com/11000436/wallpaper/thumb/"

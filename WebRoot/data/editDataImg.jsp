@@ -16,7 +16,7 @@
 <head>
 <base target="_self" />
 
-<title>编辑数据</title>
+<title>编辑数据1</title>
 <%@include file="/include/jquerylib.jsp"%>
 
 <link rel="stylesheet" type="text/css"
@@ -159,13 +159,6 @@ body {
 		}
 	}
 	
-	function test1(){
-		var aa ='';
-		$("input[name='check']:checkbox:checked").each(function(){ 
-			aa+=$(this).val() +','
-			}) 
-			alert(aa);
-	}
 	
 	//把已选中的多选框更改成未选中 
 	function clearCheckbox(){ 
@@ -181,7 +174,7 @@ body {
     	var imgUrls=document.getElementsByName("image");
     	 var imgUrl ='';
     	for(var i=0;i<imgUrls.length;i++){
-    		var f = imgUrls[i].files
+    		var f = imgUrls[i].files;
     		imgUrl=imgUrl+f[0].name+'#';
     	}
         document.getElementById("imgNames").value = imgUrl;
@@ -389,6 +382,7 @@ html {
 								<option value="html"
 									<c:if test="${dataImgTable.data_type=='html'}">selected="selected"</c:if>>HTML</option>
 						</select>
+						</td>
 					</tr>
 					<tr>
 						<td align="right">发布时间：</td>
@@ -404,29 +398,47 @@ html {
 						<td align="left">
 						<c:forEach var="tag" items="${tagList}">
 							<input style="width: 30px;border: 0px;" type="checkbox"
-								name="check"  id="${tag[0]}" value="${tag[0]}"/>${tag[1]}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <c:if test="${tag[0] % 4 == 0}"></br></c:if>
+								name="check"  id="${tag[0]}" value="${tag[0]}"/>${tag[1]}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <c:if test="${tag[0] % 4 == 0}"><br/></c:if>
 						</c:forEach>
 						</td>
 					</tr>
 					</table>
+					<c:forEach var="img" items="${imgList }">
+						<table>
+							<tr>
+								<td align="right">上传图片：</td>
+								<td align="left"><input type="file" id="image"
+									name="image" value="${img[0]}" onchange="uploadImg()"/>
+								</td>
+							</tr>
+							<tr>
+								<td align="right">内容：</td>
+								<td align="left"><textarea rows="10" cols="5" id="imgUrl"
+									name="imgUrl" style="width: 270px">${img[1]}</textarea>
+								</td>
+							</tr>
+						</table>
+					</c:forEach>
 					<table id="tableId">
-					<tr>
-						<td align="right">上传图片：</td>
-						<td align="left"><input type="file" id="image"
-							name="image" value="${image}" onchange="uploadImg()"/>
-						</td>
-					</tr>
-					<tr>
-						<td align="right">内容：</td>
-						<td align="left"><textarea rows="10" cols="5" id="imgUrl"
-							name="imgUrl" value="${dataImgTable.imgUrl}" style="width: 270px">${dataImgTable.imgUrl}</textarea>
-						</td>
-					</tr>
-				</table>
+						<tr>
+							<td align="right">上传图片：</td>
+							<td align="left"><input type="file" id="image"
+								name="image" value="${image}" onchange="uploadImg()"/>
+							</td>
+						</tr>
+						<tr>
+							<td align="right">内容：</td>
+							<td align="left"><textarea rows="10" cols="5" id="imgUrl"
+								name="imgUrl" style="width: 270px">${img[1]}</textarea>
+							</td>
+						</tr>
+					</table>
 				<table>
 				    <tr>
-				    	<input type="button" id="sdf" value="加@@" onclick="addHTML()" /> 
-						<input type="button" id="syu" value="减@@" onclick="delHTML()" /> 
+				    	<td>
+					    	<input type="button" id="sdf" value="加@@" onclick="addHTML()" /> 
+							<input type="button" id="syu" value="减@@" onclick="delHTML()" /> 
+						</td>
 				    </tr>
 					<tr>
 						<td colspan="4" align="center"><input type="button"

@@ -32,7 +32,8 @@
 			</result>
 		</action>
 		<action name= "locker_*"   method= "{1}"  class="lockerAction">
-			<result name="editDataImg">/data/addDataImg.jsp</result>
+			<result name="addDataImg">/data/addDataImg.jsp</result>
+			<result name="editDataImg">/data/editDataImg.jsp</result>
 			<result name="editTag">/data/editTag.jsp</result>
 			<result name="editWallPaper">/data/editWallPaper.jsp</result>
 		</action>
