@@ -161,7 +161,7 @@ border-bottom-right-radius: 10px;
 text-shadow: 1px 1px 1px white;
 margin-top:20px;
 }
-.footer .copyright{display:inline; margin:10px 0 0 15px;}
+.footer .copyright{display:inline; margin:8px auto 0 auto;width:100%;position:absolute;bottom:0;left:0;overflow:hidden;padding-bottom:8px;color:#CCC;word-spacing:3px;zoom:1}
 .sy_logo{float: right; text-align:right; width:78px;margin:4px 0 0 15px;}
 
  

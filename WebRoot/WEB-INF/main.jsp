@@ -116,8 +116,9 @@ body {
 				id="mainframe" onLoad="iFrameHeight()"> </iframe>
 		</div>
 		<div id="contentdetail" style="display: none;"></div>
-		<div style="text-align: center;"></div>
+		<div style="text-align: center;padding-bottom: 10px;padding-top: 10px;">
 			<span class="copyright">Copyright&copy; 北京智美点心科技有限公司</span>
+		</div>
 	</div>
 	<div id="leftside">
 		<div class="user">
