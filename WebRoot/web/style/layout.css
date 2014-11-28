@@ -28,7 +28,7 @@ label.inline{ display:inline;}
 
 /* Header 锟斤拷锟斤拷 */
 /*.header {width: 100%; height: 70px; background-image:url(../images/top_img.png); background-repeat:repeat-x;}*/
-.header_img{width: 100%; height: 175px;background-image:url(../images/top_img.png); background-repeat:repeat-x; background-position:top right;}
+.header_img{width: 100%; height: 175px;background-image:url(../images/top_img.png); background-size:cover;}
 .logo {float: left; display:inline;}
 #systemmenu {float: right; color: #fff;padding: 0px 15px 0 0;width:400px;height:70px; text-align:right;display:inline;}
 #systemmenu p {color: #fff; padding-top: 10px;}
