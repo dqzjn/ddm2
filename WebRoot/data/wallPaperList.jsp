@@ -41,12 +41,12 @@ height:auto;
 			height: 500,
 			//width: 1005, 
 			autowidth:true,
-			colNames:['ID','壁纸名','描述','作者','缩略图URL','缩略图URL','url','url','图片名','图片类型','发布时间','发布状态'],
+			colNames:['ID','壁纸名','作者','描述','缩略图URL','缩略图URL','url','url','图片名','图片类型','发布时间','发布状态','发布状态'],
 			colModel:[
 					{name:'ID',index:'ID', width:60, key:true, sorttype:"int",hidden:true},								
 					{name:'name',index:'name', width:100,align: 'center'}, 
-					{name:'desc',index:'desc', width:300,align: 'center'}, 
 					{name:'author',index:'author', width:80,align: 'center'}, 
+					{name:'desc',index:'desc', width:300,align: 'center'}, 
 					{name:'thumbURL',index:'thumbURL', width:270,align: 'center',hidden:true}, 
 					{name:'thumbURL',index:'thumbURL', width:125, align:'center',
 							formatter: function(cellvalue, options, rowObject) {
@@ -54,15 +54,23 @@ height:auto;
 			  				}
 			  			},
 					{name:'imageURL',index:'imageURL', width:270,align: 'center',hidden:true}, 
-					{name:'imageURL',index:'imageURL', width:225, align:'center',
+					{name:'imageURL',index:'imageURL', width:225, align:'center',hidden:true,
 							formatter: function(cellvalue, options, rowObject) {
 					  			return "<img src='"+rowObject.imageURL+"' style='width:120px;' />" ;
 			  				}
 			  			},
-			  		{name:'imageNAME',index:'imageNAME', width:100,align: 'center'},
-			  		{name:'imageEXT',index:'imageEXT', width:80,align: 'center'},
+			  		{name:'imageNAME',index:'imageNAME', width:100,align: 'center',hidden:true},
+			  		{name:'imageEXT',index:'imageEXT', width:80,align: 'center',hidden:true},
 					{name:'publishDATE',index:'publishDATE', width:80,align: 'center',formatter:"date",formatoptions: {srcformat:'Y-m-d',newformat:'Y-m-d'}},
-					{name:'data_sub',index:'data_sub', width:80,align: 'center'},
+					{name:'data_sub',index:'data_sub', width:80,align: 'center',hidden:true},
+					{name:'data_sub1',index:'data_sub1', width:80,align: 'center',
+						formatter: function(cellvalue, options, rowObject) {
+							if(rowObject.data_sub=='审核通过'){
+					  			return "<p style=\"color: #FFC125;font-size: 16px;\">审核通过</p>" ;
+							}else if(rowObject.data_sub=='审核中'){
+					  			return "<p style=\"color: green;font-size: 16px;\">审核中</p>" ;
+							}
+		  				}},
 			],
 			shrinkToFit:false,
 			sortname:'id',
@@ -119,7 +127,7 @@ height:auto;
 		}
 		var row = jQuery("#gridTable").jqGrid('getRowData',ids);//获取选中行.
 		var id = row.ID;//获取选中行的id属性
-		if(row.data_sub=='已发布'){
+		if(row.data_sub=='审核通过'){
 			alert("数据已发布，不能修改!");
 			return false;
 		}
@@ -236,21 +244,21 @@ height:auto;
 					name="p_name" value="" class="input" style="width:150px;" />&nbsp;&nbsp;
 					&nbsp;&nbsp;发布时间：<input type="text" id="start_date"
 						name="start_date" value="" class="input"
-						onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',maxDate:'#F{$dp.$D(\'end_date\')}'})"
+						onClick="WdatePicker({dateFmt:'yyyy-MM-dd',maxDate:'#F{$dp.$D(\'end_date\')}'})"
 						readonly="readonly" style="width:150px;" />&nbsp;&nbsp;至&nbsp;&nbsp;<input
 						type="text" id="end_date" name="end_date" value=""
-						onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'#F{$dp.$D(\'start_date\')}'})"
+						onClick="WdatePicker({dateFmt:'yyyy-MM-dd',minDate:'#F{$dp.$D(\'start_date\')}'})"
 						readonly="readonly" class="input" style="width:150px;" />
-						&nbsp;&nbsp;壁纸格式：<select id="imageEXT" name="imageEXT" style="width:150px;">
+						&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="button"
+							class="button_b" value="查询" onclick="gridSearch()" />
+							&nbsp;&nbsp;<input type="button"
+							class="button_b" value="清空" onclick="reset()" /><br /><br />
+							&nbsp;&nbsp;壁纸格式：<select id="imageEXT" name="imageEXT" style="width:150px;">
 								<option value="" selected="selected">--请选择--</option>
 								<option value=".jpg">jpg</option>
 								<option value=".png">png</option>
 						</select>
-						&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="button"
-							class="button_b" value="查询" onclick="gridSearch()" />
-							&nbsp;&nbsp;<input type="button"
-							class="button_b" value="清空" onclick="reset()" /><br />
-						&nbsp;&nbsp;同&nbsp;&nbsp;步：&nbsp;&nbsp;<select id="data_sub" name="data_sub" style="width:150px;">
+						&nbsp;&nbsp;&nbsp;&nbsp;同&nbsp;&nbsp;步：&nbsp;&nbsp;<select id="data_sub" name="data_sub" style="width:150px;">
 							<option value="">全部</option>
 							<option value="0">未发布</option>
 							<option value="1">已发布</option>

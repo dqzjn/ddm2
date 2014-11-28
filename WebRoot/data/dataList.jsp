@@ -285,19 +285,12 @@ height:auto;
 			class="tabman" style="width:100%;margin-bottom:0px">
 			<tr>
 				<td>&nbsp;&nbsp;标题：<input type="text" id="data_title"
-					name="data_title" value="" class="input" style="width:150px;" />&nbsp;&nbsp;
-					<td>&nbsp;&nbsp;时间：<input type="text" id="start_date"
-						name="start_date" value="" class="input"
-						onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',maxDate:'#F{$dp.$D(\'end_date\')}'})"
-						readonly="readonly" style="width:150px;" />&nbsp;&nbsp;至&nbsp;&nbsp;<input
-						type="text" id="end_date" name="end_date" value=""
-						onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'#F{$dp.$D(\'start_date\')}'})"
-						readonly="readonly" class="input" style="width:150px;" />
+					name="data_title" value="" class="input" style="width:150px;" />&nbsp;&nbsp;</td>
 						<td>&nbsp;&nbsp;日期：<input type="text" id="edit_date"
 						name="edit_date" value="" class="input"
 						onClick="WdatePicker()"
-						readonly="readonly" style="width:150px;" />
-						&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="button"
+						readonly="readonly" style="width:150px;" /></td>
+						<td>&nbsp;&nbsp;<input type="button"
 							class="button_b" value="查询" onclick="gridSearch()" />
 							&nbsp;&nbsp;<input type="button"
 							class="button_b" value="清空" onclick="reset()" />

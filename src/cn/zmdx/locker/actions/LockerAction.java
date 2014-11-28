@@ -751,7 +751,7 @@ public class LockerAction extends ActionSupport {
 					.getRequest().getParameter("data_sub"));
 			PrintWriter out = ServletActionContext.getResponse().getWriter();
 			Map<String, String> filterMap = getPagerMap();
-			String[] viewArray = {"ID","name","desc","author","thumbURL","imageURL", "imageNAME" , "imageEXT" , "publishDATE","data_sub:[{'0':'未发布','1':'已发布'}]" };
+			String[] viewArray = {"ID","name","desc","author","thumbURL","imageURL", "imageNAME" , "imageEXT" , "publishDATE","data_sub:[{'0':'审核中','1':'审核通过'}]" };
 			if (p_name != null && !"".equals(p_name)) {
 				filterMap.put("p_name", p_name);
 			}

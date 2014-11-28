@@ -28,10 +28,7 @@
 	  			</script>
 </c:if>
 <style>
-.ui-jqgrid tr.jqgrow td {
-white-space: normal !important;
-height:auto;
-}
+.ui-jqgrid-sortable {font-size:16px;}  
 </style>
 <script type="text/javascript">
 	$(document).ready(function(){
@@ -44,7 +41,7 @@ height:auto;
 			colNames:['id','标签'],
 			colModel:[
 					{name:'id',index:'id', width:60, key:true, sorttype:"int",hidden:true},								
-					{name:'tag_name',index:'tag_name', width:300,align: 'center'}
+					{name:'tag_name',index:'tag_name', width:500,align: 'center'}
 			],
 			shrinkToFit:false,
 			sortname:'id',
@@ -201,7 +198,7 @@ height:auto;
 			</tr>
 			<tr>
 				<td colspan="4">
-					<table id="gridTable"></table>
+					<table id="gridTable" style="font-size: 24px;"></table>
 					<div id="gridPager"></div>
 				</td>
 			</tr>

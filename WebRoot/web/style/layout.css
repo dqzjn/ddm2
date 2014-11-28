@@ -11,7 +11,7 @@ background-color:#EAEAEA;
 color: #666;
 }
 a{ text-decoration:none;}
-ul, li {list-style: none!important;padding: 0;margin: 0;}
+ul, li {list-style: none!important;padding-left: 20px;margin-bottom: 10px;}
 img {border: none;}
 label {padding-right: 20px;display: block;padding-bottom: 10px;}
 label.inline{ display:inline;}
@@ -27,8 +27,8 @@ label.inline{ display:inline;}
 
 
 /* Header 锟斤拷锟斤拷 */
-.header {width: 100%; height: 70px; background-image:url(../images/top_bg.gif); background-repeat:repeat-x;}
-.header_img{width: 100%; height: 70px;background-image:url(../images/top_img.jpg); background-repeat:no-repeat; background-position:top right;}
+/*.header {width: 100%; height: 70px; background-image:url(../images/top_img.png); background-repeat:repeat-x;}*/
+.header_img{width: 100%; height: 175px;background-image:url(../images/top_img.png); background-repeat:repeat-x; background-position:top right;}
 .logo {float: left; display:inline;}
 #systemmenu {float: right; color: #fff;padding: 0px 15px 0 0;width:400px;height:70px; text-align:right;display:inline;}
 #systemmenu p {color: #fff; padding-top: 10px;}
@@ -50,7 +50,7 @@ text-shadow: 1px 1px 1px #E4E4E4; border-top:1px solid #000;
 #position li.current {}
 
 /* 锟斤拷锟斤拷 锟斤拷锟斤拷 */
-#leftside {width: 225px;height: 100%;position: absolute;top: 70px; border-top:1px solid #000;border-right:1px solid #676767;}
+#leftside {width: 225px;height: 100%;position: absolute;top: 190px; border-top:0px solid #000;border-right:0px solid #676767;margin-left: 20px;}
 .toggle_open,.toggle_close{ background:url(../images/toggle.png); width:21px; height:17px; cursor:pointer;}
 .toggle_close{ background-position:0 -17px;}
 
@@ -59,18 +59,17 @@ width: 195px;
 padding: 15px;
 color: #000;
 overflow: auto;
-text-shadow: 1px 1px 1px #111;
 background: url(../images/bg_left_spacer.png) repeat-x bottom;
 }
 .user{
-background:#fcfcfc url(../images/left_logbg.gif) repeat-x bottom;
+background:#ffffff ; text-align: center;
 }
-.user img {float: left;margin: 5px 15px 10px 0;}
+.user img {margin: 5px 15px 10px 0;}
 .user p{ line-height:150%}
-.hoverimg {background: #CCC;padding: 3px;float: left;}
+.hoverimg {background: #CCC;padding: 3px;}
 .hoverimg:hover {cursor: pointer; background: #e4e4e4;}
 .username {color:#000;font-size: 18px;font-weight: 700;letter-spacing: -1px;padding-bottom: 5px;}
-.userbtn {text-shadow: none;float: left;padding-right: 5px;text-align: center;}
+.userbtn {text-shadow: none;padding-right: 5px;text-align: center;}
 .message{width:185px; float:left; display:inline; font-weight:bold; color:#000;}
 .message ul{margin:0px;}
 .message li{ float:left; display:inline; margin:0 2px;}
@@ -81,9 +80,9 @@ background:#fcfcfc url(../images/left_logbg.gif) repeat-x bottom;
 .message li img{margin:5px 3px 0px 3px; padding-bottom:10px;}
 
 
-.userbtn a {display: block;color: black;text-shadow: 1px 1px 1px #EEE;font-size: 12px;width: 58px;background: #CCC url(../images/bg_btn_grey_sml.png) repeat-x top;
+.userbtn a {color: black;text-shadow: 1px 1px 1px #EEE;font-size: 16px;width: 58px;background: #ffffff ;
 border: 1px solid black;padding: 2px 0;text-decoration: none;border-radius: 5px;-moz-border-radius: 5px;}
-.userbtn a:hover {color: #fff; background: #eee url(../images/bg_btn_grey_sml.png) 0 -30px; text-shadow: none;}
+.userbtn a:hover {color: #fff; background: #eee ; text-shadow: none;}
 
 
 ul.navigation li a {text-shadow: 1px 1px 1px #222;background: url(../images/bg_navigation_link.png) repeat-x top ;outline: none;width: 185px; overflow:hidden; display: block;color:#000000;text-decoration: none;padding: 10px; padding-left:30px; height: 15px;}
@@ -162,7 +161,7 @@ border-bottom-right-radius: 10px;
 text-shadow: 1px 1px 1px white;
 margin-top:20px;
 }
-.footer .copyright{float:left; display:inline; margin:10px 0 0 15px;}
+.footer .copyright{display:inline; margin:10px 0 0 15px;}
 .sy_logo{float: right; text-align:right; width:78px;margin:4px 0 0 15px;}
 
  
@@ -234,4 +233,4 @@ input[type="submit"]::-moz-focus-inner{
 .login_img a img {border: none;}
 .login_main{ width:1207px; height:702px; background-image:url(../images/login_bg.jpg); background-repeat:no-repeat;margin:auto; font-size:17px;font-family:microsoft yahei;}
 .login_main .log_input{ width:266px; height:34px;line-height:34px; border:1px solid #9b9b9b; background-image:url(../images/login_inputbg.gif); background-repeat:repeat-x; background-position:top; font-size:15px;}
-.login_main .log_bt{ background-image:url(../images/login_bt.gif); height:43px; border:1px solid #20255d; font-size:17px; font-family:microsoft yahei;color:#FFFFFF; width:270px;}
+.login_main .log_bt{ background-image:url(../images/login_bt.gif); height:43px; border:1px solid #20255d; font-size:17px; font-family:microsoft yahei;color:#FFFFFF; width:150px;}

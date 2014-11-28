@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="/struts-tags"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <html style="overflow-y:hidden">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -21,23 +22,26 @@
 <style>
 body {
 	background-repeat: repeat-x;
-	background-color: #eaeaea;
+	background-color: #ffffff;
 }
 
 .li {
 	background-image: url(web/images/bg_navigation.png);
 	background-repeat: repeat-x;
-	height: 40px;
+	height: 50px;
+	width: 148px;
+	margin-left:8px;
+	text-align: left;
 }
 
 .innerHTML {
-	color: #000;
-	font-size: 18px;
+	color: #696969;
+	font-size: 23px;
 	font-weight: 700;
 	letter-spacing: -1px;
 	padding-bottom: 5px;
-	margin-left: 70px;
-	padding-top: 10px
+	padding-top: 13px;
+	margin-left: 23px;
 }
 
 .footer {
@@ -98,9 +102,8 @@ body {
 			</div>
 			<div id="systemmenu">
 				<p class="left smltxt">
-				<DIV style="margin-top:15px;">
-					<a href="WEB-INF/main.jsp"><img src="web/images/top_icon1.png"
-						border="0" title="首页" /> </a> <img src="web/images/top_icon5.png"
+				<DIV style="margin-top:25px;margin-right: 20px;"><br/>
+					<img src="web/images/top_icon5.png"
 						onclick="logout()" style="cursor: pointer" border="0" title="退出" />
 				</DIV>
 				</p>
@@ -113,10 +116,8 @@ body {
 				id="mainframe" onLoad="iFrameHeight()"> </iframe>
 		</div>
 		<div id="contentdetail" style="display: none;"></div>
-		<div style="clear: both;"></div>
-		<div class="footer">
+		<div style="text-align: center;"></div>
 			<span class="copyright">Copyright&copy; 北京智美点心科技有限公司</span>
-		</div>
 	</div>
 	<div id="leftside">
 		<div class="user">
@@ -124,17 +125,20 @@ body {
 				欢迎登录：<br />
 			</p>
 			<p class="username"><%=session.getAttribute("username")%></p>
-			<div style="float:left">
-			<p class="userbtn"><a class="fancybox fancybox.ajax" title=""><span onclick="changeRight('user/updatePwd.jsp')" style="cursor: pointer">修改密码</span></a></p>
+			<div >
+			<p class="userbtn">
+				<a title=""  onclick="changeRight('user/updatePwd.jsp')" style="cursor: pointer">修改密码</a>&nbsp;&nbsp;&nbsp;&nbsp;
+				<a title=""  onclick="logout()" style="cursor: pointer">退出</a>
+			</p>
 			</div>
 		</div>
 		<ul id="menu">
-			<li class="li" id="id1" onclick="li(id)"><p class="innerHTML">数据管理(线下)</p>
+			<li class="li" style="cursor: pointer" id="id1" onclick="li(id)"><p class="innerHTML">数据管理</p>
 			</li>
-			<li class="li" id="id2" onclick="li(id)"><p class="innerHTML">标签管理</p>
-			</li>
-			<li class="li" id="id3" onclick="li(id)"><p class="innerHTML">壁纸管理</p>
-			</li>
+			<c:if test="${sessionScope.USER_ORG=='0'}"><li class="li" style="cursor: pointer" id="id2" onclick="li(id)"><p class="innerHTML">标签管理</p>
+			</li></c:if>
+			<c:if test="${sessionScope.USER_ORG=='0'}"><li class="li" style="cursor: pointer" id="id3" onclick="li(id)"><p class="innerHTML">壁纸管理</p>
+			</li></c:if>
 		</ul>
 	</div>
 	<div id="ajax-loader"
