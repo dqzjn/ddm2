@@ -108,6 +108,12 @@ public interface LockerDAO extends ParentDAO {
 	 */
 	List<?> queryAllBySql(String sql);
 	
+	/**
+	 * 执行sql语句 增删改
+	 * @param entity
+	 */
+	public int executeBySQL(String sql);
+	
 	public void saveOrUpdate(Object entity);
 	
 	public String save(Object entity);

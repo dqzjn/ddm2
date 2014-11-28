@@ -247,36 +247,6 @@ height:auto;
 		window.showModalDialog('<%=request.getContextPath()%>/data/editTimePage.jsp?ids='+ids+'&temp='+new Date(),'', 'dialogWidth:300px;status:no;dialogHeight:200px;');
 		gridSearch();
 	}
-	
-	<%--
-	 function AutoSizeWindow() {
-		     if (window.dialogArguments == null) {
-		         return; //忽略非模态窗口
-		      }
-		 
-		     var _offset = new Object();
-		     _offset.height = 40;
-		     _offset.width = 40;
-		     _offset.top = -40;
-		    _offset.left = 0;
-		    _offset.minHeight = 400;
-		    _offset.minWidth = 400;
-		
-		    var _myDialog = new Object();
-		    _myDialog.height = document.body.scrollHeight + _offset.height;
-		    _myDialog.width = document.body.scrollWidth + _offset.width;
-		    _myDialog.top = (this.screen.height - _myDialog.height) / 2 + _offset.top;
-		    _myDialog.left = (this.screen.width - _myDialog.width) / 2 + _offset.left;
-		
-		    if (_myDialog.height < _offset.minHeight) _myDialog.height = _offset.minHeight;
-		    if (_myDialog.width < _offset.minWidth) _myDialog.width = _offset.minWidth;
-		
-		    window.dialogHeight = _myDialog.height + "px";
-		    window.dialogWidth = _myDialog.width + "px";
-		    window.dialogTop = _myDialog.top + "px";
-		    window.dialogLeft = _myDialog.left + "px";
-		}
---%>
 </script>
 </head>
 <body>

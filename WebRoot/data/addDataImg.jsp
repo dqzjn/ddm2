@@ -42,10 +42,10 @@ body {
     	    success: function(data) {
     	    	 if(data.result=='success'){
 						alert("保存成功");
-						window.returnValue = data;
+						//window.returnValue = data;
 						window.close();
 	    	      }else{
-	    	      	window.returnValue = "error";
+	    	      //	window.returnValue = "error";
 	    	    	  alert("保存失败");
 	    	      }
     	}};
@@ -64,7 +64,10 @@ body {
     	}};
       	$('#submitBtn').click(function(){
 	    	if(checkedForm()){
+	    		alert("上传中 请等待...");
 			    $('#pageFrom').ajaxSubmit(optionsSubmit);
+	    		uploadImg();
+	    		uploadContent();
 		        return false;
 	        }
 	     });
@@ -175,8 +178,13 @@ body {
 	} 
 	
     function uploadImg() {
-    	var f = document.getElementById("image").files;  
-        document.getElementById("imgName").value=f[0].name;
+    	var imgUrls=document.getElementsByName("image");
+    	 var imgUrl ='';
+    	for(var i=0;i<imgUrls.length;i++){
+    		var f = imgUrls[i].files
+    		imgUrl=imgUrl+f[0].name+'#';
+    	}
+        document.getElementById("imgNames").value = imgUrl;
     };
     
     function addHTML(){
@@ -331,8 +339,7 @@ html {
 			<div class="fieldsetContent">
 				<table width="100%" border="0" cellspacing="0" cellpadding="0"
 					class="infoTableSpace">
-					<input type="hidden" name="imgName" id="imgName"/>
-					<input type="hidden" id="id" name="dataImgTable.id" value="${dataImgTable.id}" />
+					<input type="hidden" id="id" name="dataImgId" value="${dataImgTable.id}" />
 					<tr>
 						<td align="right">标题：</td>
 						<td align="left"><input id="title" name="dataImgTable.title"
@@ -369,7 +376,7 @@ html {
 						</select>
 					</tr>
 					<tr>
-						<td align="right">采集时间：</td>
+						<td align="right">发布时间：</td>
 						<td align="left"><input id="collect_time"
 							name="dataImgTable.collect_time" readonly="readonly"
 							value="${dataImgTable.collect_time}"
@@ -391,22 +398,24 @@ html {
 					<tr>
 						<td align="right">上传图片：</td>
 						<td align="left"><input type="file" id="image"
-							name="image" value="${image}" onchange="uploadImg()" />
+							name="image" value="${image}" onchange="uploadImg()"/>
 						</td>
 					</tr>
 					<tr>
 						<td align="right">内容：</td>
 						<td align="left"><textarea rows="10" cols="5" id="imgUrl"
-							name="dataImgTable.imgUrl" value="${dataImgTable.imgUrl}" style="width: 270px">${dataImgTable.imgUrl}</textarea>
+							name="imgUrl" value="${dataImgTable.imgUrl}" style="width: 270px">${dataImgTable.imgUrl}</textarea>
 						</td>
 					</tr>
 				</table>
 				<table>
+				    <tr>
+				    	<input type="button" id="sdf" value="加@@" onclick="addHTML()" /> 
+						<input type="button" id="syu" value="减@@" onclick="delHTML()" /> 
+				    </tr>
 					<tr>
 						<td colspan="4" align="center"><input type="button"
 							id="submitBtn" value="保 存" class="form_bt_orange" /> 
-						<input type="button" id="sdf" value="加@@" onclick="addHTML()" /> 
-						<input type="button" id="syu" value="减@@" onclick="delHTML()" /> 
 							<c:if test="${sessionScope.USER_ORG=='0'}"><input type="button" id="saveInsert" value="保存并入云库" class="form_bt_orange" /></c:if>
 							 <input type="button" value="取 消"
 							class="form_bt_orange" onclick="window.close()" />
@@ -415,6 +424,7 @@ html {
 				</table>
 			</div>
 		</fieldset>
+		<input type="hidden" name="imgNames" id="imgNames" value="${imgNames}"/>
 	</form>
 </body>
 </html>

@@ -3,6 +3,7 @@ package cn.zmdx.locker.actions;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -43,6 +44,7 @@ public class LockerAction extends ActionSupport {
 	private LockerServiceImpl lockerService;
 	private Data_img_table dataImgTable;
 	private WallPaper wallPaper;
+	private String dataImgId;
 	private Data_img dataImg;
 	private Img img;
 	private Tag tag;
@@ -52,8 +54,10 @@ public class LockerAction extends ActionSupport {
 	private String sidx;
 	private String sord;
 	private String check;
+	private String imgNames;
 	private String imgName;
-	private File image;
+	private String[] imgUrl;
+	private File[] image;
 
 	public String getResult() {
 		return result;
@@ -127,22 +131,6 @@ public class LockerAction extends ActionSupport {
 		this.check = check;
 	}
 
-	public File getImage() {
-		return image;
-	}
-
-	public void setImage(File image) {
-		this.image = image;
-	}
-
-	public String getImgName() {
-		return imgName;
-	}
-
-	public void setImgName(String imgName) {
-		this.imgName = imgName;
-	}
-
 	public Data_img getDataImg() {
 		return dataImg;
 	}
@@ -165,6 +153,46 @@ public class LockerAction extends ActionSupport {
 
 	public void setWallPaper(WallPaper wallPaper) {
 		this.wallPaper = wallPaper;
+	}
+
+	public String getImgNames() {
+		return imgNames;
+	}
+
+	public void setImgNames(String imgNames) {
+		this.imgNames = imgNames;
+	}
+
+	public String[] getImgUrl() {
+		return imgUrl;
+	}
+
+	public void setImgUrl(String[] imgUrl) {
+		this.imgUrl = imgUrl;
+	}
+
+	public File[] getImage() {
+		return image;
+	}
+
+	public void setImage(File[] image) {
+		this.image = image;
+	}
+
+	public String getDataImgId() {
+		return dataImgId;
+	}
+
+	public void setDataImgId(String dataImgId) {
+		this.dataImgId = dataImgId;
+	}
+
+	public String getImgName() {
+		return imgName;
+	}
+
+	public void setImgName(String imgName) {
+		this.imgName = imgName;
 	}
 
 	public String getColumnJson(PageResult result, String[] viewArray) {
@@ -451,46 +479,65 @@ public class LockerAction extends ActionSupport {
 		ServletActionContext.getResponse().setContentType(
 				"text/json; charset=utf-8");
 		PrintWriter out = ServletActionContext.getResponse().getWriter();
-		String imageName = "";
+		List<String> imageName = new ArrayList<String>();
 		String checks[] = check.split(",");
 		try {
 			if (image != null) {
 				imageName = uploadImg();
-				String imgSql="insert into img(imageUrl,content) values()";
-				String dataImgSql="insert into data_img(data_id,img_id) values()";
-			}
-			if (0 == dataImgTable.getId()) {
-				dataImgTable.setData_sub(0);
-				String id = lockerService.save(dataImgTable);
-				lockerService.save(dataImgTable);
-				for (String ck : checks) {
-					Data_tag dt = new Data_tag();
-					dt.setTag_id(Integer.parseInt(ck.trim()));
-					dt.setData_id(Integer.parseInt(id));
-					lockerService.save(dt);
+				if (null == dataImgId || "".equals(dataImgId)) {
+					dataImgTable.setData_sub(0);
+					String id = lockerService.save(dataImgTable);
+					lockerService.save(dataImgTable);
+					for (String ck : checks) {
+						Data_tag dt = new Data_tag();
+						dt.setTag_id(Integer.parseInt(ck.trim()));
+						dt.setData_id(Integer.parseInt(id));
+						lockerService.save(dt);
+					}
+					for (int i = 0; i < imageName.size(); i++) {
+						Img img = new Img();
+						Data_img dataImg = new Data_img();
+						img.setImageUrl("http://cos.myqcloud.com/11000436/data/image/"
+								+ imageName.get(i));
+						img.setContent(imgUrl[i]);
+						String img_id = lockerService.save(img);
+						dataImg.setData_id(Integer.parseInt(id));
+						dataImg.setImg_id(Integer.parseInt(img_id));
+						lockerService.save(dataImg);
+					}
+				} else {
+					Data_img_table entity = lockerService
+							.getDataImgById(dataImgId);
+					entity.setId(Integer.parseInt(dataImgId));
+					entity.setTitle(dataImgTable.getTitle());
+					entity.setUrl(dataImgTable.getUrl());
+					entity.setImgUrl(dataImgTable.getImgUrl());
+					entity.setCollect_website(dataImgTable.getCollect_website());
+					entity.setData_type(dataImgTable.getData_type());
+					entity.setCollect_time(dataImgTable.getCollect_time());
+					entity.setData_sub(0);
+					lockerService.saveOrUpdate(entity);
+					lockerService.deleteTagByDataId(dataImgTable.getId());
+					for (String ck : checks) {
+						Data_tag dt = new Data_tag();
+						dt.setTag_id(Integer.parseInt(ck.trim()));
+						dt.setData_id(Integer.parseInt(dataImgId));
+						lockerService.saveOrUpdate(dt);
+					}
+					for (int i = 0; i < imageName.size(); i++) {
+						Img img = new Img();
+						Data_img dataImg = new Data_img();
+						img.setImageUrl("http://cos.myqcloud.com/11000436/data/image/"
+								+ imageName.get(i));
+						img.setContent(imgUrl[i]);
+						String img_id = lockerService.save(img);
+						dataImg.setData_id(Integer.parseInt(dataImgId));
+						dataImg.setImg_id(Integer.parseInt(img_id));
+						lockerService.save(dataImg);
+					}
 				}
-			} else {
-				Data_img_table entity = lockerService.getDataImgById(String
-						.valueOf(dataImgTable.getId()));
-				entity.setId(dataImgTable.getId());
-				entity.setTitle(dataImgTable.getTitle());
-				entity.setUrl(dataImgTable.getUrl());
-				entity.setImgUrl(dataImgTable.getImgUrl());
-				entity.setCollect_website(dataImgTable.getCollect_website());
-				entity.setData_type(dataImgTable.getData_type());
-				entity.setCollect_time(dataImgTable.getCollect_time());
-				entity.setData_sub(0);
-				lockerService.saveOrUpdate(entity);
-				lockerService.deleteTagByDataId(dataImgTable.getId());
-				for (String ck : checks) {
-					Data_tag dt = new Data_tag();
-					dt.setTag_id(Integer.parseInt(ck.trim()));
-					dt.setData_id(dataImgTable.getId());
-					lockerService.saveOrUpdate(dt);
-				}
+				out.print("{\"result\":\"success\"}");
 			}
-			out.print("{\"result\":\"success\"}");
-
 		} catch (Exception e) {
 			out.print("{\"result\":\"error\"}");
 			e.printStackTrace();
@@ -544,9 +591,9 @@ public class LockerAction extends ActionSupport {
 					dataImgTable.setData_sub(1);
 					lockerService.saveOrUpdate(dataImgTable);
 				} else {
-					Data_img_table entity = lockerService.getDataImgById(String
-							.valueOf(dataImgTable.getId()));
-					entity.setId(dataImgTable.getId());
+					Data_img_table entity = lockerService
+							.getDataImgById(dataImgId);
+					entity.setId(Integer.parseInt(dataImgId));
 					entity.setTitle(dataImgTable.getTitle());
 					entity.setUrl(dataImgTable.getUrl());
 					entity.setImgUrl(dataImgTable.getImgUrl());
@@ -693,11 +740,11 @@ public class LockerAction extends ActionSupport {
 		}
 	}
 
-	public String uploadImg() throws Exception {
+	public List<String> uploadImg() throws Exception {
 		// 用户定义变量
 		int accessId = 11000436; // accessId
 		String accessKey = "7OgnLklEIptHNwZCS0RDNk1rUXrxXJfP"; // accessKey
-		String bucketId = "bucket_1"; // bucket id
+		String bucketId = "data"; // bucket id
 		String secretId = "AKIDBvY9dcNUS2LeFTxI2ThzgrKxuWuNROIr";
 		Cos cos = null;
 		try {
@@ -706,30 +753,35 @@ public class LockerAction extends ActionSupport {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		List<String> nameList = new ArrayList<String>();
 		String imgType = "";
 		String uploadImg = "";
-		if (null != imgName && !"".equals(imgName)) {
-			imgType = imgName.substring(imgName.lastIndexOf("."));
-			uploadImg = imgName + new Date().getTime();
-			MD5 md5 = new MD5();
-			uploadImg = md5.getMD5ofStr(uploadImg);
+		if (image != null && imgNames != null) {
+			for (int i = 0; i < image.length; i++) {
+				String[] imgNamess = imgNames.substring(0,
+						imgNames.length() - 1).split("#");
+				imgType = imgNamess[i].substring(imgNamess[i].lastIndexOf("."));
+				uploadImg = imgNamess[i] + new Date().getTime();
+				MD5 md5 = new MD5();
+				uploadImg = md5.getMD5ofStr(uploadImg);
+				// 返回消息体, 包含错误码和错误消息
+				Message msg = new Message();
+				// System.out.println("----------------------uploadFileContent----------------------\n");
+				Map<String, Object> inParams = new HashMap<String, Object>();
+				inParams.put("bucketId", bucketId);
+				inParams.put("path", "/image");
+				inParams.put("cosfile", uploadImg + imgType);
+				CosFile file = new CosFile();
+				cos.uploadFileContent(inParams,
+						FileUtils.readFileToByteArray(image[i]), file, msg);
+				System.out.println(file);
+				System.out.println(msg);
+				nameList.add(uploadImg + imgType);
+			}
 		}
-		// 返回消息体, 包含错误码和错误消息
-		Message msg = new Message();
-		// System.out.println("----------------------uploadFileContent----------------------\n");
-		Map<String, Object> inParams = new HashMap<String, Object>();
-		inParams.put("bucketId", bucketId);
-		inParams.put("path", "/image");
-		inParams.put("cosfile", uploadImg + imgType);
-		CosFile file = new CosFile();
-		cos.uploadFileContent(inParams, FileUtils.readFileToByteArray(image),
-				file, msg);
-		System.out.println(file);
-		System.out.println(msg);
-
-		return uploadImg + imgType;
+		return nameList;
 	}
-	
+
 	/**
 	 * 查询壁纸数据
 	 * 
@@ -738,7 +790,8 @@ public class LockerAction extends ActionSupport {
 	 */
 	public void queryWallPaper() throws IOException {
 		try {
-			ServletActionContext.getResponse().setContentType("text/json; charset=utf-8");
+			ServletActionContext.getResponse().setContentType(
+					"text/json; charset=utf-8");
 			String p_name = StringUtil.encodingUrl(ServletActionContext
 					.getRequest().getParameter("p_name"));
 			String start_date = StringUtil.encodingUrl(ServletActionContext
@@ -751,7 +804,9 @@ public class LockerAction extends ActionSupport {
 					.getRequest().getParameter("data_sub"));
 			PrintWriter out = ServletActionContext.getResponse().getWriter();
 			Map<String, String> filterMap = getPagerMap();
-			String[] viewArray = {"ID","name","desc","author","thumbURL","imageURL", "imageNAME" , "imageEXT" , "publishDATE","data_sub:[{'0':'审核中','1':'审核通过'}]" };
+			String[] viewArray = { "ID", "name", "desc", "author", "thumbURL",
+					"imageURL", "imageNAME", "imageEXT", "publishDATE",
+					"data_sub:[{'0':'审核中','1':'审核通过'}]" };
 			if (p_name != null && !"".equals(p_name)) {
 				filterMap.put("p_name", p_name);
 			}
@@ -767,7 +822,7 @@ public class LockerAction extends ActionSupport {
 			if (data_sub != null && !"".equals(data_sub)) {
 				filterMap.put("data_sub", data_sub);
 			}
-			
+
 			PageResult result = lockerService.queryWallPaper(filterMap);
 			String returnStr = getColumnJson(result, viewArray);
 			out.print(returnStr);
@@ -775,24 +830,27 @@ public class LockerAction extends ActionSupport {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * 跳转至编辑壁纸页
+	 * 
 	 * @return
 	 * @throws IOException
 	 */
 	public String editWallPaper() throws IOException {
 		ServletActionContext.getResponse().setContentType(
 				"text/json; charset=utf-8");
-		String id=ServletActionContext.getRequest().getParameter("id");
-		if(!"".equals(id)&&id!=null){
-			wallPaper=(WallPaper)lockerService.getObjectById(WallPaper.class, Integer.parseInt(id));
+		String id = ServletActionContext.getRequest().getParameter("id");
+		if (!"".equals(id) && id != null) {
+			wallPaper = (WallPaper) lockerService.getObjectById(
+					WallPaper.class, Integer.parseInt(id));
 		}
 		return "editWallPaper";
 	}
-	
+
 	/**
 	 * 保存壁纸到本地
+	 * 
 	 * @throws IOException
 	 */
 	public void saveWallPaper() throws IOException {
@@ -800,34 +858,44 @@ public class LockerAction extends ActionSupport {
 				"text/json; charset=utf-8");
 		PrintWriter out = ServletActionContext.getResponse().getWriter();
 		try {
-			String imageName ="";
-			if(image!=null){
+			String imageName = "";
+			if (image != null) {
 				imageName = uploadWallPaper();
 			}
 			if (0 == wallPaper.getId()) {
-				if(image!=null){
-					wallPaper.setImageURL("http://cos.myqcloud.com/11000436/wallpaper/image/"+imageName);
-					wallPaper.setThumbURL("http://cos.myqcloud.com/11000436/wallpaper/thumb/"+imageName);
-					String imageNAME=imgName.substring(0, imgName.lastIndexOf("."));
+				if (image != null) {
+					wallPaper
+							.setImageURL("http://cos.myqcloud.com/11000436/wallpaper/image/"
+									+ imageName);
+					wallPaper
+							.setThumbURL("http://cos.myqcloud.com/11000436/wallpaper/thumb/"
+									+ imageName);
+					String imageNAME = imgName.substring(0,
+							imgName.lastIndexOf("."));
 					wallPaper.setImageNAME(imageNAME);
-					String imageEXT=imgName.substring(imgName.lastIndexOf("."));
+					String imageEXT = imgName.substring(imgName
+							.lastIndexOf("."));
 					wallPaper.setImageEXT(imageEXT);
 				}
-				wallPaper.setData_sub(0);//保存至本地
+				wallPaper.setData_sub(0);// 保存至本地
 				lockerService.save(wallPaper);
 			} else {
-				WallPaper wPaper=(WallPaper)lockerService.getObjectById(WallPaper.class, wallPaper.getId());
-				if(image!=null){
-					wPaper.setImageURL("http://cos.myqcloud.com/11000436/wallpaper/image/"+imageName);
-					wPaper.setThumbURL("http://cos.myqcloud.com/11000436/wallpaper/thumb/"+imageName);
+				WallPaper wPaper = (WallPaper) lockerService.getObjectById(
+						WallPaper.class, wallPaper.getId());
+				if (image != null) {
+					wPaper.setImageURL("http://cos.myqcloud.com/11000436/wallpaper/image/"
+							+ imageName);
+					wPaper.setThumbURL("http://cos.myqcloud.com/11000436/wallpaper/thumb/"
+							+ imageName);
 					wPaper.setImageNAME(imgName);
-					wPaper.setImageEXT(imgName.substring(imgName.lastIndexOf(".")));
+					wPaper.setImageEXT(imgName.substring(imgName
+							.lastIndexOf(".")));
 				}
 				wPaper.setP_author(wallPaper.getP_author());
 				wPaper.setP_desc(wallPaper.getP_desc());
 				wPaper.setP_name(wallPaper.getP_name());
 				wPaper.setPublishDATE(wallPaper.getPublishDATE());
-				wPaper.setData_sub(0);//保存至本地
+				wPaper.setData_sub(0);// 保存至本地
 				lockerService.saveOrUpdate(wPaper);
 			}
 			out.print("{\"result\":\"success\"}");
@@ -838,10 +906,10 @@ public class LockerAction extends ActionSupport {
 		}
 
 	}
-	
-	
+
 	/**
 	 * 保存壁纸到云数据库
+	 * 
 	 * @throws IOException
 	 */
 	public void saveInsertWallPaper() throws IOException {
@@ -849,43 +917,53 @@ public class LockerAction extends ActionSupport {
 				"text/json; charset=utf-8");
 		PrintWriter out = ServletActionContext.getResponse().getWriter();
 		try {
-			String imageName ="";
-			if(image!=null){
+			String imageName = "";
+			if (image != null) {
 				imageName = uploadWallPaper();
 			}
-			int flag=0;
+			int flag = 0;
 			if (0 == wallPaper.getId()) {
-				if(image!=null){
-					wallPaper.setImageURL("http://cos.myqcloud.com/11000436/wallpaper/image/"+imageName);
-					wallPaper.setThumbURL("http://cos.myqcloud.com/11000436/wallpaper/thumb/"+imageName);
-					String imageNAME=imgName.substring(0, imgName.lastIndexOf("."));
+				if (image != null) {
+					wallPaper
+							.setImageURL("http://cos.myqcloud.com/11000436/wallpaper/image/"
+									+ imageName);
+					wallPaper
+							.setThumbURL("http://cos.myqcloud.com/11000436/wallpaper/thumb/"
+									+ imageName);
+					String imageNAME = imgName.substring(0,
+							imgName.lastIndexOf("."));
 					wallPaper.setImageNAME(imageNAME);
-					String imageEXT=imgName.substring(imgName.lastIndexOf("."));
+					String imageEXT = imgName.substring(imgName
+							.lastIndexOf("."));
 					wallPaper.setImageEXT(imageEXT);
 				}
-				wallPaper.setData_sub(1);//已上传至云服务器
+				wallPaper.setData_sub(1);// 已上传至云服务器
 				lockerService.save(wallPaper);
-				flag=lockerService.insertWallPaper(wallPaper);
+				flag = lockerService.insertWallPaper(wallPaper);
 			} else {
-				WallPaper wPaper=(WallPaper)lockerService.getObjectById(WallPaper.class, wallPaper.getId());
-				if(image!=null){
-					wPaper.setImageURL("http://cos.myqcloud.com/11000436/wallpaper/image/"+imageName);
-					wPaper.setThumbURL("http://cos.myqcloud.com/11000436/wallpaper/thumb/"+imageName);
+				WallPaper wPaper = (WallPaper) lockerService.getObjectById(
+						WallPaper.class, wallPaper.getId());
+				if (image != null) {
+					wPaper.setImageURL("http://cos.myqcloud.com/11000436/wallpaper/image/"
+							+ imageName);
+					wPaper.setThumbURL("http://cos.myqcloud.com/11000436/wallpaper/thumb/"
+							+ imageName);
 					wPaper.setImageNAME(imgName);
-					wPaper.setImageEXT(imgName.substring(imgName.lastIndexOf(".")));
+					wPaper.setImageEXT(imgName.substring(imgName
+							.lastIndexOf(".")));
 				}
 				wPaper.setP_author(wallPaper.getP_author());
 				wPaper.setP_desc(wallPaper.getP_desc());
 				wPaper.setP_name(wallPaper.getP_name());
 				wPaper.setPublishDATE(wallPaper.getPublishDATE());
-				wPaper.setData_sub(1);//已上传至云服务器
+				wPaper.setData_sub(1);// 已上传至云服务器
 				lockerService.saveOrUpdate(wPaper);
-				flag=lockerService.insertWallPaper(wPaper);
-				
+				flag = lockerService.insertWallPaper(wPaper);
+
 			}
-			if(flag>0){
+			if (flag > 0) {
 				out.print("{\"result\":\"success\"}");
-			}else{
+			} else {
 				out.print("{\"result\":\"error\"}");
 			}
 
@@ -895,8 +973,10 @@ public class LockerAction extends ActionSupport {
 		}
 
 	}
+
 	/**
 	 * 上传壁纸并生成缩略图
+	 * 
 	 * @return
 	 * @throws Exception
 	 */
@@ -925,28 +1005,29 @@ public class LockerAction extends ActionSupport {
 		Message msg = new Message();
 		// System.out.println("----------------------uploadFileContent----------------------\n");
 		Map<String, Object> inParams = new HashMap<String, Object>();
-//		inParams.put("bucketId", bucketId);
-		String fileName=uploadImg + imgType;
+		// inParams.put("bucketId", bucketId);
+		String fileName = uploadImg + imgType;
 		inParams.put("uploadBucketId", bucketId);
 		inParams.put("compressBucketId", bucketId);
-		inParams.put("uploadFilePath", "/image/"+fileName);
-		inParams.put("compressFilePath", "/thumb/"+fileName);
-		inParams.put("zoomType", 1);//等比缩放
-		inParams.put("width", 180);//缩放后宽度
-		inParams.put("height", 324);//缩放后高度
+		inParams.put("uploadFilePath", "/image/" + fileName);
+		inParams.put("compressFilePath", "/thumb/" + fileName);
+		inParams.put("zoomType", 1);// 等比缩放
+		inParams.put("width", 180);// 缩放后宽度
+		inParams.put("height", 324);// 缩放后高度
 		Map<String, CosFile> files = new HashMap<String, CosFile>();
 		files.put("uploadFile", new CosFile());
 		files.put("compressFile", new CosFile());
-		cos.uploadFileContentWithCompress(inParams, FileUtils.readFileToByteArray(image),
-				files, msg);
+		cos.uploadFileContentWithCompress(inParams,
+				FileUtils.readFileToByteArray(image[0]), files, msg);
 		System.out.println(files);
 		System.out.println(msg);
 
 		return fileName;
 	}
-	
+
 	/**
 	 * 根据id删除壁纸
+	 * 
 	 * @throws IOException
 	 */
 	public void deleteWallPaperById() throws IOException {
@@ -960,9 +1041,10 @@ public class LockerAction extends ActionSupport {
 			out.print("{\"result\":\"error\"}");
 		}
 	}
-	
+
 	/**
 	 * 将制定id的壁纸保存至云服务器中
+	 * 
 	 * @throws IOException
 	 */
 	public void insertWallPaper() throws IOException {

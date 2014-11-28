@@ -74,6 +74,9 @@ public class LockerServiceImpl implements LockerService {
 	public List<?> queryAllBySql(String sql) {
 		return lockerDAO.queryAllBySql(sql);
 	}
+	public int executeBySQL(String sql) {
+		return lockerDAO.executeBySQL(sql);
+	}
 
 	@Override
 	public String saveTag(Tag tag) {

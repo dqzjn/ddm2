@@ -355,6 +355,12 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 		Query query = getSession().createSQLQuery(sql);
 		return query.list();
 	}
+	@Override
+	public int executeBySQL(String sql) {
+		Query query = getSession().createSQLQuery(sql);
+		int count = query.executeUpdate();
+		return count;
+	}
 
 	@Override
 	public void deleteTagByDataId(int id) {
