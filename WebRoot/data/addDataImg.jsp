@@ -64,10 +64,8 @@ body {
     	}};
       	$('#submitBtn').click(function(){
 	    	if(checkedForm()){
-	    		alert("上传中 请等待...");
-			    $('#pageFrom').ajaxSubmit(optionsSubmit);
 	    		uploadImg();
-	    		uploadContent();
+			    $('#pageFrom').ajaxSubmit(optionsSubmit);
 		        return false;
 	        }
 	     });
@@ -89,14 +87,25 @@ body {
 			alert("时间不能为空!");
 			return false;
 		}
+		
+		if ($("input[name='check']:checkbox:checked").length == 0) {
+			alert("标签不能为空!");
+			return false;
+		}
 		if ($.trim($("#collect_website").val()) == "") {
 			alert("来源网站不能为空!");
 			return false;
 		}
-		if ($.trim($("#data_type").val()) == "") {
-			alert("数据类型不能为空!");
+		
+		var imgUrls=document.getElementsByName("image");
+		if ($.trim($("#url").val()) == ""&&imgUrls.length==1&&imgUrls[0].files[0]==undefined) {
+			alert("图片不能空!请添加图片url或者上传图片!");
 			return false;
 		}
+//		if ($.trim($("#data_type").val()) == "") {
+//			alert("数据类型不能为空!");
+//			return false;
+//		}
 		var d=/\.[^\.]+$/.exec($("#url").val())+'';
 		if (d.toLowerCase() == ".gif") {
 			var select = document.getElementById("data_type");  
@@ -114,12 +123,12 @@ body {
 				return false;
 			}
 		}
-		if (d.toLowerCase() != ".jpg"&&d.toLowerCase() != ".png") {
-			if($("#data_type").val()=='joke'||$("#data_type").val()=='news'){
-				alert("类型与url不匹配!");
-				return false;
-			}
-		}
+//		if (d.toLowerCase() != ".jpg"&&d.toLowerCase() != ".png") {
+//			if($("#data_type").val()=='joke'||$("#data_type").val()=='news'){
+//				alert("类型与url不匹配!");
+//				return false;
+//			}
+//		}
 
 		return true;
 	}
@@ -180,11 +189,15 @@ body {
     function uploadImg() {
     	var imgUrls=document.getElementsByName("image");
     	 var imgUrl ='';
-    	for(var i=0;i<imgUrls.length;i++){
-    		var f = imgUrls[i].files
-    		imgUrl=imgUrl+f[0].name+'#';
-    	}
-        document.getElementById("imgNames").value = imgUrl;
+    	 
+	    	for(var i=0;i<imgUrls.length;i++){
+	    		var f = imgUrls[i].files;
+	    		if(f[0]!='undefined'&&f[0]!=undefined){
+	    			imgUrl=imgUrl+f[0].name+'#';
+	    		}
+	    	}
+	        document.getElementById("imgNames").value = imgUrl;
+    	 
     };
     
     function addHTML(){
