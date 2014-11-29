@@ -51,7 +51,11 @@ height:auto;
 					{name:'url',index:'url', width:270,align: 'center'}, 
 					{name:'url',index:'url', width:335, align:'center',
 							formatter: function(cellvalue, options, rowObject) {
-					  			return "<img src='"+rowObject.url+"' style='width:170px;' />" 
+								if(rowObject.url.indexOf(".")!=-1){
+						  			return "<img src='"+rowObject.url+"' style='width:170px;' />" ;
+								}else{
+						  			return "<img src='' style='width:170px;' />" ;
+								}
 			  				}
 			  			},
 			  		{name:'data_sub',index:'data_sub', width:270,align: 'center',hidden:true}
