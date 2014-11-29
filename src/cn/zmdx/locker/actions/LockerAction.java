@@ -462,7 +462,7 @@ public class LockerAction extends ActionSupport {
 		String sqlId = "select tag_id from data_tag where data_id =" + id + "";
 		List<?> tagIdList = lockerService.queryAllBySql(sqlId);
 		if (tagIdList.size() > 0) {
-			session.setAttribute("tagIdList", tagIdList);
+			ServletActionContext.getRequest().setAttribute("tagIdList", tagIdList);
 		}
 		String sqlImgs="select t.imageUrl,t.content from img t left join data_img di on di.img_id=t.id where di.data_id= "+id;
 		List<?> imgList=lockerService.queryAllBySql(sqlImgs);
@@ -556,7 +556,7 @@ public class LockerAction extends ActionSupport {
 				entity.setCollect_time(dataImgTable.getCollect_time());
 				entity.setData_sub(0);
 				lockerService.saveOrUpdate(entity);
-				lockerService.deleteTagByDataId(dataImgTable.getId());
+				lockerService.deleteTagByDataId(Integer.parseInt(dataImgId));
 				for (String ck : checks) {
 					Data_tag dt = new Data_tag();
 					dt.setTag_id(Integer.parseInt(ck.trim()));
@@ -1127,6 +1127,26 @@ public class LockerAction extends ActionSupport {
 				e.printStackTrace();
 				out.print("{\"result\":\"error\"}");
 			}
+		}
+	}
+	
+	/**
+	 * 验证是否是多图文数据
+	 * @throws IOException
+	 */
+	public void CheckedManyImgsByDataImgTableId() throws IOException {
+		ServletActionContext.getResponse().setContentType("text/json; charset=utf-8");
+		PrintWriter out = ServletActionContext.getResponse().getWriter();
+		try {
+			String id = ServletActionContext.getRequest().getParameter("id");
+			List list=lockerService.queryAllBySql("select t.imageUrl,t.content from img t left join data_img di on di.img_id=t.id where di.data_id= "+id);
+			if (list.size() > 1)
+				out.print("{\"result\":\"error\"}");
+			else
+				out.print("{\"result\":\"success\"}");
+		} catch (Exception e) {
+			e.printStackTrace();
+			out.print("{\"result\":\"error\"}");
 		}
 	}
 }

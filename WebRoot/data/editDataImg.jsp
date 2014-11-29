@@ -4,6 +4,7 @@
 <%@page import="java.text.SimpleDateFormat"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="s" uri="/struts-tags"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme() + "://"
@@ -16,7 +17,7 @@
 <head>
 <base target="_self" />
 
-<title>编辑数据1</title>
+<title>编辑数据</title>
 <%@include file="/include/jquerylib.jsp"%>
 
 <link rel="stylesheet" type="text/css"
@@ -64,15 +65,23 @@ body {
     	}};
       	$('#submitBtn').click(function(){
 	    	if(checkedForm()){
-	    		alert("上传中 请等待...");
+	    		//uploadImg();
+	    		$("#submitBtn").attr("disabled", true);  
+	    		$("#saveInsert").attr("disabled", true);  
+	    		$("#exit").attr("disabled", true); 
+	    		$("#addHtml").attr("disabled", true);  
+	    		$("#delHtml").attr("disabled", true);  
 			    $('#pageFrom').ajaxSubmit(optionsSubmit);
-	    		uploadImg();
-	    		uploadContent();
 		        return false;
 	        }
 	     });
       	$('#saveInsert').click(function(){
 	    	if(checkedForm()){
+	    		$("#submitBtn").attr("disabled", true);  
+	    		$("#saveInsert").attr("disabled", true);  
+	    		$("#exit").attr("disabled", true); 
+	    		$("#addHtml").attr("disabled", true);  
+	    		$("#delHtml").attr("disabled", true);  
 			    $('#pageFrom').ajaxSubmit(optionsSubmitInsert);
 		        return false;
 	        }
@@ -95,6 +104,10 @@ body {
 		}
 		if ($.trim($("#data_type").val()) == "") {
 			alert("数据类型不能为空!");
+			return false;
+		}
+		if ($("input[name='check']:checkbox:checked").length == 0) {
+			alert("标签不能为空!");
 			return false;
 		}
 		var d=/\.[^\.]+$/.exec($("#url").val())+'';
@@ -198,15 +211,20 @@ body {
     function changedTag(){
     	var tagIds='${tagIdList}';
     	var tagIdss=tagIds.replace("[", "").replace("]", "").split(",");
-    	$("input[name='check']").each( 
-  			function(){ 
-				for(var i =0;i<tagIdss.length;i++){
-					if(this.id==tagIdss[i]){
-						$(this).attr("checked",true);
-						break;
-					}
-    	    	}
- 		});
+    	var checkboxs =document.getElementsByName("check");
+    	for(var i=0;i<checkboxs.length;i++){
+    		for(var j =0;j<tagIdss.length;j++){
+				if(checkboxs[i].id==$.trim(tagIdss[j])){
+					checkboxs[i].checked="true";
+					break;
+				}
+	    	}
+    	}
+    }
+    //删除指定id的table
+    function delTab(tabId){
+    	document.getElementById("div").removeChild(document.getElementById(tabId));
+    	//document.removeChild(document.getElementById(tabId));
     }
 </script>
 <style type="text/css">
@@ -344,7 +362,7 @@ html {
 			<legend>
 				<font size="3">基本信息</font>
 			</legend>
-			<div class="fieldsetContent">
+			<div id="div" class="fieldsetContent">
 				<table width="100%" border="0" cellspacing="0" cellpadding="0"
 					class="infoTableSpace" o>
 					<input type="hidden" id="id" name="dataImgId" value="${dataImgTable.id}" />
@@ -403,48 +421,72 @@ html {
 						</td>
 					</tr>
 					</table>
-					<c:forEach var="img" items="${imgList }">
-						<table>
-							<tr>
-								<td align="right">上传图片：</td>
-								<td align="left"><input type="file" id="image"
-									name="image" value="${img[0]}" onchange="uploadImg()"/>
-								</td>
-							</tr>
-							<tr>
-								<td align="right">内容：</td>
-								<td align="left"><textarea rows="10" cols="5" id="imgUrl"
-									name="imgUrl" style="width: 270px">${img[1]}</textarea>
-								</td>
-							</tr>
-						</table>
-					</c:forEach>
-					<table id="tableId">
-						<tr>
-							<td align="right">上传图片：</td>
-							<td align="left"><input type="file" id="image"
-								name="image" value="${image}" onchange="uploadImg()"/>
-							</td>
-						</tr>
-						<tr>
-							<td align="right">内容：</td>
-							<td align="left"><textarea rows="10" cols="5" id="imgUrl"
-								name="imgUrl" style="width: 270px">${img[1]}</textarea>
-							</td>
-						</tr>
-					</table>
+					<c:if test="${fn:length(imgList)>1 }">
+						<c:forEach var="img" items="${imgList }" varStatus="vs">
+							<table id="tab${vs.count }">
+								<tr>
+									<td align="right">上传图片：</td>
+									<td align="left"><input type="file" id="image"
+										name="image" value="${img[0]}" onchange="uploadImg()"/>
+									</td>
+									<td>
+										<a href="javascript:delTab('tab${vs.count }');" style="margin-right: 0px;">删除</a>
+									</td>
+								</tr>
+								<tr>
+									<td align="right">内容：</td>
+									<td align="left" colspan="2"><textarea rows="10" cols="5" id="imgUrl"
+										name="imgUrl" style="width: 270px">${img[1]}</textarea>
+									</td>
+								</tr>
+							</table>
+						</c:forEach>
+					</c:if>
+					<c:if test="${fn:length(imgList)==0 }">
+						<table id="tab1">
+								<tr>
+									<td align="right">上传图片：</td>
+									<td align="left"><input type="file" id="image"
+										name="image" value="${image}" onchange="uploadImg()"/>
+									</td>
+									<td>
+										<%-- <a href="javascript:delTab('tab1');" style="margin-right: 0px;">删除</a>--%>
+									</td>
+								</tr>
+								<tr>
+									<td align="right">内容：</td>
+									<td align="left" colspan="2"><textarea rows="10" cols="5" id="imgUrl"
+										name="imgUrl" style="width: 270px">${dataImgTable.imgUrl}</textarea>
+									</td>
+								</tr>
+							</table>
+					</c:if>
+					<%-- <table id="tableId">--%>
+					<%-- 	<tr>--%>
+					<%-- 		<td align="right">上传图片：</td>--%>
+					<%-- 		<td align="left"><input type="file" id="image"--%>
+					<%-- 			name="image" value="${image}" onchange="uploadImg()"/>--%>
+					<%-- 		</td>--%>
+					<%-- 	</tr>--%>
+					<%-- 	<tr>--%>
+					<%-- 		<td align="right">内容：</td>--%>
+					<%-- 		<td align="left"><textarea rows="10" cols="5" id="imgUrl"--%>
+					<%-- 			name="imgUrl" style="width: 270px">${img[1]}</textarea>--%>
+					<%-- 		</td>--%>
+					<%-- 	</tr>--%>
+					<%-- </table>--%>
 				<table>
-				    <tr>
-				    	<td>
-					    	<input type="button" id="sdf" value="加@@" onclick="addHTML()" /> 
-							<input type="button" id="syu" value="减@@" onclick="delHTML()" /> 
-						</td>
-				    </tr>
+				   <%-- <tr>--%>
+				    <%--	<td>--%>
+					<%--    	<input type="button" id="addHtml" value="加@@" onclick="addHTML()" /> --%>
+					<%--		<input type="button" id="delHtml" value="减@@" onclick="delHTML()" /> --%>
+					<%--	</td>--%>
+				    <%--</tr>--%>
 					<tr>
 						<td colspan="4" align="center"><input type="button"
 							id="submitBtn" value="保 存" class="form_bt_orange" /> 
 							<c:if test="${sessionScope.USER_ORG=='0'}"><input type="button" id="saveInsert" value="保存并入云库" class="form_bt_orange" /></c:if>
-							 <input type="button" value="取 消"
+							 <input type="button" value="取 消" id="exit"
 							class="form_bt_orange" onclick="window.close()" />
 						</td>
 					</tr>

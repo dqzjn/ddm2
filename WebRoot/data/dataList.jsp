@@ -120,8 +120,26 @@ height:auto;
 			alert("数据已发布，不能修改!");
 			return false;
 		}
-		window.showModalDialog('<%=request.getContextPath()%>/locker_editDataImg.action?id='+id+'&temp='+new Date(),'', 'dialogWidth:700px;status:no;dialogHeight:570px;');
-		refreshIt();
+		var params = {"id": id};  
+		var actionUrl = "<%=request.getContextPath()%>/locker_CheckedManyImgsByDataImgTableId.action";  
+		$.ajax({  
+			  url : actionUrl,  
+		      type : "post", 
+		      data : params,  
+		      dataType : "json",  
+		      cache : false,  
+		      error : function(textStatus, errorThrown) {  
+		          alert("系统ajax交互错误: " + textStatus.value);  
+		      },  
+		      success : function(data, textStatus) {
+		      	if(data.result=='success'){
+		    		window.showModalDialog('<%=request.getContextPath()%>/locker_editDataImg.action?id='+id+'&temp='+new Date(),'', 'dialogWidth:700px;status:no;dialogHeight:570px;');
+		    		refreshIt();
+		      	}else{
+		      		alert("多图文数据暂不支持修改，敬请等待。。。");
+		      	}
+		    }  
+		});
 	}
 	
 	//delete
