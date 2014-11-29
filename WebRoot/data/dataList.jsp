@@ -45,7 +45,7 @@ height:auto;
 			colModel:[
 					{name:'ID',index:'ID', width:60, key:true, sorttype:"int",hidden:true},								
 					{name:'title',index:'title', width:150}, 
-					{name:'data_type',index:'data_type', width:80,align: 'center'}, 
+					{name:'type',index:'type', width:80,align: 'center'}, 
 					{name:'imgUrl',index:'imgUrl', width:200,align: 'center'}, 
 					{name:'collect_time',index:'collect_time', width:80,align: 'center',formatter:"date",formatoptions: {srcformat:'Y-m-d',newformat:'Y-m-d'}},
 					{name:'url',index:'url', width:270,align: 'center'}, 
@@ -194,7 +194,7 @@ height:auto;
 			var data_title = jQuery("#data_title").val();
 			var start_date = jQuery("#start_date").val();
 			var end_date = jQuery("#end_date").val();
-			var data_type = jQuery("#data_type").val();
+			var type = jQuery("#type").val();
 			var edit_date = jQuery("#edit_date").val();
 			var data_sub = jQuery("#data_sub").val();
 			var collect_website = jQuery("#collect_website").val();
@@ -202,7 +202,7 @@ height:auto;
 	            "data_title" : encodeURIComponent($.trim(data_title)),
 	            "start_date" : encodeURIComponent($.trim(start_date)),
 	            "end_date" : encodeURIComponent($.trim(end_date)),
-	            "data_type" : encodeURIComponent($.trim(data_type)),
+	            "type" : encodeURIComponent($.trim(type)),
 	            "edit_date" : encodeURIComponent($.trim(edit_date)),
 	            "data_sub" : encodeURIComponent($.trim(data_sub)),
 	            "collect_website" : encodeURIComponent($.trim(collect_website))
@@ -289,12 +289,13 @@ height:auto;
 					</td>
 			</tr>
 			<tr>
-				<td>&nbsp;&nbsp;类型：<select id="data_type" name="data_type" style="width:150px;">
+				<td>&nbsp;&nbsp;类型：<select id="type" name="type" style="width:150px;">
 								<option value="" selected="selected">--请选择--</option>
 								<option value="joke">搞笑</option>
 								<option value="news">新闻</option>
-								<option value="gif">动态图</option>
-								<option value="html">HTML</option>
+								<option value="film">影视</option>
+								<option value="entertainment">娱乐</option>
+								<option value="game">游戏</option>
 						</select>
 						<td>&nbsp;&nbsp;同步：<select id="data_sub" name="data_sub" style="width:150px;">
 								<option value="">全部</option>

@@ -64,6 +64,11 @@ body {
     	}};
       	$('#submitBtn').click(function(){
 	    	if(checkedForm()){
+	    		$("#submitBtn").attr("disabled", true);  
+	    		$("#saveInsert").attr("disabled", true);  
+	    		$("#exit").attr("disabled", true);  
+	    		$("#addHtml").attr("disabled", true);  
+	    		$("#delHtml").attr("disabled", true);  
 	    		uploadImg();
 			    $('#pageFrom').ajaxSubmit(optionsSubmit);
 		        return false;
@@ -71,6 +76,11 @@ body {
 	     });
       	$('#saveInsert').click(function(){
 	    	if(checkedForm()){
+	    		$("#submitBtn").attr("disabled", true);  
+	    		$("#saveInsert").attr("disabled", true);  
+	    		$("#exit").attr("disabled", true);  
+	    		$("#addHtml").attr("disabled", true);  
+	    		$("#delHtml").attr("disabled", true);  
 			    $('#pageFrom').ajaxSubmit(optionsSubmitInsert);
 		        return false;
 	        }
@@ -108,21 +118,16 @@ body {
 //		}
 		var d=/\.[^\.]+$/.exec($("#url").val())+'';
 		if (d.toLowerCase() == ".gif") {
-			var select = document.getElementById("data_type");  
-			for(var i=0; i<select.options.length; i++){  
-			    if(select.options[i].innerHTML == '动态图'){  
-			        select.options[i].selected = true;  
-			        break;  
-			    }  
-			}
+			document.getElementById("data_type").value= 'gif';
 			return true;
 		}
-		if ($.trim($("#data_type").val()) == "gif") {
-			if(d.toLowerCase()!='.gif'){
-				alert("类型与url不匹配!");
-				return false;
-			}
+		
+		if (d.toLowerCase() != ".jpg"&&d.toLowerCase() != ".png") {
+			document.getElementById("data_type").value= 'html';
+			return true;
 		}
+		
+		//if ($.trim($("#data_type").val()) == "gif") 
 //		if (d.toLowerCase() != ".jpg"&&d.toLowerCase() != ".png") {
 //			if($("#data_type").val()=='joke'||$("#data_type").val()=='news'){
 //				alert("类型与url不匹配!");
@@ -390,17 +395,19 @@ html {
 					</tr>
 					<tr>
 						<td align="right">数据类型：</td>
-						<td align="left"><select id="data_type"
-							name="dataImgTable.data_type" style="width:200px;">
+						<td align="left"><select id="type"
+							name="dataImgTable.type" style="width:200px;">
 								<option value="">--请选择--</option>
 								<option value="joke"
-									<c:if test="${dataImgTable.data_type=='joke'}">selected="selected"</c:if>>搞笑</option>
+									<c:if test="${dataImgTable.type=='joke'}">selected="selected"</c:if>>搞笑</option>
 								<option value="news"
-									<c:if test="${dataImgTable.data_type=='news'}">selected="selected"</c:if>>新闻</option>
-								<option value="gif"
-									<c:if test="${dataImgTable.data_type=='gif'}">selected="selected"</c:if>>动态图</option>
-								<option value="html"
-									<c:if test="${dataImgTable.data_type=='html'}">selected="selected"</c:if>>HTML</option>
+									<c:if test="${dataImgTable.type=='news'}">selected="selected"</c:if>>新闻</option>
+								<option value="film"
+									<c:if test="${dataImgTable.type=='film'}">selected="selected"</c:if>>影视</option>
+								<option value="entertainment"
+									<c:if test="${dataImgTable.type=='entertainment'}">selected="selected"</c:if>>娱乐</option>
+								<option value="game"
+									<c:if test="${dataImgTable.type=='game'}">selected="selected"</c:if>>游戏</option>
 						</select>
 					</tr>
 					<tr>
@@ -438,14 +445,14 @@ html {
 				</table>
 				<table>
 				    <tr>
-				    	<input type="button" id="sdf" value="加@@" onclick="addHTML()" /> 
-						<input type="button" id="syu" value="减@@" onclick="delHTML()" /> 
+				    	<input type="button" id="addHtml" value="加@@" onclick="addHTML()" /> 
+						<input type="button" id="delHtml" value="减@@" onclick="delHTML()" /> 
 				    </tr>
 					<tr>
 						<td colspan="4" align="center"><input type="button"
 							id="submitBtn" value="保 存" class="form_bt_orange" /> 
 							<c:if test="${sessionScope.USER_ORG=='0'}"><input type="button" id="saveInsert" value="保存并入云库" class="form_bt_orange" /></c:if>
-							 <input type="button" value="取 消"
+							 <input type="button" value="取 消" id="exit"
 							class="form_bt_orange" onclick="window.close()" />
 						</td>
 					</tr>
@@ -453,6 +460,7 @@ html {
 			</div>
 		</fieldset>
 		<input type="hidden" name="imgNames" id="imgNames" value="${imgNames}"/>
+		<input type="hidden" name="dataImgTable.data_type" id="data_type" value="${dataImgTable.data_type}"/>
 	</form>
 </body>
 </html>

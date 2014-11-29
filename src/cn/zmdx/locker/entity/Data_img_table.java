@@ -14,6 +14,7 @@ public class Data_img_table {
 	private int step;
 	private String collect_website;
 	private String data_type;
+	private String type;
 	private int data_sub;
 
 	public int getId() {
@@ -102,6 +103,14 @@ public class Data_img_table {
 
 	public void setData_sub(int data_sub) {
 		this.data_sub = data_sub;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 
 }

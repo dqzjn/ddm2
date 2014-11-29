@@ -339,8 +339,8 @@ public class LockerAction extends ActionSupport {
 					.getRequest().getParameter("start_date"));
 			String end_date = StringUtil.encodingUrl(ServletActionContext
 					.getRequest().getParameter("end_date"));
-			String data_type = StringUtil.encodingUrl(ServletActionContext
-					.getRequest().getParameter("data_type"));
+			String type = StringUtil.encodingUrl(ServletActionContext
+					.getRequest().getParameter("type"));
 			String edit_date = StringUtil.encodingUrl(ServletActionContext
 					.getRequest().getParameter("edit_date"));
 			String data_sub = StringUtil.encodingUrl(ServletActionContext
@@ -355,7 +355,7 @@ public class LockerAction extends ActionSupport {
 					"title",
 					"url",
 					"imgUrl",
-					"data_type:[{'joke':'搞笑','news':'新闻','film':'电影','game':'游戏','gif':'动态图','html':'HTML'}]",
+					"type:[{'joke':'搞笑','news':'新闻','film':'电影','game':'游戏','entertainment':'娱乐'}]",
 					"collect_time", "data_sub" };
 			if (title != null && !"".equals(title)) {
 				filterMap.put("title", title);
@@ -366,8 +366,8 @@ public class LockerAction extends ActionSupport {
 			if (end_date != null && !"".equals(end_date)) {
 				filterMap.put("end_date", end_date);
 			}
-			if (data_type != null && !"".equals(data_type)) {
-				filterMap.put("data_type", data_type);
+			if (type != null && !"".equals(type)) {
+				filterMap.put("type", type);
 			}
 			if (edit_date != null && !"".equals(edit_date)) {
 				filterMap.put("edit_date", edit_date);
@@ -464,8 +464,9 @@ public class LockerAction extends ActionSupport {
 		if (tagIdList.size() > 0) {
 			ServletActionContext.getRequest().setAttribute("tagIdList", tagIdList);
 		}
-		String sqlImgs="select t.imageUrl,t.content from img t left join data_img di on di.img_id=t.id where di.data_id= "+id;
-		List<?> imgList=lockerService.queryAllBySql(sqlImgs);
+		String sqlImgs = "select t.imageUrl,t.content from img t left join data_img di on di.img_id=t.id where di.data_id= "
+				+ id;
+		List<?> imgList = lockerService.queryAllBySql(sqlImgs);
 		ServletActionContext.getRequest().setAttribute("imgList", imgList);
 		String userOrg = (String) session.getAttribute("USER_ORG");
 		session.setAttribute("userOrg", userOrg);
@@ -489,10 +490,10 @@ public class LockerAction extends ActionSupport {
 			if (null == dataImgId || "".equals(dataImgId)) {
 				dataImgTable.setData_sub(0);
 				dataImgTable.setImgUrl(imgUrl[0]);
-				if (dataImgTable.getData_type() == null
-						|| "".equals(dataImgTable.getData_type())) {
-					dataImgTable.setData_type("singleImg");
-				}
+//				if (dataImgTable.getData_type() == null
+//						|| "".equals(dataImgTable.getData_type())) {
+//					dataImgTable.setData_type("singleImg");
+//				}
 				String id = lockerService.save(dataImgTable);
 				lockerService.save(dataImgTable);
 				for (String ck : checks) {
@@ -511,7 +512,13 @@ public class LockerAction extends ActionSupport {
 						entity.setUrl("http://cos.myqcloud.com/11000436/data/image/"
 								+ imageName);
 						entity.setImgUrl(imgUrl[0]);
-						entity.setData_type("singleImg");
+						if (!"gif".equals(imageName.substring(
+								imageName.indexOf(".") + 1).toLowerCase())
+								&& !"html".equals(imageName.substring(
+										imageName.indexOf(".") + 1)
+										.toLowerCase())) {
+							entity.setData_type("singleImg");
+						}
 						lockerService.save(entity);
 					} else if (image.length > 1) {
 						for (int i = 0; i < image.length; i++) {
@@ -547,12 +554,12 @@ public class LockerAction extends ActionSupport {
 				entity.setUrl(dataImgTable.getUrl());
 				entity.setImgUrl(imgUrl[0]);
 				entity.setCollect_website(dataImgTable.getCollect_website());
-				if (dataImgTable.getData_type() == null
-						|| "".equals(dataImgTable.getData_type())) {
-					entity.setData_type("singleImg");
-				} else {
+//				if (dataImgTable.getData_type() == null
+//						|| "".equals(dataImgTable.getData_type())) {
+//					entity.setData_type("singleImg");
+//				} else {
 					entity.setData_type(dataImgTable.getData_type());
-				}
+//				}
 				entity.setCollect_time(dataImgTable.getCollect_time());
 				entity.setData_sub(0);
 				lockerService.saveOrUpdate(entity);
@@ -573,7 +580,13 @@ public class LockerAction extends ActionSupport {
 						dit.setUrl("http://cos.myqcloud.com/11000436/data/image/"
 								+ imageName);
 						dit.setImgUrl(imgUrl[0]);
-						dit.setData_type("singleImg");
+						if (!"gif".equals(imageName.substring(
+								imageName.indexOf(".") + 1).toLowerCase())
+								&& !"html".equals(imageName.substring(
+										imageName.indexOf(".") + 1)
+										.toLowerCase())) {
+							dit.setData_type("singleImg");
+						}
 						lockerService.save(dit);
 					} else if (image.length > 1) {
 						for (int i = 0; i < image.length; i++) {
@@ -653,21 +666,136 @@ public class LockerAction extends ActionSupport {
 					"text/json; charset=utf-8");
 			PrintWriter out = ServletActionContext.getResponse().getWriter();
 			try {
-				if (0 == dataImgTable.getId()) {
+				String imageName = "";
+				String checks[] = check.split(",");
+				if (null == dataImgId || "".equals(dataImgId)) {
 					dataImgTable.setData_sub(1);
-					lockerService.saveOrUpdate(dataImgTable);
+					dataImgTable.setImgUrl(imgUrl[0]);
+//					if (dataImgTable.getData_type() == null
+//							|| "".equals(dataImgTable.getData_type())) {
+//						dataImgTable.setData_type("singleImg");
+//					}
+					String id = lockerService.save(dataImgTable);
+					lockerService.save(dataImgTable);
+					for (String ck : checks) {
+						Data_tag dt = new Data_tag();
+						dt.setTag_id(Integer.parseInt(ck.trim()));
+						dt.setData_id(Integer.parseInt(id));
+						lockerService.save(dt);
+					}
+					if (image != null && image[0] != null) {
+						String[] imgNamess = imgNames.substring(0,
+								imgNames.length() - 1).split("#");
+						if (image.length == 1 && image[0] != null) {
+							imageName = uploadImg(imgNamess[0], image[0]);
+							Data_img_table entity = lockerService
+									.getDataImgById(id);
+							entity.setUrl("http://cos.myqcloud.com/11000436/data/image/"
+									+ imageName);
+							entity.setImgUrl(imgUrl[0]);
+							if (!"gif".equals(imageName.substring(
+									imageName.indexOf(".") + 1).toLowerCase())
+									&& !"html".equals(imageName.substring(
+											imageName.indexOf(".") + 1)
+											.toLowerCase())) {
+								entity.setData_type("singleImg");
+							}
+							lockerService.save(entity);
+						} else if (image.length > 1) {
+							for (int i = 0; i < image.length; i++) {
+								if (image[i] != null) {
+									imageName = uploadImg(imgNamess[i], image[i]);
+									Img img = new Img();
+									Data_img dataImg = new Data_img();
+									img.setImageUrl("http://cos.myqcloud.com/11000436/data/image/"
+											+ imageName);
+									img.setContent(imgUrl[i]);
+									String img_id = lockerService.save(img);
+									dataImg.setData_id(Integer.parseInt(id));
+									dataImg.setImg_id(Integer.parseInt(img_id));
+									lockerService.save(dataImg);
+									if (i == 0) {
+										Data_img_table entity = lockerService
+												.getDataImgById(id);
+										entity.setUrl("http://cos.myqcloud.com/11000436/data/image/"
+												+ imageName);
+										entity.setImgUrl("http://192.168.1.110:8080/pandora/locker!viewDataImg.action?id="
+												+ Integer.parseInt(id) + "");
+										entity.setData_type("multiImg");
+										lockerService.save(entity);
+									}
+								}
+							}
+						}
+					}
 				} else {
-					Data_img_table entity = lockerService
-							.getDataImgById(dataImgId);
+					Data_img_table entity = lockerService.getDataImgById(dataImgId);
 					entity.setId(Integer.parseInt(dataImgId));
 					entity.setTitle(dataImgTable.getTitle());
 					entity.setUrl(dataImgTable.getUrl());
-					entity.setImgUrl(dataImgTable.getImgUrl());
+					entity.setImgUrl(imgUrl[0]);
 					entity.setCollect_website(dataImgTable.getCollect_website());
-					entity.setData_type(dataImgTable.getData_type());
+//					if (dataImgTable.getData_type() == null
+//							|| "".equals(dataImgTable.getData_type())) {
+//						entity.setData_type("singleImg");
+//					} else {
+						entity.setData_type(dataImgTable.getData_type());
+//					}
 					entity.setCollect_time(dataImgTable.getCollect_time());
 					entity.setData_sub(1);
 					lockerService.saveOrUpdate(entity);
+					lockerService.deleteTagByDataId(dataImgTable.getId());
+					for (String ck : checks) {
+						Data_tag dt = new Data_tag();
+						dt.setTag_id(Integer.parseInt(ck.trim()));
+						dt.setData_id(Integer.parseInt(dataImgId));
+						lockerService.saveOrUpdate(dt);
+					}
+					if (image != null && image[0] != null) {
+						String[] imgNamess = imgNames.substring(0,
+								imgNames.length() - 1).split("#");
+						if (image.length == 1 && image[0] != null) {
+							imageName = uploadImg(imgNamess[0], image[0]);
+							Data_img_table dit = lockerService
+									.getDataImgById(dataImgId);
+							dit.setUrl("http://cos.myqcloud.com/11000436/data/image/"
+									+ imageName);
+							dit.setImgUrl(imgUrl[0]);
+							if (!"gif".equals(imageName.substring(
+									imageName.indexOf(".") + 1).toLowerCase())
+									&& !"html".equals(imageName.substring(
+											imageName.indexOf(".") + 1)
+											.toLowerCase())) {
+								dit.setData_type("singleImg");
+							}
+							lockerService.save(dit);
+						} else if (image.length > 1) {
+							for (int i = 0; i < image.length; i++) {
+								if (image[i] != null) {
+									imageName = uploadImg(imgNamess[i], image[i]);
+									Img img = new Img();
+									Data_img dataImg = new Data_img();
+									img.setImageUrl("http://cos.myqcloud.com/11000436/data/image/"
+											+ imageName);
+									img.setContent(imgUrl[i]);
+									String img_id = lockerService.save(img);
+									dataImg.setData_id(Integer.parseInt(dataImgId));
+									dataImg.setImg_id(Integer.parseInt(img_id));
+									lockerService.save(dataImg);
+									if (i == 0) {
+										Data_img_table dit = lockerService
+												.getDataImgById(dataImgId);
+										dit.setUrl("http://cos.myqcloud.com/11000436/data/image/"
+												+ imageName);
+										dit.setImgUrl("http://192.168.1.110:8080/pandora/locker!viewDataImg.action?id="
+												+ Integer.parseInt(dataImgId) + "");
+										dit.setData_type("multiImg");
+										lockerService.save(dit);
+									}
+								}
+							}
+						}
+					}
 				}
 				int bl = lockerService.insertDataImg(dataImgTable);
 				if (bl > 0)

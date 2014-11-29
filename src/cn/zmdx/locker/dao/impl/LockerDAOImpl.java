@@ -12,7 +12,9 @@ import org.hibernate.Query;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 
 import cn.zmdx.locker.dao.interfaces.LockerDAO;
+import cn.zmdx.locker.entity.Data_img;
 import cn.zmdx.locker.entity.Data_img_table;
+import cn.zmdx.locker.entity.Img;
 import cn.zmdx.locker.entity.PageResult;
 import cn.zmdx.locker.entity.Tag;
 import cn.zmdx.locker.entity.WallPaper;
@@ -97,9 +99,9 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 		StringBuffer queryString = new StringBuffer();
 		StringBuffer queryCountString = new StringBuffer();
 		queryCountString
-				.append("select count(*) from (select id,title,url,imgUrl,data_type,collect_time from data_img_table  where 1=1  ");
+				.append("select count(*) from (select id,title,url,imgUrl,type,collect_time from data_img_table  where 1=1  ");
 		queryString
-				.append("select id,title,url,imgUrl,data_type,collect_time,data_sub from data_img_table  where 1=1 ");
+				.append("select id,title,url,imgUrl,type,collect_time,data_sub from data_img_table  where 1=1 ");
 		if (filterMap != null && !filterMap.isEmpty()) {
 			if (null != filterMap.get("title")
 					&& !"".equals(filterMap.get("title"))) {
@@ -108,12 +110,12 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 				queryString.append("and title like '%" + filterMap.get("title")
 						+ "%' ");
 			}
-			if (null != filterMap.get("data_type")
-					&& !"".equals(filterMap.get("data_type"))) {
-				queryCountString.append("and data_type = '"
-						+ filterMap.get("data_type") + "'  ");
-				queryString.append("and data_type = '"
-						+ filterMap.get("data_type") + "'  ");
+			if (null != filterMap.get("type")
+					&& !"".equals(filterMap.get("type"))) {
+				queryCountString.append("and type = '" + filterMap.get("type")
+						+ "'  ");
+				queryString.append("and type = '" + filterMap.get("type")
+						+ "'  ");
 			}
 			if (null != filterMap.get("start_date")
 					&& !"".equals(filterMap.get("start_date"))) {
@@ -187,17 +189,31 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 		this.getHibernateTemplate().saveOrUpdate(entity);
 
 	}
+
 	@Override
 	public String save(Object entity) {
 		String id = this.getHibernateTemplate().save(entity).toString();
 		return id;
 	}
-	
+
 	@Override
 	public Data_img_table getDataImgById(String id) {
 		Data_img_table dit = (Data_img_table) this.getHibernateTemplate().get(
 				Data_img_table.class, Integer.parseInt(id));
 		return dit;
+	}
+
+	public Img getImgById(String id) {
+		Img im = (Img) this.getHibernateTemplate().get(Img.class,
+				Integer.parseInt(id));
+		return im;
+	}
+
+	public List<Data_img> getData_ImgById(String id) {
+		StringBuffer sql = new StringBuffer();
+		sql.append("from Data_img where data_id =" + id);
+		List<Data_img> diList = getHibernateTemplate().find(sql.toString());
+		return diList;
 	}
 
 	@Override
@@ -210,19 +226,6 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 		GenericsUtils genericsUtils = new GenericsUtils();
 		PreparedStatement pstmt = null;
 		Connection dbConn = null;
-		String idss[] = ids.split(",");
-		Data_img_table dit;
-		StringBuffer sql = new StringBuffer();
-		sql.append("insert into data_img_table(title,url,imgUrl,data_type,collect_time,collect_website) values");
-		for (String id : idss) {
-			dit = getDataImgById(id);
-			dit.setData_sub(1);
-			this.getHibernateTemplate().update(dit);
-			sql.append("('" + dit.getTitle() + "','" + dit.getUrl() + "','"
-					+ dit.getImgUrl() + "','" + dit.getData_type() + "','"
-					+ dit.getCollect_time() + "','" + dit.getCollect_website()
-					+ "'),");
-		}
 		try {
 			Properties p = genericsUtils.loadProperty("c3p0.properties");
 			String url = p.getProperty("c3p0.cloudTestUrl");
@@ -231,6 +234,45 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 			String password = p.getProperty("c3p0.cloudTestPassword");
 			Class.forName(driverName).newInstance();
 			dbConn = DriverManager.getConnection(url, userName, password);
+			String idss[] = ids.split(",");
+			Data_img_table dit;
+			Img im;
+			StringBuffer sql = new StringBuffer();
+			StringBuffer data_img_sql = new StringBuffer();
+			StringBuffer img_sql = new StringBuffer();
+			sql.append("insert into data_img_table(id,title,url,imgUrl,data_type,collect_time,collect_website) values");
+			data_img_sql.append("insert into data_img(id,img_id,data_id) values");
+			img_sql.append("insert into img(id,imageUrl,content) values");
+			for (String id : idss) {
+				dit = getDataImgById(id);
+				dit.setData_sub(1);
+				this.getHibernateTemplate().update(dit);
+				sql.append("('" + dit.getId() + "','" + dit.getTitle() + "','"
+						+ dit.getUrl() + "','" + dit.getImgUrl() + "','"
+						+ dit.getData_type() + "','" + dit.getCollect_time()
+						+ "','" + dit.getCollect_website() + "'),");
+				List<Data_img> diList = getData_ImgById(id);
+				if (diList.size() > 0) {
+					for (Data_img di : diList) {
+						data_img_sql.append("('" + di.getId() + "','"
+								+ di.getImg_id() + "','" + di.getData_id()
+								+ "'),");
+						im = getImgById(String.valueOf(di.getImg_id()));
+						img_sql.append("('" + im.getId() + "','"
+								+ im.getImageUrl() + "','" + im.getContent()
+								+ "'),");
+					}
+					pstmt = (PreparedStatement) dbConn
+							.prepareStatement(String.valueOf(img_sql.substring(
+									0, img_sql.length() - 1)));
+					pstmt.executeUpdate();
+					pstmt = (PreparedStatement) dbConn.prepareStatement(String
+							.valueOf(data_img_sql.substring(0,
+									data_img_sql.length() - 1)));
+					pstmt.executeUpdate();
+
+				}
+			}
 			pstmt = (PreparedStatement) dbConn.prepareStatement(String
 					.valueOf(sql.substring(0, sql.length() - 1)));
 			return pstmt.executeUpdate();
@@ -254,12 +296,6 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 		GenericsUtils genericsUtils = new GenericsUtils();
 		PreparedStatement pstmt = null;
 		Connection dbConn = null;
-		StringBuffer sql = new StringBuffer();
-		sql.append("insert into data_img_table(title,url,imgUrl,data_type,collect_time,collect_website) values");
-		sql.append("('" + dit.getTitle() + "','" + dit.getUrl() + "','"
-				+ dit.getImgUrl() + "','" + dit.getData_type() + "','"
-				+ dit.getCollect_time() + "','" + dit.getCollect_website()
-				+ "'),");
 		try {
 			Properties p = genericsUtils.loadProperty("c3p0.properties");
 			String url = p.getProperty("c3p0.cloudTestUrl");
@@ -268,6 +304,34 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 			String password = p.getProperty("c3p0.cloudTestPassword");
 			Class.forName(driverName).newInstance();
 			dbConn = DriverManager.getConnection(url, userName, password);
+			Img im;
+			StringBuffer sql = new StringBuffer();
+			StringBuffer data_img_sql = new StringBuffer();
+			StringBuffer img_sql = new StringBuffer();
+			sql.append("insert into data_img_table(title,url,imgUrl,data_type,collect_time,collect_website) values");
+			data_img_sql.append("insert into data_img(id,img_id,data_id) values");
+			img_sql.append("insert into img(id,imageUrl,content) values");
+			sql.append("('" + dit.getTitle() + "','" + dit.getUrl() + "','"
+					+ dit.getImgUrl() + "','" + dit.getData_type() + "','"
+					+ dit.getCollect_time() + "','" + dit.getCollect_website()
+					+ "'),");
+			List<Data_img> diList = getData_ImgById(String.valueOf(dit.getId()));
+			if (diList.size() > 0) {
+				for (Data_img di : diList) {
+					data_img_sql.append("('" + di.getId() + "','"
+							+ di.getImg_id() + "','" + di.getData_id() + "'),");
+					im = getImgById(String.valueOf(di.getImg_id()));
+					img_sql.append("('" + im.getId() + "','" + im.getImageUrl()
+							+ "','" + im.getContent() + "'),");
+				}
+				pstmt = (PreparedStatement) dbConn.prepareStatement(String
+						.valueOf(img_sql.substring(0, img_sql.length() - 1)));
+				pstmt.executeUpdate();
+				pstmt = (PreparedStatement) dbConn.prepareStatement(String
+						.valueOf(data_img_sql.substring(0,
+								data_img_sql.length() - 1)));
+				pstmt.executeUpdate();
+			}
 			pstmt = (PreparedStatement) dbConn.prepareStatement(String
 					.valueOf(sql.substring(0, sql.length() - 1)));
 			return pstmt.executeUpdate();
@@ -306,15 +370,14 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 		StringBuffer queryCountString = new StringBuffer();
 		queryCountString
 				.append("select count(*) from (select id,tag_name from tag  where 1=1  ");
-		queryString
-				.append("select id,tag_name from tag  where 1=1 ");
+		queryString.append("select id,tag_name from tag  where 1=1 ");
 		if (filterMap != null && !filterMap.isEmpty()) {
 			if (null != filterMap.get("tag_name")
 					&& !"".equals(filterMap.get("tag_name"))) {
 				queryCountString.append("and tag_name like '%"
 						+ filterMap.get("tag_name") + "%' ");
-				queryString.append("and tag_name like '%" + filterMap.get("tag_name")
-						+ "%' ");
+				queryString.append("and tag_name like '%"
+						+ filterMap.get("tag_name") + "%' ");
 			}
 			queryCountString.append(") as t");
 			queryString.append(" order by id desc");
@@ -336,8 +399,8 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 
 	@Override
 	public Tag getTagById(String id) {
-		Tag tag = (Tag) this.getHibernateTemplate().get(
-				Tag.class, Integer.parseInt(id));
+		Tag tag = (Tag) this.getHibernateTemplate().get(Tag.class,
+				Integer.parseInt(id));
 		return tag;
 	}
 
@@ -355,6 +418,7 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 		Query query = getSession().createSQLQuery(sql);
 		return query.list();
 	}
+
 	@Override
 	public int executeBySQL(String sql) {
 		Query query = getSession().createSQLQuery(sql);
@@ -365,7 +429,7 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 	@Override
 	public void deleteTagByDataId(int id) {
 		StringBuffer sql = new StringBuffer();
-		sql.append("delete from data_tag where data_id = "+id+"");
+		sql.append("delete from data_tag where data_id = " + id + "");
 		Query query = getSession().createSQLQuery(sql.toString());
 		query.executeUpdate();
 	}
@@ -374,13 +438,17 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 	public PageResult queryWallPaper(Map<String, String> filterMap) {
 		StringBuffer queryString = new StringBuffer();
 		StringBuffer queryCountString = new StringBuffer();
-		queryCountString.append("select count(*) from (select ID,p_name,p_desc,p_author,thumbURL,imageURL,imageNAME,imageEXT,publishDATE,data_sub from wallpaper as t where 1=1  ");
-		queryString.append("select ID,p_name,p_desc,p_author,thumbURL,imageURL,imageNAME,imageEXT,publishDATE,data_sub from wallpaper as t where 1=1");
+		queryCountString
+				.append("select count(*) from (select ID,p_name,p_desc,p_author,thumbURL,imageURL,imageNAME,imageEXT,publishDATE,data_sub from wallpaper as t where 1=1  ");
+		queryString
+				.append("select ID,p_name,p_desc,p_author,thumbURL,imageURL,imageNAME,imageEXT,publishDATE,data_sub from wallpaper as t where 1=1");
 		if (filterMap != null && !filterMap.isEmpty()) {
-			if(null != filterMap.get("p_name")
-					&& !"".equals(filterMap.get("p_name"))){
-				queryCountString.append(" and p_name='"+filterMap.get("p_name")+"'");
-				queryString.append(" and p_name='"+filterMap.get("p_name")+"'");
+			if (null != filterMap.get("p_name")
+					&& !"".equals(filterMap.get("p_name"))) {
+				queryCountString.append(" and p_name='"
+						+ filterMap.get("p_name") + "'");
+				queryString.append(" and p_name='" + filterMap.get("p_name")
+						+ "'");
 			}
 			if (null != filterMap.get("start_date")
 					&& !"".equals(filterMap.get("start_date"))) {
@@ -396,15 +464,19 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 				queryString.append("and publishDATE < '"
 						+ filterMap.get("end_date") + "' ");
 			}
-			if(null != filterMap.get("imageEXT")
-					&& !"".equals(filterMap.get("imageEXT"))){
-				queryCountString.append(" and imageEXT='"+filterMap.get("imageEXT")+"'");
-				queryString.append(" and imageEXT='"+filterMap.get("imageEXT")+"'");
+			if (null != filterMap.get("imageEXT")
+					&& !"".equals(filterMap.get("imageEXT"))) {
+				queryCountString.append(" and imageEXT='"
+						+ filterMap.get("imageEXT") + "'");
+				queryString.append(" and imageEXT='"
+						+ filterMap.get("imageEXT") + "'");
 			}
-			if(null != filterMap.get("data_sub")
-					&& !"".equals(filterMap.get("data_sub"))){
-				queryCountString.append(" and data_sub='"+filterMap.get("data_sub")+"'");
-				queryString.append(" and data_sub='"+filterMap.get("data_sub")+"'");
+			if (null != filterMap.get("data_sub")
+					&& !"".equals(filterMap.get("data_sub"))) {
+				queryCountString.append(" and data_sub='"
+						+ filterMap.get("data_sub") + "'");
+				queryString.append(" and data_sub='"
+						+ filterMap.get("data_sub") + "'");
 			}
 			queryCountString.append(") as a");
 			queryString.append(" order by id desc");
@@ -425,8 +497,12 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 		Connection dbConn = null;
 		StringBuffer sql = new StringBuffer();
 		sql.append("insert into wallpaper (p_name,p_desc,p_author,thumbURL,imageURL,imageNAME,imageEXT,publishDATE,data_sub) VALUES ");
-		sql.append("('"+wallPaper.getP_name()+"','"+wallPaper.getP_desc()+"','"+wallPaper.getP_author()+"','"
-		+wallPaper.getThumbURL()+"','"+wallPaper.getImageURL()+"','"+wallPaper.getImageNAME()+"','"+wallPaper.getImageEXT()+"','"+wallPaper.getPublishDATE()+"',"+wallPaper.getData_sub()+")");
+		sql.append("('" + wallPaper.getP_name() + "','" + wallPaper.getP_desc()
+				+ "','" + wallPaper.getP_author() + "','"
+				+ wallPaper.getThumbURL() + "','" + wallPaper.getImageURL()
+				+ "','" + wallPaper.getImageNAME() + "','"
+				+ wallPaper.getImageEXT() + "','" + wallPaper.getPublishDATE()
+				+ "'," + wallPaper.getData_sub() + ")");
 		try {
 			Properties p = genericsUtils.loadProperty("c3p0.properties");
 			String url = p.getProperty("c3p0.cloudTestUrl");
@@ -467,13 +543,20 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 		Connection dbConn = null;
 		StringBuffer sql = new StringBuffer();
 		sql.append("insert into wallpaper (p_name,p_desc,p_author,thumbURL,imageURL,imageNAME,imageEXT,publishDATE,data_sub) VALUES ");
-		String [] idss=ids.split(",");
+		String[] idss = ids.split(",");
 		for (String id : idss) {
-			WallPaper wallPaper =(WallPaper)getObjectById(WallPaper.class, Integer.parseInt(id));
+			WallPaper wallPaper = (WallPaper) getObjectById(WallPaper.class,
+					Integer.parseInt(id));
 			wallPaper.setData_sub(1);
-			saveOrUpdate(wallPaper);//将壁纸修改为已发布
-			sql.append("('"+wallPaper.getP_name()+"','"+wallPaper.getP_desc()+"','"+wallPaper.getP_author()+"','"
-					+wallPaper.getThumbURL()+"','"+wallPaper.getImageURL()+"','"+wallPaper.getImageNAME()+"','"+wallPaper.getImageEXT()+"','"+wallPaper.getPublishDATE()+"',"+wallPaper.getData_sub()+"),");
+			saveOrUpdate(wallPaper);// 将壁纸修改为已发布
+			sql.append("('" + wallPaper.getP_name() + "','"
+					+ wallPaper.getP_desc() + "','" + wallPaper.getP_author()
+					+ "','" + wallPaper.getThumbURL() + "','"
+					+ wallPaper.getImageURL() + "','"
+					+ wallPaper.getImageNAME() + "','"
+					+ wallPaper.getImageEXT() + "','"
+					+ wallPaper.getPublishDATE() + "',"
+					+ wallPaper.getData_sub() + "),");
 		}
 		try {
 			Properties p = genericsUtils.loadProperty("c3p0.properties");
