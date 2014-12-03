@@ -32,6 +32,7 @@
 white-space: normal !important;
 height:auto;
 }
+.button_b{height: 18px;width: 36px;background-image: url(<%=request.getContextPath()%>/images/inputBg.png) ;background-size:cover;background-color: transparent;border: none ;}
 </style>
 <script type="text/javascript">
 function saveTime(){
@@ -77,8 +78,8 @@ function saveTime(){
 			<tr>
 			<br/><br/><br/><br/><br/><br/>
 				<td colspan="4" align="center"><input type="button"
-					id="submitBtn" onclick="saveTime()" value="保 存" class="form_bt_orange" /> <input
-					type="button" value="取 消" class="form_bt_orange"
+					id="submitBtn" onclick="saveTime()" value="保 存" class="button_b" /> <input
+					type="button" value="取 消" class="button_b"
 					onclick="window.close();" />
 				</td>
 			</tr>

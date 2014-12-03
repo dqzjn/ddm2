@@ -12,7 +12,7 @@
 <link href="../css/css.css" rel="stylesheet" type="text/css" />
 <title>标签管理</title>
 <meta http-equiv="X-UA-Compatible" content="IE=7" />
-<link rel="stylesheet" type="text/css" href="<%=request.getContextPath() %>/jqGrid/themes/smoothness/jquery-ui-1.7.2.custom.css" />
+<link rel="stylesheet" type="text/css" href="<%=request.getContextPath() %>/jqGrid/themes/cupertino/jquery-ui-1.7.2.custom.css" />
 <link rel="stylesheet" type="text/css" href="<%=request.getContextPath() %>/jqGrid/css/jqgrid.css" />
 <script type="text/javascript" src="<%=request.getContextPath() %>/jqGrid/js/jquery-1.7.2.min.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/jqGrid/js/jquery-ui-1.8.21.custom.min.js"></script>
@@ -28,7 +28,10 @@
 	  			</script>
 </c:if>
 <style>
-.ui-jqgrid-sortable {font-size:16px;}  
+.ui-jqgrid tr.jqgrow td {
+text-overflow : ellipsis;
+}
+.button_b{height: 18px;width: 36px;background-image: url(<%=request.getContextPath()%>/images/inputBg.png) ;background-size:cover;background-color: transparent;border: none ;}
 </style>
 <script type="text/javascript">
 	$(document).ready(function(){

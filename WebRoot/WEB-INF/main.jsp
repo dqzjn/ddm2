@@ -98,13 +98,16 @@ body {
 	<div class="header">
 		<div class="header_img">
 			<div>
-				<div class="logo"></div>
+				<div class="logo">Hi~<%=session.getAttribute("username")%>!&nbsp;&nbsp;&nbsp;&nbsp;欢迎登录潘多拉</div>
 			</div>
 			<div id="systemmenu">
 				<p class="left smltxt">
-				<DIV style="margin-top:25px;margin-right: 20px;"><br/>
-					<img src="web/images/top_icon5.png"
-						onclick="logout()" style="cursor: pointer" border="0" title="退出" />
+				<DIV style="margin-top:15px;margin-right: 15px;"><br/>
+					<img src="<%=request.getContextPath()%>/web/images/changePwd.png"
+						onclick="changeRight('user/updatePwd.jsp')" style="cursor: pointer;" border="0" title="修改密码" />
+					<img src="<%=request.getContextPath()%>/web/images/quit.png"
+						onclick="logout()" style="cursor: pointer;margin-left: 20px;margin-right: 15px;" border="0" title="退出" />
+					<br/>
 				</DIV>
 				</p>
 			</div>
@@ -112,7 +115,7 @@ body {
 	</div>
 	<div id="rightside">
 		<div id="contentside">
-			<iframe scrolling="no" src="" width="100%" frameborder="0"
+			<iframe scrolling="no" src="<%=request.getContextPath()%>/data/dataList.jsp" width="100%" frameborder="0"
 				id="mainframe" onLoad="iFrameHeight()"> </iframe>
 		</div>
 		<div id="contentdetail" style="display: none;"></div>
@@ -121,18 +124,18 @@ body {
 		</div>
 	</div>
 	<div id="leftside">
-		<div class="user">
-			<p>
-				欢迎登录：<br />
-			</p>
-			<p class="username"><%=session.getAttribute("username")%></p>
-			<div >
-			<p class="userbtn">
-				<a title=""  onclick="changeRight('user/updatePwd.jsp')" style="cursor: pointer">修改密码</a>&nbsp;&nbsp;&nbsp;&nbsp;
-				<a title=""  onclick="logout()" style="cursor: pointer">退出</a>
-			</p>
-			</div>
-		</div>
+<!-- 		<div class="user"> -->
+<!-- 			<p> -->
+<!-- 				欢迎登录：<br /> -->
+<!-- 			</p> -->
+<!-- 			<p class="username"><%=session.getAttribute("username")%></p> -->
+<!-- 			<div > -->
+<!-- 			<p class="userbtn"> -->
+<!-- 				<a title=""  onclick="changeRight('user/updatePwd.jsp')" style="cursor: pointer">修改密码</a>&nbsp;&nbsp;&nbsp;&nbsp; -->
+<!-- 				<a title=""  onclick="logout()" style="cursor: pointer">退出</a> -->
+<!-- 			</p> -->
+<!-- 			</div> -->
+<!-- 		</div> -->
 		<ul id="menu">
 			<li class="li" style="cursor: pointer" id="id1" onclick="li(id)"><p class="innerHTML">数据管理</p>
 			</li>

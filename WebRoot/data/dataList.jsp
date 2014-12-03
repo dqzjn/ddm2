@@ -12,7 +12,7 @@
 <link href="../css/css.css" rel="stylesheet" type="text/css" />
 <title>数据管理</title>
 <meta http-equiv="X-UA-Compatible" content="IE=7" />
-<link rel="stylesheet" type="text/css" href="<%=request.getContextPath() %>/jqGrid/themes/smoothness/jquery-ui-1.7.2.custom.css" />
+<link rel="stylesheet" type="text/css" href="<%=request.getContextPath() %>/jqGrid/themes/cupertino/jquery-ui-1.7.2.custom.css" />
 <link rel="stylesheet" type="text/css" href="<%=request.getContextPath() %>/jqGrid/css/jqgrid.css" />
 <script type="text/javascript" src="<%=request.getContextPath() %>/jqGrid/js/jquery-1.7.2.min.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/jqGrid/js/jquery-ui-1.8.21.custom.min.js"></script>
@@ -29,18 +29,22 @@
 </c:if>
 <style>
 .ui-jqgrid tr.jqgrow td {
-white-space: normal !important;
-height:auto;
+text-overflow : ellipsis;
+}
+.button_b{height: 18px;width: 36px;background-image: url(<%=request.getContextPath()%>/images/inputBg.png) ;background-size:cover;background-color: transparent;border: none ;}
+.altclass{
+	background: #f9fdfc;
 }
 </style>
 <script type="text/javascript">
+	var widthScroll=window.screen.width;
 	$(document).ready(function(){
 		$("#gridTable").jqGrid({					
 			url:'<%=request.getContextPath()%>/locker_queryDataImgTable.action?temp='+Math.round(Math.random()*10000),
 			datatype: "json",
 			height: 500,
-			//width: 1005, 
-			autowidth:true,
+			width: widthScroll/1.5, 
+			//autowidth:true,
 			colNames:['ID','标题','类型','内容','发布日期','url','图片','发布'],
 			colModel:[
 					{name:'ID',index:'ID', width:60, key:true, sorttype:"int",hidden:true},								
@@ -49,12 +53,12 @@ height:auto;
 					{name:'imgUrl',index:'imgUrl', width:200,align: 'center'}, 
 					{name:'collect_time',index:'collect_time', width:80,align: 'center',formatter:"date",formatoptions: {srcformat:'Y-m-d',newformat:'Y-m-d'}},
 					{name:'url',index:'url', width:270,align: 'center'}, 
-					{name:'url',index:'url', width:335, align:'center',
+					{name:'url',index:'url', width:200, align:'center',
 							formatter: function(cellvalue, options, rowObject) {
 								if(rowObject.url.indexOf(".")!=-1){
-						  			return "<img src='"+rowObject.url+"' style='width:170px;' />" ;
+						  			return "<img src='"+rowObject.url+"' style='width:100px;' />" ;
 								}else{
-						  			return "<img src='' style='width:170px;' />" ;
+						  			return "<img src='' style='width:100px;' />" ;
 								}
 			  				}
 			  			},
@@ -72,6 +76,8 @@ height:auto;
 			rowNum:10,
 			rowList:[5,10,20,100,500],
 			toolbar: [false,"top"],
+			altRows:true,//隔行变色
+			altclass:'altclass',//隔行变色样式
 			jsonReader: {
 				root:"rows",		// 数据行（默认为：rows）
 				page: "page",  	// 当前页
@@ -120,26 +126,26 @@ height:auto;
 			alert("数据已发布，不能修改!");
 			return false;
 		}
-		var params = {"id": id};  
-		var actionUrl = "<%=request.getContextPath()%>/locker_CheckedManyImgsByDataImgTableId.action";  
-		$.ajax({  
-			  url : actionUrl,  
-		      type : "post", 
-		      data : params,  
-		      dataType : "json",  
-		      cache : false,  
-		      error : function(textStatus, errorThrown) {  
-		          alert("系统ajax交互错误: " + textStatus.value);  
-		      },  
-		      success : function(data, textStatus) {
-		      	if(data.result=='success'){
+// 		var params = {"id": id};  
+// 		var actionUrl = "<%=request.getContextPath()%>/locker_CheckedManyImgsByDataImgTableId.action";  
+// 		$.ajax({  
+// 			  url : actionUrl,  
+// 		      type : "post", 
+// 		      data : params,  
+// 		      dataType : "json",  
+// 		      cache : false,  
+// 		      error : function(textStatus, errorThrown) {  
+// 		          alert("系统ajax交互错误: " + textStatus.value);  
+// 		      },  
+// 		      success : function(data, textStatus) {
+// 		      	if(data.result=='success'){
 		    		window.showModalDialog('<%=request.getContextPath()%>/locker_editDataImg.action?id='+id+'&temp='+new Date(),'', 'dialogWidth:700px;status:no;dialogHeight:570px;');
 		    		refreshIt();
-		      	}else{
-		      		alert("多图文数据暂不支持修改，敬请等待。。。");
-		      	}
-		    }  
-		});
+// 		      	}else{
+// 		      		alert("多图文数据暂不支持修改，敬请等待。。。");
+// 		      	}
+// 		    }  
+// 		});
 	}
 	
 	//delete
@@ -317,7 +323,7 @@ height:auto;
 					class='button_b' /> <input id="delete" type='button' value='删 除'
 					onclick='deleteData();' class='button_b' />
 					<c:if test="${sessionScope.USER_ORG=='0'}"><input id="delete" type='button' value='插入数据库' onclick='insertData();' class='button_b' /></c:if>
-					<c:if test="${sessionScope.USER_ORG=='0'}"><input id="delete" type='button' value='批量修改时间' onclick='updateTime();' class='button_b' /></c:if>
+					<c:if test="${sessionScope.USER_ORG=='0'}"><input id="delete" type='button' value='批量修改时间' onclick='updateTime();' class='button_b' style="width: 70px;"/></c:if>
 					 <input id="refresh" type='button' value='刷 新' onclick='refreshIt()' class='button_b' />
 				</td>
 			</tr>

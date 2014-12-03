@@ -34,6 +34,7 @@
 body {
 	background: #ffffff;
 }
+.button_b{height: 18px;width: 36px;background-image: url(<%=request.getContextPath()%>/images/inputBg.png) ;background-size:cover;background-color: transparent;border: none ;}
 </style>
 <script type="text/javascript">
 	$(document).ready(function(){
@@ -188,7 +189,11 @@ body {
     	 var imgUrl ='';
     	for(var i=0;i<imgUrls.length;i++){
     		var f = imgUrls[i].files;
-    		imgUrl=imgUrl+f[0].name+'#';
+    		if(f[0]!=null&&f[0]!=undefined){
+        		imgUrl=imgUrl+f[0].name+'#';
+    		}else{
+    			imgUrl=imgUrl+'#';
+    		}
     	}
         document.getElementById("imgNames").value = imgUrl;
     };
@@ -224,7 +229,10 @@ body {
     //删除指定id的table
     function delTab(tabId){
     	document.getElementById("div").removeChild(document.getElementById(tabId));
-    	//document.removeChild(document.getElementById(tabId));
+    	var delImgIds=document.getElementById("delImgIds").value;
+    	delImgIds=delImgIds+tabId.substring(3, tabId.length);
+    	document.getElementById("delImgIds").value=delImgIds+",";
+    	alert("删除成功！");
     }
 </script>
 <style type="text/css">
@@ -363,74 +371,75 @@ html {
 				<font size="3">基本信息</font>
 			</legend>
 			<div id="div" class="fieldsetContent">
-				<table width="100%" border="0" cellspacing="0" cellpadding="0"
-					class="infoTableSpace" o>
+				<table width="650px;" border="0" cellspacing="0" cellpadding="0"
+					class="infoTableSpace" >
 					<input type="hidden" id="id" name="dataImgId" value="${dataImgTable.id}" />
 					<tr>
 						<td align="right">标题：</td>
 						<td align="left"><input id="title" name="dataImgTable.title"
-							value="${dataImgTable.title}" style="width: 500px" />
+							value="${dataImgTable.title}" style="width: 300px" />
 						</td>
-					</tr>
-					<tr>
-						<td align="right">url：</td>
-						<td align="left"><input type="text" id="url"
-							name="dataImgTable.url" value="${dataImgTable.url}"
-							style="width: 500px" />
-						</td>
-					</tr>
-					<tr>
 						<td align="right">来源网站：</td>
 						<td align="left"><input id="collect_website"
 							name="dataImgTable.collect_website" 
-							<c:if test="${userOrg!='0'}">readonly="readonly"</c:if> value="${dataImgTable.collect_website}" style="width: 200px" />
+							<c:if test="${userOrg!='0'}">readonly="readonly"</c:if> value="${dataImgTable.collect_website}" style="width: 120px" />
+						</td>
+					</tr>
+					<tr>
+						<td align="right">URL：</td>
+						<td align="left" colspan="3"><input type="text" id="url"
+							name="dataImgTable.url" value="${dataImgTable.url}"
+							style="width: 555px" />
 						</td>
 					</tr>
 					<tr>
 						<td align="right">数据类型：</td>
-						<td align="left"><select id="data_type"
-							name="dataImgTable.data_type" style="width:200px;">
+						<td align="left"><select id="type"
+							name="dataImgTable.type" style="width:200px;">
 								<option value="">--请选择--</option>
 								<option value="joke"
-									<c:if test="${dataImgTable.data_type=='joke'}">selected="selected"</c:if>>搞笑</option>
+									<c:if test="${dataImgTable.type=='joke'}">selected="selected"</c:if>>搞笑</option>
 								<option value="news"
-									<c:if test="${dataImgTable.data_type=='news'}">selected="selected"</c:if>>新闻</option>
-								<option value="gif"
-									<c:if test="${dataImgTable.data_type=='gif'}">selected="selected"</c:if>>动态图</option>
-								<option value="html"
-									<c:if test="${dataImgTable.data_type=='html'}">selected="selected"</c:if>>HTML</option>
+									<c:if test="${dataImgTable.type=='news'}">selected="selected"</c:if>>新闻</option>
+								<option value="film"
+									<c:if test="${dataImgTable.type=='film'}">selected="selected"</c:if>>影视</option>
+								<option value="entertainment"
+									<c:if test="${dataImgTable.type=='entertainment'}">selected="selected"</c:if>>娱乐</option>
+								<option value="game"
+									<c:if test="${dataImgTable.type=='game'}">selected="selected"</c:if>>游戏</option>
 						</select>
 						</td>
-					</tr>
-					<tr>
 						<td align="right">发布时间：</td>
 						<td align="left"><input id="collect_time"
 							name="dataImgTable.collect_time" readonly="readonly"
 							value="${dataImgTable.collect_time}"
 							onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"
-							style="width: 200px" />
+							style="width: 120px" />
 						</td>
 					</tr>
 					<tr>
+						
+					</tr>
+					<tr>
 						<td align="right">标签：</td>
-						<td align="left">
+						<td align="left" colspan="3">
 						<c:forEach var="tag" items="${tagList}">
 							<input style="width: 30px;border: 0px;" type="checkbox"
-								name="check"  id="${tag[0]}" value="${tag[0]}"/>${tag[1]}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <c:if test="${tag[0] % 4 == 0}"><br/></c:if>
+								name="check"  id="${tag[0]}" value="${tag[0]}"/>${tag[1]}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <c:if test="${tag[0] % 5 == 0}"></br></c:if>
 						</c:forEach>
 						</td>
 					</tr>
 					</table>
 					<c:if test="${fn:length(imgList)>1 }">
 						<c:forEach var="img" items="${imgList }" varStatus="vs">
-							<table id="tab${vs.count }">
+							<table id="tab${img[2]}">
 								<tr>
 									<td align="right">上传图片：</td>
 									<td align="left"><input type="file" id="image"
 										name="image" value="${img[0]}" onchange="uploadImg()"/>
 									</td>
-									<td>
-										<a href="javascript:delTab('tab${vs.count }');" style="margin-right: 0px;">删除</a>
+									<td><input type="hidden" name="uImgId" value="${img[2] }" />
+										<a href="javascript:delTab('tab${img[2]}');" style="margin-right: 0px;">删除</a>
 									</td>
 								</tr>
 								<tr>
@@ -443,14 +452,15 @@ html {
 						</c:forEach>
 					</c:if>
 					<c:if test="${fn:length(imgList)==0 }">
-						<table id="tab1">
+						<c:if test="${image!=null||image!=''||dataImgTable.imgUrl!=null||dataImgTable.imgUrl!=''}">
+							<table id="tab">
 								<tr>
 									<td align="right">上传图片：</td>
 									<td align="left"><input type="file" id="image"
 										name="image" value="${image}" onchange="uploadImg()"/>
 									</td>
 									<td>
-										<%-- <a href="javascript:delTab('tab1');" style="margin-right: 0px;">删除</a>--%>
+										 <a href="javascript:delTab('tab');" style="margin-right: 0px;">删除</a>
 									</td>
 								</tr>
 								<tr>
@@ -460,40 +470,42 @@ html {
 									</td>
 								</tr>
 							</table>
+						</c:if>
 					</c:if>
-					<%-- <table id="tableId">--%>
-					<%-- 	<tr>--%>
-					<%-- 		<td align="right">上传图片：</td>--%>
-					<%-- 		<td align="left"><input type="file" id="image"--%>
-					<%-- 			name="image" value="${image}" onchange="uploadImg()"/>--%>
-					<%-- 		</td>--%>
-					<%-- 	</tr>--%>
-					<%-- 	<tr>--%>
-					<%-- 		<td align="right">内容：</td>--%>
-					<%-- 		<td align="left"><textarea rows="10" cols="5" id="imgUrl"--%>
-					<%-- 			name="imgUrl" style="width: 270px">${img[1]}</textarea>--%>
-					<%-- 		</td>--%>
-					<%-- 	</tr>--%>
-					<%-- </table>--%>
+					<table id="tableId">
+						<tr>
+							<td align="right">上传图片：</td>
+							<td align="left"><input type="file" id="image"
+								name="image" value="${image}" onchange="uploadImg()"/>
+							</td>
+						</tr>
+						<tr>
+							<td align="right">内容：</td>
+							<td align="left"><textarea rows="10" cols="5" id="imgUrl"
+								name="imgUrl" style="width: 270px">${img[1]}</textarea>
+							</td>
+						</tr>
+					</table>
 				<table>
-				   <%-- <tr>--%>
-				    <%--	<td>--%>
-					<%--    	<input type="button" id="addHtml" value="加@@" onclick="addHTML()" /> --%>
-					<%--		<input type="button" id="delHtml" value="减@@" onclick="delHTML()" /> --%>
-					<%--	</td>--%>
-				    <%--</tr>--%>
+				   <tr>
+				   	<td>
+					   	<input type="button" id="addHtml" value="加@@" onclick="addHTML()" /> 
+							<input type="button" id="delHtml" value="减@@" onclick="delHTML()" /> 
+						</td>
+				    </tr>
 					<tr>
 						<td colspan="4" align="center"><input type="button"
-							id="submitBtn" value="保 存" class="form_bt_orange" /> 
-							<c:if test="${sessionScope.USER_ORG=='0'}"><input type="button" id="saveInsert" value="保存并入云库" class="form_bt_orange" /></c:if>
+							id="submitBtn" value="保 存" class="button_b" /> 
+							<c:if test="${sessionScope.USER_ORG=='0'}"><input type="button" id="saveInsert" value="保存并入云库" class="button_b" /></c:if>
 							 <input type="button" value="取 消" id="exit"
-							class="form_bt_orange" onclick="window.close()" />
+							class="button_b" onclick="window.close()" />
 						</td>
 					</tr>
 				</table>
 			</div>
 		</fieldset>
 		<input type="hidden" name="imgNames" id="imgNames" value="${imgNames}"/>
+		<input type="hidden" name="delImgIds" id="delImgIds" value=""/>
 	</form>
 </body>
 </html>

@@ -445,10 +445,10 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 		if (filterMap != null && !filterMap.isEmpty()) {
 			if (null != filterMap.get("p_name")
 					&& !"".equals(filterMap.get("p_name"))) {
-				queryCountString.append(" and p_name='"
-						+ filterMap.get("p_name") + "'");
-				queryString.append(" and p_name='" + filterMap.get("p_name")
-						+ "'");
+				queryCountString.append(" and p_name like '%"
+						+ filterMap.get("p_name") + "%'");
+				queryString.append(" and p_name like'%" + filterMap.get("p_name")
+						+ "%'");
 			}
 			if (null != filterMap.get("start_date")
 					&& !"".equals(filterMap.get("start_date"))) {

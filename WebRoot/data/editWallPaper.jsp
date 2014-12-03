@@ -33,6 +33,7 @@
 body {
 	background: #ffffff;
 }
+.button_b{height: 18px;width: 36px;background-image: url(<%=request.getContextPath()%>/images/inputBg.png) ;background-size:cover;background-color: transparent;border: none ;}
 </style>
 <script type="text/javascript">
 	$(document).ready(function(){
@@ -335,10 +336,10 @@ html {
 				<table>
 					<tr>
 						<td colspan="4" align="center"><input type="button"
-							id="submitBtn" value="保 存" class="form_bt_orange" /> 
-							<c:if test="${sessionScope.USER_ORG=='0'}"><input type="button" id="saveInsert" value="保存并入云库" class="form_bt_orange" /></c:if>
+							id="submitBtn" value="保 存" class="button_b" /> 
+							<c:if test="${sessionScope.USER_ORG=='0'}"><input type="button" id="saveInsert" value="保存并入云库" class="button_b" /></c:if>
 							 <input id="exit" type="button" value="取 消"
-							class="form_bt_orange" onclick="window.close()" />
+							class="button_b" onclick="window.close()" />
 						</td>
 					</tr>
 				</table>

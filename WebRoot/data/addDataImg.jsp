@@ -33,6 +33,7 @@
 body {
 	background: #ffffff;
 }
+.button_b{height: 18px;width: 36px;background-image: url(<%=request.getContextPath()%>/images/inputBg.png) ;background-size:cover;background-color: transparent;border: none ;}
 </style>
 <script type="text/javascript">
 	$(document).ready(function(){
@@ -370,27 +371,25 @@ html {
 				<font size="3">基本信息</font>
 			</legend>
 			<div class="fieldsetContent">
-				<table width="100%" border="0" cellspacing="0" cellpadding="0"
+				<table width="650px;" border="0" cellspacing="0" cellpadding="0"
 					class="infoTableSpace" o>
 					<input type="hidden" id="id" name="dataImgId" value="${dataImgTable.id}" />
 					<tr>
 						<td align="right">标题：</td>
 						<td align="left"><input id="title" name="dataImgTable.title"
-							value="${dataImgTable.title}" style="width: 500px" />
+							value="${dataImgTable.title}" style="width: 300px" />
 						</td>
-					</tr>
-					<tr>
-						<td align="right">url：</td>
-						<td align="left"><input type="text" id="url"
-							name="dataImgTable.url" value="${dataImgTable.url}"
-							style="width: 500px" />
-						</td>
-					</tr>
-					<tr>
 						<td align="right">来源网站：</td>
 						<td align="left"><input id="collect_website"
 							name="dataImgTable.collect_website" 
-							<c:if test="${userOrg!='0'}">readonly="readonly"</c:if> value="${dataImgTable.collect_website}" style="width: 200px" />
+							<c:if test="${userOrg!='0'}">readonly="readonly"</c:if> value="${dataImgTable.collect_website}" style="width: 120px" />
+						</td>
+					</tr>
+					<tr>
+						<td align="right">URL：</td>
+						<td align="left" colspan="3"><input type="text" id="url"
+							name="dataImgTable.url" value="${dataImgTable.url}"
+							style="width: 555px" />
 						</td>
 					</tr>
 					<tr>
@@ -409,22 +408,24 @@ html {
 								<option value="game"
 									<c:if test="${dataImgTable.type=='game'}">selected="selected"</c:if>>游戏</option>
 						</select>
-					</tr>
-					<tr>
+						</td>
 						<td align="right">发布时间：</td>
 						<td align="left"><input id="collect_time"
 							name="dataImgTable.collect_time" readonly="readonly"
 							value="${dataImgTable.collect_time}"
 							onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"
-							style="width: 200px" />
+							style="width: 120px" />
 						</td>
 					</tr>
 					<tr>
+						
+					</tr>
+					<tr>
 						<td align="right">标签：</td>
-						<td align="left">
+						<td align="left" colspan="3">
 						<c:forEach var="tag" items="${tagList}">
 							<input style="width: 30px;border: 0px;" type="checkbox"
-								name="check"  id="${tag[0]}" value="${tag[0]}"/>${tag[1]}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <c:if test="${tag[0] % 4 == 0}"></br></c:if>
+								name="check"  id="${tag[0]}" value="${tag[0]}"/>${tag[1]}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <c:if test="${tag[0] % 5 == 0}"></br></c:if>
 						</c:forEach>
 						</td>
 					</tr>
@@ -445,15 +446,15 @@ html {
 				</table>
 				<table>
 				    <tr>
-				    	<input type="button" id="addHtml" value="加@@" onclick="addHTML()" /> 
-						<input type="button" id="delHtml" value="减@@" onclick="delHTML()" /> 
+				    	<input type="button" id="addHtml" value="加@@" onclick="addHTML()" class="button_b" /> 
+						<input type="button" id="delHtml" value="减@@" onclick="delHTML()" class="button_b" /> 
 				    </tr>
 					<tr>
 						<td colspan="4" align="center"><input type="button"
-							id="submitBtn" value="保 存" class="form_bt_orange" /> 
-							<c:if test="${sessionScope.USER_ORG=='0'}"><input type="button" id="saveInsert" value="保存并入云库" class="form_bt_orange" /></c:if>
+							id="submitBtn" value="保 存" class="button_b" /> 
+							<c:if test="${sessionScope.USER_ORG=='0'}"><input type="button" id="saveInsert" value="保存并入云库" class="button_b" /></c:if>
 							 <input type="button" value="取 消" id="exit"
-							class="form_bt_orange" onclick="window.close()" />
+							class="button_b" onclick="window.close()" />
 						</td>
 					</tr>
 				</table>
