@@ -44,7 +44,6 @@ text-overflow : ellipsis;
 			datatype: "json",
 			height: 500,
 			width: widthScroll/1.5, 
-			//autowidth:true,
 			colNames:['ID','标题','类型','内容','发布日期','url','图片','发布'],
 			colModel:[
 					{name:'ID',index:'ID', width:60, key:true, sorttype:"int",hidden:true},								

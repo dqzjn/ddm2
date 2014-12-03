@@ -14,6 +14,7 @@ import org.springframework.orm.hibernate3.HibernateTemplate;
 import cn.zmdx.locker.dao.interfaces.LockerDAO;
 import cn.zmdx.locker.entity.Data_img;
 import cn.zmdx.locker.entity.Data_img_table;
+import cn.zmdx.locker.entity.Data_tag;
 import cn.zmdx.locker.entity.Img;
 import cn.zmdx.locker.entity.PageResult;
 import cn.zmdx.locker.entity.Tag;
@@ -216,6 +217,13 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 		return diList;
 	}
 
+	public List<Data_tag> getData_TagById(String id) {
+		StringBuffer sql = new StringBuffer();
+		sql.append("from Data_tag where data_id =" + id);
+		List<Data_tag> dgList = getHibernateTemplate().find(sql.toString());
+		return dgList;
+	}
+
 	@Override
 	public void updateDataImg(Data_img_table dit) {
 		this.getHibernateTemplate().update(dit);
@@ -240,18 +248,29 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 			StringBuffer sql = new StringBuffer();
 			StringBuffer data_img_sql = new StringBuffer();
 			StringBuffer img_sql = new StringBuffer();
-			sql.append("insert into data_img_table(id,title,url,imgUrl,data_type,collect_time,collect_website) values");
-			data_img_sql.append("insert into data_img(id,img_id,data_id) values");
+			StringBuffer data_tag_sql = new StringBuffer();
+			sql.append("insert into data_img_table(id,title,url,imgUrl,data_type,collect_time,collect_website,type) values");
+			data_img_sql
+					.append("insert into data_img(id,img_id,data_id) values");
 			img_sql.append("insert into img(id,imageUrl,content) values");
+			data_tag_sql
+					.append("insert into data_tag(id,data_id,tag_id) values");
 			for (String id : idss) {
 				dit = getDataImgById(id);
 				dit.setData_sub(1);
 				this.getHibernateTemplate().update(dit);
+				List<Data_img> diList = getData_ImgById(id);
+				if (diList.size() > 1) {
+					dit.setImgUrl("http://pandora.hdlocker.com/pandora/locker!viewDataImg.action?id="
+
+							+ Integer.parseInt(id) + "");
+				}
 				sql.append("('" + dit.getId() + "','" + dit.getTitle() + "','"
 						+ dit.getUrl() + "','" + dit.getImgUrl() + "','"
 						+ dit.getData_type() + "','" + dit.getCollect_time()
-						+ "','" + dit.getCollect_website() + "'),");
-				List<Data_img> diList = getData_ImgById(id);
+						+ "','" + dit.getCollect_website() + "','"
+						+ dit.getType() + "'),");
+				List<Data_tag> dgList = getData_TagById(id);
 				if (diList.size() > 0) {
 					for (Data_img di : diList) {
 						data_img_sql.append("('" + di.getId() + "','"
@@ -271,6 +290,17 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 									data_img_sql.length() - 1)));
 					pstmt.executeUpdate();
 
+				}
+				if (dgList.size() > 0) {
+					for (Data_tag dg : dgList) {
+						data_tag_sql.append("('" + dg.getId() + "','"
+								+ dg.getData_id() + "','" + dg.getTag_id()
+								+ "'),");
+					}
+					pstmt = (PreparedStatement) dbConn.prepareStatement(String
+							.valueOf(data_tag_sql.substring(0,
+									data_tag_sql.length() - 1)));
+					pstmt.executeUpdate();
 				}
 			}
 			pstmt = (PreparedStatement) dbConn.prepareStatement(String
@@ -308,14 +338,32 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 			StringBuffer sql = new StringBuffer();
 			StringBuffer data_img_sql = new StringBuffer();
 			StringBuffer img_sql = new StringBuffer();
-			sql.append("insert into data_img_table(title,url,imgUrl,data_type,collect_time,collect_website) values");
-			data_img_sql.append("insert into data_img(id,img_id,data_id) values");
+			StringBuffer data_tag_sql = new StringBuffer();
+			sql.append("insert into data_img_table(title,url,imgUrl,data_type,collect_time,collect_website,type) values");
+			data_img_sql
+					.append("insert into data_img(id,img_id,data_id) values");
 			img_sql.append("insert into img(id,imageUrl,content) values");
-			sql.append("('" + dit.getTitle() + "','" + dit.getUrl() + "','"
-					+ dit.getImgUrl() + "','" + dit.getData_type() + "','"
-					+ dit.getCollect_time() + "','" + dit.getCollect_website()
-					+ "'),");
+			data_tag_sql
+					.append("insert into data_tag(id,data_id,tag_id) values");
 			List<Data_img> diList = getData_ImgById(String.valueOf(dit.getId()));
+			List<Data_tag> dgList = getData_TagById(String.valueOf(dit.getId()));
+			if (diList.size() > 1) {
+				sql.append("('"
+						+ dit.getTitle()
+						+ "','"
+						+ dit.getUrl()
+						+ "','http://pandora.hdlocker.com/pandora/locker!viewDataImg.action?id="
+						+ dit.getId() + "','" + dit.getData_type() + "','"
+						+ dit.getCollect_time() + "','"
+						+ dit.getCollect_website() + "','" + dit.getType()
+						+ "'),");
+			} else {
+				sql.append("('" + dit.getTitle() + "','" + dit.getUrl() + "','"
+						+ dit.getImgUrl() + "','" + dit.getData_type() + "','"
+						+ dit.getCollect_time() + "','"
+						+ dit.getCollect_website() + "','" + dit.getType()
+						+ "'),");
+			}
 			if (diList.size() > 0) {
 				for (Data_img di : diList) {
 					data_img_sql.append("('" + di.getId() + "','"
@@ -330,6 +378,16 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 				pstmt = (PreparedStatement) dbConn.prepareStatement(String
 						.valueOf(data_img_sql.substring(0,
 								data_img_sql.length() - 1)));
+				pstmt.executeUpdate();
+			}
+			if (dgList.size() > 0) {
+				for (Data_tag dg : dgList) {
+					data_tag_sql.append("('" + dg.getId() + "','"
+							+ dg.getData_id() + "','" + dg.getTag_id() + "'),");
+				}
+				pstmt = (PreparedStatement) dbConn.prepareStatement(String
+						.valueOf(data_tag_sql.substring(0,
+								data_tag_sql.length() - 1)));
 				pstmt.executeUpdate();
 			}
 			pstmt = (PreparedStatement) dbConn.prepareStatement(String

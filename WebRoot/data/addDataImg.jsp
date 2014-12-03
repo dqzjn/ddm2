@@ -126,6 +126,9 @@ body {
 		if (d.toLowerCase() != ".jpg"&&d.toLowerCase() != ".png") {
 			document.getElementById("data_type").value= 'html';
 			return true;
+		}else{
+			document.getElementById("data_type").value= 'singleImg';
+			return true;
 		}
 		
 		//if ($.trim($("#data_type").val()) == "gif") 
@@ -208,7 +211,7 @@ body {
     
     function addHTML(){
     	 var d=document.getElementById('tableId').lastChild;
-    	 var a =d.cloneNode(true);
+    	 var a =d.cloneNode(true);	
     	 document.getElementById('tableId').appendChild(a);
     }
     function delHTML(){
@@ -385,6 +388,7 @@ html {
 							<c:if test="${userOrg!='0'}">readonly="readonly"</c:if> value="${dataImgTable.collect_website}" style="width: 120px" />
 						</td>
 					</tr>
+					<c:if test="${sessionScope.USER_ORG=='0'}">
 					<tr>
 						<td align="right">URL：</td>
 						<td align="left" colspan="3"><input type="text" id="url"
@@ -392,6 +396,7 @@ html {
 							style="width: 555px" />
 						</td>
 					</tr>
+					</c:if>
 					<tr>
 						<td align="right">数据类型：</td>
 						<td align="left"><select id="type"
@@ -443,11 +448,12 @@ html {
 							name="imgUrl" value="${dataImgTable.imgUrl}" style="width: 270px">${dataImgTable.imgUrl}</textarea>
 						</td>
 					</tr>
+					<tr><td><br/></td></tr>
 				</table>
 				<table>
 				    <tr>
-				    	<input type="button" id="addHtml" value="加@@" onclick="addHTML()" class="button_b" /> 
-						<input type="button" id="delHtml" value="减@@" onclick="delHTML()" class="button_b" /> 
+				    	<input type="button" id="addHtml" value="+图片" onclick="addHTML()" class="button_b" /> 
+						<input type="button" id="delHtml" value="-图片" onclick="delHTML()" class="button_b" /> 
 				    </tr>
 					<tr>
 						<td colspan="4" align="center"><input type="button"

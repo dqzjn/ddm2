@@ -24,7 +24,7 @@
 		<filter-name>encodingFilter</filter-name>
 		<url-pattern>/* </url-pattern>
 	</filter-mapping>
-		<filter>
+	<filter>
 		<filter-name>Login</filter-name>
 		<filter-class>cn.zmdx.locker.filter.LoginFilter</filter-class>
 		<init-param>
@@ -51,11 +51,12 @@
 	<filter>
 		<filter-name>hibernateFilter</filter-name>
 		<filter-class>
-			org.springframework.orm.hibernate3.support.OpenSessionInViewFilter</filter-class>
-		<init-param>  
-           <param-name>flushMode</param-name>  
-           <param-value>AUTO</param-value>  
-       </init-param>
+			org.springframework.orm.hibernate3.support.OpenSessionInViewFilter
+		</filter-class>
+		<init-param>
+			<param-name>flushMode</param-name>
+			<param-value>AUTO</param-value>
+		</init-param>
 		<init-param>
 			<param-name>singleSession</param-name>
 			<param-value>true</param-value>
@@ -66,13 +67,13 @@
 		<url-pattern>*.action</url-pattern>
 	</filter-mapping>
 	<filter>
-        <filter-name>struts2</filter-name>
-        <filter-class>org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>struts2</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>
+		<filter-name>struts2</filter-name>
+		<filter-class>org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>struts2</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
@@ -82,22 +83,25 @@
 	<welcome-file-list>
 		<welcome-file>login.jsp</welcome-file>
 	</welcome-file-list>
-	
+
 	<servlet>
-    	<servlet-name>userlogin</servlet-name>
-    	<servlet-class>cn.zmdx.locker.servlet.LoginServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-    	<servlet-name>userlogin</servlet-name>
-    	<url-pattern>/android/login.jsp</url-pattern>
-    </servlet-mapping>
-    
-    <servlet>
-    	<servlet-name>userregister</servlet-name>
-    	<servlet-class>cn.zmdx.locker.servlet.RegisterServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-    	<servlet-name>userregister</servlet-name>
-    	<url-pattern>/android/register.jsp</url-pattern>
-    </servlet-mapping>
+		<servlet-name>userlogin</servlet-name>
+		<servlet-class>cn.zmdx.locker.servlet.LoginServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>userlogin</servlet-name>
+		<url-pattern>/android/login.jsp</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>userregister</servlet-name>
+		<servlet-class>cn.zmdx.locker.servlet.RegisterServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>userregister</servlet-name>
+		<url-pattern>/android/register.jsp</url-pattern>
+	</servlet-mapping>
+	<session-config>
+		<session-timeout>9999</session-timeout>
+	</session-config>
 </web-app>

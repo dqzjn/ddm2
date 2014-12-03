@@ -3,7 +3,6 @@ package cn.zmdx.locker.actions;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -328,6 +327,7 @@ public class LockerAction extends ActionSupport {
 			String returnStr = getColumnJson(result, viewArray);
 			out.print(returnStr);
 		} catch (IOException e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 
@@ -402,6 +402,7 @@ public class LockerAction extends ActionSupport {
 			String returnStr = getColumnJson(result, viewArray);
 			out.print(returnStr);
 		} catch (IOException e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 	}
@@ -419,6 +420,7 @@ public class LockerAction extends ActionSupport {
 			lockerService.deleteDataImgById(ids);
 			out.print("{\"result\":\"success\"}");
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 			out.print("{\"result\":\"error\"}");
 		}
@@ -472,7 +474,8 @@ public class LockerAction extends ActionSupport {
 		String sqlId = "select tag_id from data_tag where data_id =" + id + "";
 		List<?> tagIdList = lockerService.queryAllBySql(sqlId);
 		if (tagIdList.size() > 0) {
-			ServletActionContext.getRequest().setAttribute("tagIdList", tagIdList);
+			ServletActionContext.getRequest().setAttribute("tagIdList",
+					tagIdList);
 		}
 		String sqlImgs = "select t.imageUrl,t.content,t.id from img t left join data_img di on di.img_id=t.id where di.data_id= "
 				+ id;
@@ -497,20 +500,20 @@ public class LockerAction extends ActionSupport {
 		String imageName = "";
 		String checks[] = check.split(",");
 		try {
-			if (null == dataImgId || "".equals(dataImgId)) {
+			if (null == dataImgId || "".equals(dataImgId)|| "0".equals(dataImgId)) {
 				dataImgTable.setData_sub(0);
 				dataImgTable.setImgUrl(imgUrl[0]);
-//				if (dataImgTable.getData_type() == null
-//						|| "".equals(dataImgTable.getData_type())) {
-//					dataImgTable.setData_type("singleImg");
-//				}
+				// if (dataImgTable.getData_type() == null
+				// || "".equals(dataImgTable.getData_type())) {
+				// dataImgTable.setData_type("singleImg");
+				// }
 				String id = lockerService.save(dataImgTable);
 				lockerService.save(dataImgTable);
 				for (String ck : checks) {
 					Data_tag dt = new Data_tag();
 					dt.setTag_id(Integer.parseInt(ck.trim()));
 					dt.setData_id(Integer.parseInt(id));
-					lockerService.save(dt);
+					lockerService.saveOrUpdate(dt);
 				}
 				if (image != null && image[0] != null) {
 					String[] imgNamess = imgNames.substring(0,
@@ -548,7 +551,7 @@ public class LockerAction extends ActionSupport {
 											.getDataImgById(id);
 									entity.setUrl("http://cos.myqcloud.com/11000436/data/image/"
 											+ imageName);
-									entity.setImgUrl("http://192.168.1.110:8080/pandora/locker!viewDataImg.action?id="
+									entity.setImgUrl("http://nb.hdlocker.com/pandora/locker!viewDataImg.action?id="
 											+ Integer.parseInt(id) + "");
 									entity.setData_type("multiImg");
 									lockerService.save(entity);
@@ -574,12 +577,7 @@ public class LockerAction extends ActionSupport {
 				entity.setUrl(dataImgTable.getUrl());
 				entity.setImgUrl(imgUrl[0]);
 				entity.setCollect_website(dataImgTable.getCollect_website());
-//				if (dataImgTable.getData_type() == null
-//						|| "".equals(dataImgTable.getData_type())) {
-//					entity.setData_type("singleImg");
-//				} else {
-					entity.setData_type(dataImgTable.getData_type());
-//				}
+				entity.setData_type(dataImgTable.getData_type());
 				entity.setCollect_time(dataImgTable.getCollect_time());
 				entity.setData_sub(0);
 				lockerService.saveOrUpdate(entity);
@@ -597,17 +595,14 @@ public class LockerAction extends ActionSupport {
 					String[] imgNamess = imgNames.substring(0,
 							imgNames.length() - 1).split("#");
 					List imgNameList=Arrays.asList(imgNamess);
-	//				List imgNameL=new ArrayList(imgNameList);
 					if(uImgId!=null){
 						for(int i=0;i<uImgId.length;i++){
 							if(imgNamess.length>i){
 								if(uImgId[i]!=null&&!"".equals(uImgId[i])){
 									Img img =(Img)lockerService.getObjectById(Img.class, Integer.parseInt(uImgId[i]));
 									if(imgNamess[i]!=null&&!"".equals(imgNamess[i])){
-		//								if(image[i]!=null&&!"".equals(image[i])&&imgNamess[i]!=null&&!"".equals(imgNamess[i])){
 										img.setImageUrl(uploadImg(imgNamess[i], image[i]));
 										countU++;
-		//								imgNameL.remove(i);
 									}
 									img.setContent(imgUrl[i]); 
 									lockerService.saveOrUpdate(img);
@@ -616,7 +611,6 @@ public class LockerAction extends ActionSupport {
 						}
 					}
 					if (imgNames.length()>1) {
-	//					if (image.length == 1 && image[0] != null) {
 						int uIdCounts=0;
 						if(uImgId==null){
 							uIdCounts=0;
@@ -643,7 +637,6 @@ public class LockerAction extends ActionSupport {
 								if(countU==0){
 									countU=uImgId==null?0:uImgId.length;
 								}
-	//							for (int i = imgNameList.size()-countU; i < image.length; i++) {
 								for (int i = 0; i < imgNameList.size()-countU; i++) {
 									if (image[i] != null) {
 										imageName = uploadImg(imgNameList.get(i+countU)+"", image[i]);
@@ -656,16 +649,6 @@ public class LockerAction extends ActionSupport {
 										dataImg.setData_id(Integer.parseInt(dataImgId));
 										dataImg.setImg_id(Integer.parseInt(img_id));
 										lockerService.save(dataImg);
-//										if (i == 0) {
-//											Data_img_table dit = lockerService
-//													.getDataImgById(dataImgId);
-//											dit.setUrl("http://cos.myqcloud.com/11000436/data/image/"
-//													+ imageName);
-//											dit.setImgUrl("http://192.168.1.110:8080/pandora/locker!viewDataImg.action?id="
-//													+ Integer.parseInt(dataImgId) + "");
-//											dit.setData_type("multiImg");
-//											lockerService.save(dit);
-//										}
 									}
 								}
 							}else{//修改部分原有图文
@@ -682,16 +665,6 @@ public class LockerAction extends ActionSupport {
 										dataImg.setData_id(Integer.parseInt(dataImgId));
 										dataImg.setImg_id(Integer.parseInt(img_id));
 										lockerService.save(dataImg);
-//										if (i == 0) {
-//											Data_img_table dit = lockerService
-//													.getDataImgById(dataImgId);
-//											dit.setUrl("http://cos.myqcloud.com/11000436/data/image/"
-//													+ imageName);
-//											dit.setImgUrl("http://192.168.1.110:8080/pandora/locker!viewDataImg.action?id="
-//													+ Integer.parseInt(dataImgId) + "");
-//											dit.setData_type("multiImg");
-//											lockerService.save(dit);
-//										}
 										num++;
 									}
 								}
@@ -703,6 +676,7 @@ public class LockerAction extends ActionSupport {
 			out.print("{\"result\":\"success\"}");
 		} catch (Exception e) {
 			out.print("{\"result\":\"error\"}");
+			logger.error(e);
 			e.printStackTrace();
 		}
 
@@ -730,6 +704,7 @@ public class LockerAction extends ActionSupport {
 				else
 					out.print("{\"result\":\"error\"}");
 			} catch (Exception e) {
+				logger.error(e);
 				e.printStackTrace();
 				out.print("{\"result\":\"error\"}");
 			}
@@ -755,10 +730,6 @@ public class LockerAction extends ActionSupport {
 				if (null == dataImgId || "".equals(dataImgId)) {
 					dataImgTable.setData_sub(1);
 					dataImgTable.setImgUrl(imgUrl[0]);
-//					if (dataImgTable.getData_type() == null
-//							|| "".equals(dataImgTable.getData_type())) {
-//						dataImgTable.setData_type("singleImg");
-//					}
 					String id = lockerService.save(dataImgTable);
 					lockerService.save(dataImgTable);
 					for (String ck : checks) {
@@ -788,7 +759,8 @@ public class LockerAction extends ActionSupport {
 						} else if (image.length > 1) {
 							for (int i = 0; i < image.length; i++) {
 								if (image[i] != null) {
-									imageName = uploadImg(imgNamess[i], image[i]);
+									imageName = uploadImg(imgNamess[i],
+											image[i]);
 									Img img = new Img();
 									Data_img dataImg = new Data_img();
 									img.setImageUrl("http://cos.myqcloud.com/11000436/data/image/"
@@ -803,7 +775,7 @@ public class LockerAction extends ActionSupport {
 												.getDataImgById(id);
 										entity.setUrl("http://cos.myqcloud.com/11000436/data/image/"
 												+ imageName);
-										entity.setImgUrl("http://192.168.1.110:8080/pandora/locker!viewDataImg.action?id="
+										entity.setImgUrl("http://nb.hdlocker.com/pandora/locker!viewDataImg.action?id="
 												+ Integer.parseInt(id) + "");
 										entity.setData_type("multiImg");
 										lockerService.save(entity);
@@ -829,12 +801,7 @@ public class LockerAction extends ActionSupport {
 					entity.setUrl(dataImgTable.getUrl());
 					entity.setImgUrl(imgUrl[0]);
 					entity.setCollect_website(dataImgTable.getCollect_website());
-//					if (dataImgTable.getData_type() == null
-//							|| "".equals(dataImgTable.getData_type())) {
-//						entity.setData_type("singleImg");
-//					} else {
-						entity.setData_type(dataImgTable.getData_type());
-//					}
+					entity.setData_type(dataImgTable.getData_type());
 					entity.setCollect_time(dataImgTable.getCollect_time());
 					entity.setData_sub(0);
 					lockerService.saveOrUpdate(entity);
@@ -852,17 +819,14 @@ public class LockerAction extends ActionSupport {
 						String[] imgNamess = imgNames.substring(0,
 								imgNames.length() - 1).split("#");
 						List imgNameList=Arrays.asList(imgNamess);
-		//				List imgNameL=new ArrayList(imgNameList);
 						if(uImgId!=null){
 							for(int i=0;i<uImgId.length;i++){
 								if(imgNamess.length>i){
 									if(uImgId[i]!=null&&!"".equals(uImgId[i])){
 										Img img =(Img)lockerService.getObjectById(Img.class, Integer.parseInt(uImgId[i]));
 										if(imgNamess[i]!=null&&!"".equals(imgNamess[i])){
-			//								if(image[i]!=null&&!"".equals(image[i])&&imgNamess[i]!=null&&!"".equals(imgNamess[i])){
 											img.setImageUrl(uploadImg(imgNamess[i], image[i]));
 											countU++;
-			//								imgNameL.remove(i);
 										}
 										img.setContent(imgUrl[i]); 
 										lockerService.saveOrUpdate(img);
@@ -871,7 +835,6 @@ public class LockerAction extends ActionSupport {
 							}
 						}
 						if (imgNames.length()>1) {
-		//					if (image.length == 1 && image[0] != null) {
 							int uIdCounts=0;
 							if(uImgId==null){
 								uIdCounts=0;
@@ -898,7 +861,6 @@ public class LockerAction extends ActionSupport {
 									if(countU==0){
 										countU=uImgId==null?0:uImgId.length;
 									}
-		//							for (int i = imgNameList.size()-countU; i < image.length; i++) {
 									for (int i = 0; i < imgNameList.size()-countU; i++) {
 										if (image[i] != null) {
 											imageName = uploadImg(imgNameList.get(i+countU)+"", image[i]);
@@ -911,16 +873,6 @@ public class LockerAction extends ActionSupport {
 											dataImg.setData_id(Integer.parseInt(dataImgId));
 											dataImg.setImg_id(Integer.parseInt(img_id));
 											lockerService.save(dataImg);
-//											if (i == 0) {
-//												Data_img_table dit = lockerService
-//														.getDataImgById(dataImgId);
-//												dit.setUrl("http://cos.myqcloud.com/11000436/data/image/"
-//														+ imageName);
-//												dit.setImgUrl("http://192.168.1.110:8080/pandora/locker!viewDataImg.action?id="
-//														+ Integer.parseInt(dataImgId) + "");
-//												dit.setData_type("multiImg");
-//												lockerService.save(dit);
-//											}
 										}
 									}
 								}else{//修改部分原有图文
@@ -961,6 +913,7 @@ public class LockerAction extends ActionSupport {
 				else
 					out.print("{\"result\":\"error\"}");
 			} catch (Exception e) {
+				logger.error(e);
 				e.printStackTrace();
 				out.print("{\"result\":\"error\"}");
 			}
@@ -1000,6 +953,7 @@ public class LockerAction extends ActionSupport {
 				out.print("{\"result\":\"empty\"}");
 			}
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 			out.print("{\"result\":\"error\"}");
 		}
@@ -1026,6 +980,7 @@ public class LockerAction extends ActionSupport {
 			String returnStr = getColumnJson(result, viewArray);
 			out.print(returnStr);
 		} catch (IOException e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 
@@ -1069,6 +1024,7 @@ public class LockerAction extends ActionSupport {
 
 		} catch (Exception e) {
 			out.print("{\"result\":\"error\"}");
+			logger.error(e);
 			e.printStackTrace();
 		}
 
@@ -1087,11 +1043,21 @@ public class LockerAction extends ActionSupport {
 			lockerService.deleteTagById(ids);
 			out.print("{\"result\":\"success\"}");
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 			out.print("{\"result\":\"error\"}");
 		}
 	}
 
+	/**
+	 * 上传图片云存储
+	 * 
+	 * @param imageNameStr
+	 * @param imageFile
+	 * @return
+	 * @throws Exception
+	 * @author 张加宁
+	 */
 	public String uploadImg(String imageNameStr, File imageFile)
 			throws Exception {
 		// 用户定义变量
@@ -1104,6 +1070,7 @@ public class LockerAction extends ActionSupport {
 			cos = new CosImpl(accessId, accessKey, Common.COS_HOST,
 					Common.DOWNLOAD_HOST, secretId);
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 		String imgType = "";
@@ -1117,13 +1084,17 @@ public class LockerAction extends ActionSupport {
 			Message msg = new Message();
 			// System.out.println("----------------------uploadFileContent----------------------\n");
 			Map<String, Object> inParams = new HashMap<String, Object>();
-			inParams.put("bucketId", bucketId);
-			inParams.put("path", "/image");
-			inParams.put("cosfile", uploadImg + imgType);
-			CosFile file = new CosFile();
-			cos.uploadFileContent(inParams,
-					FileUtils.readFileToByteArray(imageFile), file, msg);
-			System.out.println(file);
+			String fileName = uploadImg + imgType;
+			inParams.put("compressBucketId", bucketId);
+			inParams.put("compressFilePath", "/image/" + fileName);
+			inParams.put("zoomType", 1);// 等比缩放
+			inParams.put("width", 720);// 缩放后宽度
+			inParams.put("height", 720);// 缩放后高度
+			Map<String, CosFile> files = new HashMap<String, CosFile>();
+			files.put("compressFile", new CosFile());
+			cos.uploadFileContentWithCompress(inParams,
+					FileUtils.readFileToByteArray(imageFile), files, msg);
+			System.out.println(files);
 			System.out.println(msg);
 		}
 		return uploadImg + imgType;
@@ -1174,6 +1145,7 @@ public class LockerAction extends ActionSupport {
 			String returnStr = getColumnJson(result, viewArray);
 			out.print(returnStr);
 		} catch (IOException e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 	}
@@ -1249,6 +1221,7 @@ public class LockerAction extends ActionSupport {
 
 		} catch (Exception e) {
 			out.print("{\"result\":\"error\"}");
+			logger.error(e);
 			e.printStackTrace();
 		}
 
@@ -1316,6 +1289,7 @@ public class LockerAction extends ActionSupport {
 
 		} catch (Exception e) {
 			out.print("{\"result\":\"error\"}");
+			logger.error(e);
 			e.printStackTrace();
 		}
 
@@ -1338,6 +1312,7 @@ public class LockerAction extends ActionSupport {
 			cos = new CosImpl(accessId, accessKey, Common.COS_HOST,
 					Common.DOWNLOAD_HOST, secretId);
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 		String imgType = "";
@@ -1384,6 +1359,7 @@ public class LockerAction extends ActionSupport {
 			lockerService.deleteWallPaperById(ids);
 			out.print("{\"result\":\"success\"}");
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 			out.print("{\"result\":\"error\"}");
 		}
@@ -1410,27 +1386,33 @@ public class LockerAction extends ActionSupport {
 				else
 					out.print("{\"result\":\"error\"}");
 			} catch (Exception e) {
+				logger.error(e);
 				e.printStackTrace();
 				out.print("{\"result\":\"error\"}");
 			}
 		}
 	}
-	
+
 	/**
 	 * 验证是否是多图文数据
+	 * 
 	 * @throws IOException
 	 */
 	public void CheckedManyImgsByDataImgTableId() throws IOException {
-		ServletActionContext.getResponse().setContentType("text/json; charset=utf-8");
+		ServletActionContext.getResponse().setContentType(
+				"text/json; charset=utf-8");
 		PrintWriter out = ServletActionContext.getResponse().getWriter();
 		try {
 			String id = ServletActionContext.getRequest().getParameter("id");
-			List list=lockerService.queryAllBySql("select t.imageUrl,t.content from img t left join data_img di on di.img_id=t.id where di.data_id= "+id);
+			List list = lockerService
+					.queryAllBySql("select t.imageUrl,t.content from img t left join data_img di on di.img_id=t.id where di.data_id= "
+							+ id);
 			if (list.size() > 1)
 				out.print("{\"result\":\"error\"}");
 			else
 				out.print("{\"result\":\"success\"}");
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 			out.print("{\"result\":\"error\"}");
 		}
