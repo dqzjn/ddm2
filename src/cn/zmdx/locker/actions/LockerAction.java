@@ -570,6 +570,16 @@ public class LockerAction extends ActionSupport {
 										.toLowerCase())) {
 							entity.setData_type("singleImg");
 						}
+						Img img = new Img();
+						img.setContent(imgUrl[0]);
+						img.setImageUrl("http://cos.myqcloud.com/11000436/data/image/"
+								+ imageName);
+						lockerService.save(img);
+						Data_img dataImg = new Data_img();
+						dataImg.setData_id(entity.getId());
+						dataImg.setImg_id(img.getId());
+						lockerService.save(dataImg);
+						lockerService.save(entity);
 						lockerService.save(entity);
 					} else if (image.length > 1) {
 						for (int i = 0; i < image.length; i++) {
@@ -681,6 +691,15 @@ public class LockerAction extends ActionSupport {
 											.toLowerCase())) {
 								entity.setData_type("singleImg");
 							}
+							Img img = new Img();
+							img.setContent(imgUrl[0]);
+							img.setImageUrl("http://cos.myqcloud.com/11000436/data/image/"
+									+ imageName);
+							lockerService.save(img);
+							Data_img dataImg = new Data_img();
+							dataImg.setData_id(entity.getId());
+							dataImg.setImg_id(img.getId());
+							lockerService.save(dataImg);
 							lockerService.save(entity);
 						} else if (image.length > 1) {
 							for (int i = 0; i < image.length; i++) {

@@ -123,8 +123,7 @@ body {
 			document.getElementById("data_type").value= 'gif';
 			return true;
 		}
-		
-		if (d.toLowerCase() != ".jpg"&&d.toLowerCase() != ".png") {
+		if (d!='null'&&d!=null&&d.toLowerCase() != ".jpg"&&d.toLowerCase() != ".png") {
 			document.getElementById("data_type").value= 'html';
 			alert("url格式不正确!");
 			return false;
