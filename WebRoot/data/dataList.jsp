@@ -42,9 +42,9 @@ text-overflow : ellipsis;
 		$("#gridTable").jqGrid({					
 			url:'<%=request.getContextPath()%>/locker_queryDataImgTable.action?temp='+Math.round(Math.random()*10000),
 			datatype: "json",
-			height: 500,
+			height: 460,
 			width: widthScroll/1.5, 
-			colNames:['ID','标题','类型','内容','发布日期','url','图片','发布'],
+			colNames:['ID','标题','类型','内容','发布日期','url','图片','发布','发布状态'],
 			colModel:[
 					{name:'ID',index:'ID', width:60, key:true, sorttype:"int",hidden:true},								
 					{name:'title',index:'title', width:150}, 
@@ -61,7 +61,17 @@ text-overflow : ellipsis;
 								}
 			  				}
 			  			},
-			  		{name:'data_sub',index:'data_sub', width:270,align: 'center',hidden:true}
+			  		{name:'data_sub',index:'data_sub', width:270,align: 'center',hidden:true},
+			  		{name:'data_sub1',index:'data_sub1', width:80,align: 'center',
+						formatter: function(cellvalue, options, rowObject) {
+							if(rowObject.data_sub=='审核通过'){
+					  			return "<p style=\"color: #FFC125;font-size: 16px;\">审核通过</p>" ;
+							}else if(rowObject.data_sub=='审核中'){
+					  			return "<p style=\"color: green;font-size: 16px;\">审核中</p>" ;
+							}else if(rowObject.data_sub=='审核未通过'){
+					  			return "<p style=\"color: red;font-size: 16px;\">审核未通过</p>" ;
+							}
+		  				}},
 			],
 			shrinkToFit:false,
 			sortname:'id',
@@ -199,6 +209,7 @@ text-overflow : ellipsis;
 			var data_title = jQuery("#data_title").val();
 			var start_date = jQuery("#start_date").val();
 			var end_date = jQuery("#end_date").val();
+			var data_type = jQuery("#data_type").val();
 			var type = jQuery("#type").val();
 			var edit_date = jQuery("#edit_date").val();
 			var data_sub = jQuery("#data_sub").val();
@@ -207,6 +218,7 @@ text-overflow : ellipsis;
 	            "data_title" : encodeURIComponent($.trim(data_title)),
 	            "start_date" : encodeURIComponent($.trim(start_date)),
 	            "end_date" : encodeURIComponent($.trim(end_date)),
+	            "data_type" : encodeURIComponent($.trim(data_type)),
 	            "type" : encodeURIComponent($.trim(type)),
 	            "edit_date" : encodeURIComponent($.trim(edit_date)),
 	            "data_sub" : encodeURIComponent($.trim(data_sub)),
@@ -229,6 +241,7 @@ text-overflow : ellipsis;
 		jQuery("#start_date").val("");
 		jQuery("#end_date").val("");
 		jQuery("#data_type").val("");
+		jQuery("#type").val("");
 		jQuery("#edit_date").val("");
 		jQuery("#data_sub").val("");
 	}
@@ -282,16 +295,26 @@ text-overflow : ellipsis;
 			class="tabman" style="width:100%;margin-bottom:0px">
 			<tr>
 				<td>&nbsp;&nbsp;标题：<input type="text" id="data_title"
-					name="data_title" value="" class="input" style="width:150px;" />&nbsp;&nbsp;</td>
-						<td>&nbsp;&nbsp;日期：<input type="text" id="edit_date"
+					name="data_title" value="" class="input" style="width:150px;" />&nbsp;&nbsp;
+				</td>
+				<td>&nbsp;&nbsp;日期：<input type="text" id="edit_date"
 						name="edit_date" value="" class="input"
 						onClick="WdatePicker()"
-						readonly="readonly" style="width:150px;" /></td>
-						<td>&nbsp;&nbsp;<input type="button"
+						readonly="readonly" style="width:150px;" />
+				</td>
+				<c:if test="${sessionScope.USER_ORG=='0'}"><td>&nbsp;&nbsp;数据类型：<select id="data_type" name="data_type" style="width:150px;">
+								<option value="" selected="selected">--请选择--</option>
+								<option value="html">HTML</option>
+								<option value="gif">动态图</option>
+								<option value="singleImg">单图</option>
+								<option value="multiImg">多图</option>
+						</select>
+				</td></c:if>
+				<td>&nbsp;&nbsp;<input type="button"
 							class="button_b" value="查询" onclick="gridSearch()" />
 							&nbsp;&nbsp;<input type="button"
 							class="button_b" value="清空" onclick="reset()" />
-					</td>
+				</td>
 			</tr>
 			<tr>
 				<td>&nbsp;&nbsp;类型：<select id="type" name="type" style="width:150px;">

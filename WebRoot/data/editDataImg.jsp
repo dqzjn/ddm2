@@ -103,7 +103,7 @@ body {
 			alert("来源网站不能为空!");
 			return false;
 		}
-		if ($.trim($("#data_type").val()) == "") {
+		if ($.trim($("#type").val()) == "") {
 			alert("数据类型不能为空!");
 			return false;
 		}

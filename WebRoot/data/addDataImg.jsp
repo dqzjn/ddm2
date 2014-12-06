@@ -113,10 +113,10 @@ body {
 			alert("图片不能空!请添加图片url或者上传图片!");
 			return false;
 		}
-//		if ($.trim($("#data_type").val()) == "") {
-//			alert("数据类型不能为空!");
-//			return false;
-//		}
+		if ($.trim($("#type").val()) == "") {
+			alert("数据类型不能为空!");
+			return false;
+		}
 		var d=/\.[^\.]+$/.exec($("#url").val())+'';
 		if (d.toLowerCase() == ".gif") {
 			document.getElementById("data_type").value= 'gif';
@@ -125,6 +125,10 @@ body {
 		
 		if (d.toLowerCase() != ".jpg"&&d.toLowerCase() != ".png") {
 			document.getElementById("data_type").value= 'html';
+			alert("url格式不正确!");
+			return false;
+		}else{
+			document.getElementById("data_type").value= 'singleImg';
 			return true;
 		}else{
 			document.getElementById("data_type").value= 'singleImg';
@@ -236,6 +240,17 @@ body {
 					}
     	    	}
  		});
+    }
+    
+    //只可以选一种方式! 填url地址 或 上传图片 
+    function verifyOnly(){
+    	alert("11111");
+    	var url = document.getElementById("url").value；
+    	alert(url);
+    	if(url != null){
+    		alert(只可以选一种方式!! 填写url地址 或 上传图片);
+    		return false;
+    	}
     }
 </script>
 <style type="text/css">
@@ -385,7 +400,7 @@ html {
 						<td align="right">来源网站：</td>
 						<td align="left"><input id="collect_website"
 							name="dataImgTable.collect_website" 
-							<c:if test="${userOrg!='0'}">readonly="readonly"</c:if> value="${dataImgTable.collect_website}" style="width: 120px" />
+							<c:if test="${userOrg!='0'&&userOrg!='1'}">readonly="readonly"</c:if> value="${dataImgTable.collect_website}" style="width: 120px" />
 						</td>
 					</tr>
 					<c:if test="${sessionScope.USER_ORG=='0'}">
@@ -439,7 +454,7 @@ html {
 					<tr>
 						<td align="right">上传图片：</td>
 						<td align="left"><input type="file" id="image"
-							name="image" value="${image}" onchange="uploadImg()"/>
+							name="image" value="${image}" onchange="uploadImg()" />
 						</td>
 					</tr>
 					<tr>
@@ -458,7 +473,7 @@ html {
 					<tr>
 						<td colspan="4" align="center"><input type="button"
 							id="submitBtn" value="保 存" class="button_b" /> 
-							<c:if test="${sessionScope.USER_ORG=='0'}"><input type="button" id="saveInsert" value="保存并入云库" class="button_b" /></c:if>
+							<c:if test="${userOrg=='0'||userOrg=='1'}"><input type="button" id="saveInsert" value="保存并入云库" class="button_b" /></c:if>
 							 <input type="button" value="取 消" id="exit"
 							class="button_b" onclick="window.close()" />
 						</td>

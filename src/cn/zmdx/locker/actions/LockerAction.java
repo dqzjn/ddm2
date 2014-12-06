@@ -58,7 +58,11 @@ public class LockerAction extends ActionSupport {
 	private String imgName;
 	private String[] imgUrl;
 	private File[] image;
-	private String [] uImgId;
+	private String[] uImgId;
+	private String[] oldFile;
+	private List<File> images;
+	private List<String> imagesContentType; // 文件的内容类型
+	private List<String> imagesFileName; // 上传文件名
 
 	public String getResult() {
 		return result;
@@ -202,6 +206,38 @@ public class LockerAction extends ActionSupport {
 
 	public void setuImgId(String[] uImgId) {
 		this.uImgId = uImgId;
+	}
+
+	public String[] getOldFile() {
+		return oldFile;
+	}
+
+	public void setOldFile(String[] oldFile) {
+		this.oldFile = oldFile;
+	}
+
+	public List<File> getImages() {
+		return images;
+	}
+
+	public void setImages(List<File> images) {
+		this.images = images;
+	}
+
+	public List<String> getImagesContentType() {
+		return imagesContentType;
+	}
+
+	public void setImagesContentType(List<String> imagesContentType) {
+		this.imagesContentType = imagesContentType;
+	}
+
+	public List<String> getImagesFileName() {
+		return imagesFileName;
+	}
+
+	public void setImagesFileName(List<String> imagesFileName) {
+		this.imagesFileName = imagesFileName;
 	}
 
 	public String getColumnJson(PageResult result, String[] viewArray) {
@@ -366,7 +402,8 @@ public class LockerAction extends ActionSupport {
 					"url",
 					"imgUrl",
 					"type:[{'joke':'搞笑','news':'新闻','film':'电影','game':'游戏','entertainment':'娱乐'}]",
-					"collect_time", "data_sub" };
+					"collect_time",
+					"data_sub:[{'0':'审核中','1':'审核通过','2':'审核未通过'}]" };
 			if (title != null && !"".equals(title)) {
 				filterMap.put("title", title);
 			}
@@ -500,7 +537,8 @@ public class LockerAction extends ActionSupport {
 		String imageName = "";
 		String checks[] = check.split(",");
 		try {
-			if (null == dataImgId || "".equals(dataImgId)|| "0".equals(dataImgId)) {
+			if (null == dataImgId || "".equals(dataImgId)
+					|| "0".equals(dataImgId)) {
 				dataImgTable.setData_sub(0);
 				dataImgTable.setImgUrl(imgUrl[0]);
 				// if (dataImgTable.getData_type() == null
@@ -555,118 +593,6 @@ public class LockerAction extends ActionSupport {
 											+ Integer.parseInt(id) + "");
 									entity.setData_type("multiImg");
 									lockerService.save(entity);
-								}
-							}
-						}
-					}
-				}
-			} else {
-				//获取要删除的img的id
-				String delImgIds=ServletActionContext.getRequest().getParameter("delImgIds");
-				if(!"".equals(delImgIds)&&delImgIds!=null){
-					if(!"".equals(delImgIds.substring(0, delImgIds.length()-1))){
-						//根据id删除相应img
-						lockerService.executeBySQL("delete from img where id in ("+delImgIds.substring(0, delImgIds.length()-1)+")");
-						//删除相应的data_img中间表数据
-						lockerService.executeBySQL("delete from data_img where img_id in ("+delImgIds.substring(0, delImgIds.length()-1)+")");
-					}
-				}
-				Data_img_table entity = lockerService.getDataImgById(dataImgId);
-				entity.setId(Integer.parseInt(dataImgId));
-				entity.setTitle(dataImgTable.getTitle());
-				entity.setUrl(dataImgTable.getUrl());
-				entity.setImgUrl(imgUrl[0]);
-				entity.setCollect_website(dataImgTable.getCollect_website());
-				entity.setData_type(dataImgTable.getData_type());
-				entity.setCollect_time(dataImgTable.getCollect_time());
-				entity.setData_sub(0);
-				lockerService.saveOrUpdate(entity);
-				lockerService.deleteTagByDataId(Integer.parseInt(dataImgId));
-				for (String ck : checks) {
-					Data_tag dt = new Data_tag();
-					dt.setTag_id(Integer.parseInt(ck.trim()));
-					dt.setData_id(Integer.parseInt(dataImgId));
-					lockerService.saveOrUpdate(dt);
-				}
-				//更新需要修改的img对象
-				//
-				int countU=0;
-				if(imgNames!=null&&!"".equals(imgNames)){
-					String[] imgNamess = imgNames.substring(0,
-							imgNames.length() - 1).split("#");
-					List imgNameList=Arrays.asList(imgNamess);
-					if(uImgId!=null){
-						for(int i=0;i<uImgId.length;i++){
-							if(imgNamess.length>i){
-								if(uImgId[i]!=null&&!"".equals(uImgId[i])){
-									Img img =(Img)lockerService.getObjectById(Img.class, Integer.parseInt(uImgId[i]));
-									if(imgNamess[i]!=null&&!"".equals(imgNamess[i])){
-										img.setImageUrl(uploadImg(imgNamess[i], image[i]));
-										countU++;
-									}
-									img.setContent(imgUrl[i]); 
-									lockerService.saveOrUpdate(img);
-								}
-							}
-						}
-					}
-					if (imgNames.length()>1) {
-						int uIdCounts=0;
-						if(uImgId==null){
-							uIdCounts=0;
-						}else{
-							uIdCounts=uImgId.length;
-						}
-						if (imgNamess.length+uIdCounts == 1 ) {//单图文
-							imageName = uploadImg(imgNamess[0], image[uIdCounts]);
-							Data_img_table dit = lockerService
-									.getDataImgById(dataImgId);
-							dit.setUrl("http://cos.myqcloud.com/11000436/data/image/"
-									+ imageName);
-							dit.setImgUrl(imgUrl[0]);
-							if (!"gif".equals(imageName.substring(
-									imageName.indexOf(".") + 1).toLowerCase())
-									&& !"html".equals(imageName.substring(
-											imageName.indexOf(".") + 1)
-											.toLowerCase())) {
-								dit.setData_type("singleImg");
-							}
-							lockerService.save(dit);
-						} else if (imgNamess.length > 1) {//多图文
-							if(countU==0||image.length==imgUrl.length){//全部修改或者全都不修改，添加新的图文信息
-								if(countU==0){
-									countU=uImgId==null?0:uImgId.length;
-								}
-								for (int i = 0; i < imgNameList.size()-countU; i++) {
-									if (image[i] != null) {
-										imageName = uploadImg(imgNameList.get(i+countU)+"", image[i]);
-										Img img = new Img();
-										Data_img dataImg = new Data_img();
-										img.setImageUrl("http://cos.myqcloud.com/11000436/data/image/"
-												+ imageName);
-										img.setContent(imgUrl[i+countU]);
-										String img_id = lockerService.save(img);
-										dataImg.setData_id(Integer.parseInt(dataImgId));
-										dataImg.setImg_id(Integer.parseInt(img_id));
-										lockerService.save(dataImg);
-									}
-								}
-							}else{//修改部分原有图文
-								int num =0;
-								for (int i = countU; i < image.length; i++) {
-									if (image[i] != null) {
-										imageName = uploadImg(imgNameList.get(uImgId==null?0:uImgId.length+num)+"", image[i]);
-										Img img = new Img();
-										Data_img dataImg = new Data_img();
-										img.setImageUrl("http://cos.myqcloud.com/11000436/data/image/"
-												+ imageName);
-										img.setContent(imgUrl[i]);
-										String img_id = lockerService.save(img);
-										dataImg.setData_id(Integer.parseInt(dataImgId));
-										dataImg.setImg_id(Integer.parseInt(img_id));
-										lockerService.save(dataImg);
-										num++;
-									}
 								}
 							}
 						}
@@ -784,134 +710,12 @@ public class LockerAction extends ActionSupport {
 							}
 						}
 					}
-				} else {
-					//获取要删除的img的id
-					String delImgIds=ServletActionContext.getRequest().getParameter("delImgIds");
-					if(!"".equals(delImgIds)&&delImgIds!=null){
-						if(!"".equals(delImgIds.substring(0, delImgIds.length()-1))){
-							//根据id删除相应img
-							lockerService.executeBySQL("delete from img where id in ("+delImgIds.substring(0, delImgIds.length()-1)+")");
-							//删除相应的data_img中间表数据
-							lockerService.executeBySQL("delete from data_img where img_id in ("+delImgIds.substring(0, delImgIds.length()-1)+")");
-						}
-					}
-					Data_img_table entity = lockerService.getDataImgById(dataImgId);
-					entity.setId(Integer.parseInt(dataImgId));
-					entity.setTitle(dataImgTable.getTitle());
-					entity.setUrl(dataImgTable.getUrl());
-					entity.setImgUrl(imgUrl[0]);
-					entity.setCollect_website(dataImgTable.getCollect_website());
-					entity.setData_type(dataImgTable.getData_type());
-					entity.setCollect_time(dataImgTable.getCollect_time());
-					entity.setData_sub(0);
-					lockerService.saveOrUpdate(entity);
-					lockerService.deleteTagByDataId(Integer.parseInt(dataImgId));
-					for (String ck : checks) {
-						Data_tag dt = new Data_tag();
-						dt.setTag_id(Integer.parseInt(ck.trim()));
-						dt.setData_id(Integer.parseInt(dataImgId));
-						lockerService.saveOrUpdate(dt);
-					}
-					//更新需要修改的img对象
-					//
-					int countU=0;
-					if(imgNames!=null&&!"".equals(imgNames)){
-						String[] imgNamess = imgNames.substring(0,
-								imgNames.length() - 1).split("#");
-						List imgNameList=Arrays.asList(imgNamess);
-						if(uImgId!=null){
-							for(int i=0;i<uImgId.length;i++){
-								if(imgNamess.length>i){
-									if(uImgId[i]!=null&&!"".equals(uImgId[i])){
-										Img img =(Img)lockerService.getObjectById(Img.class, Integer.parseInt(uImgId[i]));
-										if(imgNamess[i]!=null&&!"".equals(imgNamess[i])){
-											img.setImageUrl(uploadImg(imgNamess[i], image[i]));
-											countU++;
-										}
-										img.setContent(imgUrl[i]); 
-										lockerService.saveOrUpdate(img);
-									}
-								}
-							}
-						}
-						if (imgNames.length()>1) {
-							int uIdCounts=0;
-							if(uImgId==null){
-								uIdCounts=0;
-							}else{
-								uIdCounts=uImgId.length;
-							}
-							if (imgNamess.length+uIdCounts == 1 ) {//单图文
-								imageName = uploadImg(imgNamess[0], image[uIdCounts]);
-								Data_img_table dit = lockerService
-										.getDataImgById(dataImgId);
-								dit.setUrl("http://cos.myqcloud.com/11000436/data/image/"
-										+ imageName);
-								dit.setImgUrl(imgUrl[0]);
-								if (!"gif".equals(imageName.substring(
-										imageName.indexOf(".") + 1).toLowerCase())
-										&& !"html".equals(imageName.substring(
-												imageName.indexOf(".") + 1)
-												.toLowerCase())) {
-									dit.setData_type("singleImg");
-								}
-								lockerService.save(dit);
-							} else if (imgNamess.length > 1) {//多图文
-								if(countU==0||image.length==imgUrl.length){//全部修改或者全都不修改，添加新的图文信息
-									if(countU==0){
-										countU=uImgId==null?0:uImgId.length;
-									}
-									for (int i = 0; i < imgNameList.size()-countU; i++) {
-										if (image[i] != null) {
-											imageName = uploadImg(imgNameList.get(i+countU)+"", image[i]);
-											Img img = new Img();
-											Data_img dataImg = new Data_img();
-											img.setImageUrl("http://cos.myqcloud.com/11000436/data/image/"
-													+ imageName);
-											img.setContent(imgUrl[i+countU]);
-											String img_id = lockerService.save(img);
-											dataImg.setData_id(Integer.parseInt(dataImgId));
-											dataImg.setImg_id(Integer.parseInt(img_id));
-											lockerService.save(dataImg);
-										}
-									}
-								}else{//修改部分原有图文
-									int num =0;
-									for (int i = countU; i < image.length; i++) {
-										if (image[i] != null) {
-											imageName = uploadImg(imgNameList.get(uImgId==null?0:uImgId.length+num)+"", image[i]);
-											Img img = new Img();
-											Data_img dataImg = new Data_img();
-											img.setImageUrl("http://cos.myqcloud.com/11000436/data/image/"
-													+ imageName);
-											img.setContent(imgUrl[i]);
-											String img_id = lockerService.save(img);
-											dataImg.setData_id(Integer.parseInt(dataImgId));
-											dataImg.setImg_id(Integer.parseInt(img_id));
-											lockerService.save(dataImg);
-//											if (i == 0) {
-//												Data_img_table dit = lockerService
-//														.getDataImgById(dataImgId);
-//												dit.setUrl("http://cos.myqcloud.com/11000436/data/image/"
-//														+ imageName);
-//												dit.setImgUrl("http://192.168.1.110:8080/pandora/locker!viewDataImg.action?id="
-//														+ Integer.parseInt(dataImgId) + "");
-//												dit.setData_type("multiImg");
-//												lockerService.save(dit);
-//											}
-											num++;
-										}
-									}
-								}
-							}
-						}
-					}
+					int bl = lockerService.insertDataImg(dataImgTable);
+					if (bl > 0)
+						out.print("{\"result\":\"success\"}");
+					else
+						out.print("{\"result\":\"error\"}");
 				}
-				int bl = lockerService.insertDataImg(dataImgTable);
-				if (bl > 0)
-					out.print("{\"result\":\"success\"}");
-				else
-					out.print("{\"result\":\"error\"}");
 			} catch (Exception e) {
 				logger.error(e);
 				e.printStackTrace();
@@ -1124,7 +928,7 @@ public class LockerAction extends ActionSupport {
 			Map<String, String> filterMap = getPagerMap();
 			String[] viewArray = { "ID", "name", "desc", "author", "thumbURL",
 					"imageURL", "imageNAME", "imageEXT", "publishDATE",
-					"data_sub:[{'0':'审核中','1':'审核通过'}]" };
+					"data_sub:[{'0':'审核中','1':'审核通过','2':'审核未通过'}]" };
 			if (p_name != null && !"".equals(p_name)) {
 				filterMap.put("p_name", p_name);
 			}
@@ -1411,6 +1215,144 @@ public class LockerAction extends ActionSupport {
 				out.print("{\"result\":\"error\"}");
 			else
 				out.print("{\"result\":\"success\"}");
+		} catch (Exception e) {
+			logger.error(e);
+			e.printStackTrace();
+			out.print("{\"result\":\"error\"}");
+		}
+	}
+
+	/**
+	 * 修改数据
+	 * 
+	 * @throws IOException
+	 */
+	public void updateDataImg() throws IOException {
+		PrintWriter out = ServletActionContext.getResponse().getWriter();
+		try {
+			// 获取所选标签
+			String checks[] = check.split(",");
+			String ids = ServletActionContext.getRequest().getParameter("ids");
+			// 获取要删除的img的id
+			String delImgIds = ServletActionContext.getRequest().getParameter(
+					"delImgIds");
+			// 验证是否是保存并插入数据库1，是
+			String flag = ServletActionContext.getRequest()
+					.getParameter("flag");
+			if (!"".equals(delImgIds) && delImgIds != null) {
+				if (!"".equals(delImgIds.substring(0, delImgIds.length() - 1))) {
+					// 根据id删除相应img
+					lockerService.executeBySQL("delete from img where id in ("
+							+ delImgIds.substring(0, delImgIds.length() - 1)
+							+ ")");
+					// 删除相应的data_img中间表数据
+					lockerService
+							.executeBySQL("delete from data_img where img_id in ("
+									+ delImgIds.substring(0,
+											delImgIds.length() - 1) + ")");
+				}
+			}
+			Data_img_table dit = (Data_img_table) lockerService.getObjectById(
+					Data_img_table.class, Integer.parseInt(dataImgId));
+			dit.setTitle(dataImgTable.getTitle());
+			dit.setCollect_website(dataImgTable.getCollect_website());
+			dit.setType(dataImgTable.getType());
+			dit.setCollect_time(dataImgTable.getCollect_time());
+			// 删除数据原有标签
+			lockerService.deleteTagByDataId(Integer.parseInt(dataImgId));
+			for (String ck : checks) {
+				Data_tag dt = new Data_tag();
+				dt.setTag_id(Integer.parseInt(ck.trim()));
+				dt.setData_id(Integer.parseInt(dataImgId));
+				lockerService.saveOrUpdate(dt);
+			}
+			int uImgCount = 0;
+			for (int i = 0; i < imgUrl.length; i++) {
+				if (i < oldFile.length) {// 修改原有图文信息
+					Img img = (Img) lockerService.getObjectById(Img.class,
+							Integer.parseInt(uImgId[i]));
+					img.setContent(imgUrl[i]);
+					if (oldFile[i] == null || "".equals(oldFile[i])) {
+						File file = images.get(uImgCount);
+						System.out.println(file.getName());
+						System.out.println(file.getAbsoluteFile());
+						String imageName = uploadImg(
+								imagesFileName.get(uImgCount) + "", file);
+						img.setImageUrl("http://cos.myqcloud.com/11000436/data/image/"
+								+ imageName);
+						uImgCount++;
+					}
+					lockerService.saveOrUpdate(img);
+				} else {// 添加新的图文信息
+					if (imgUrl[i] != null && !"".equals(imgUrl[i])) {
+						if (imagesFileName != null) {
+							if (imagesFileName.get(uImgCount) != null
+									&& !"".equals(imagesFileName.get(uImgCount))) {
+								Img img = new Img();
+								img.setContent(imgUrl[i]);
+								if (images.get(uImgCount) != null) {
+									File file = images.get(uImgCount);
+									String imageName = uploadImg(
+											imagesFileName.get(uImgCount) + "",
+											file);
+									img.setImageUrl("http://cos.myqcloud.com/11000436/data/image/"
+											+ imageName);
+								}
+								lockerService.saveOrUpdate(img);
+								Data_img di = new Data_img();
+								di.setData_id(dit.getId());
+								di.setImg_id(img.getId());
+								lockerService.save(di);
+								uImgCount++;
+							}
+						}
+					} else {
+						Img img = new Img();
+						if (imagesFileName != null) {
+							if (imagesFileName.get(uImgCount) != null
+									&& !"".equals(imagesFileName.get(uImgCount))) {
+								File file = images.get(uImgCount);
+								String imageName = uploadImg(
+										imagesFileName.get(uImgCount) + "",
+										file);
+								img.setImageUrl("http://cos.myqcloud.com/11000436/data/image/"
+										+ imageName);
+								lockerService.saveOrUpdate(img);
+								Data_img di = new Data_img();
+								di.setData_id(dit.getId());
+								di.setImg_id(img.getId());
+								lockerService.save(di);
+								uImgCount++;
+							}
+						}
+					}
+				}
+			}
+			List list = lockerService
+					.queryAllBySql("select i.id,i.imageUrl,i.content from img i left join data_img d on d.img_id=i.id where d.data_id="
+							+ dit.getId());
+			if (list.size() > 0) {
+				Object[] obj = (Object[]) list.get(0);
+				dit.setUrl(obj[1] + "");
+				if (list.size() > 1) {
+					dit.setImgUrl("http://nb.hdlocker.com/pandora/locker!viewDataImg.action?id="
+							+ Integer.parseInt(dataImgId));
+				} else if (list.size() == 1) {
+					dit.setImgUrl(obj[2] + "");
+				}
+			}
+			// 保存dit对象
+			lockerService.save(dit);
+			if ("1".equals(flag)) {
+				int num = lockerService.insertDataImg(dit);
+				if (num > 0) {
+					out.print("{\"result\":\"success\"}");
+				} else {
+					out.print("{\"result\":\"error\"}");
+				}
+			} else {
+				out.print("{\"result\":\"success\"}");
+			}
 		} catch (Exception e) {
 			logger.error(e);
 			e.printStackTrace();

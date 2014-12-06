@@ -69,6 +69,8 @@ text-overflow : ellipsis;
 					  			return "<p style=\"color: #FFC125;font-size: 16px;\">审核通过</p>" ;
 							}else if(rowObject.data_sub=='审核中'){
 					  			return "<p style=\"color: green;font-size: 16px;\">审核中</p>" ;
+							}else if(rowObject.data_sub=='审核未通过'){
+					  			return "<p style=\"color: red;font-size: 16px;\">审核未通过</p>" ;
 							}
 		  				}},
 			],

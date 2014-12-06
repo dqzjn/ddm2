@@ -153,7 +153,7 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 				queryString.append("and collect_website = '"
 						+ filterMap.get("collect_website") + "' ");
 			}
-			if (!"0".equals(filterMap.get("userOrg"))
+			if (!"0".equals(filterMap.get("userOrg"))&&!"1".equals(filterMap.get("userOrg"))
 					&& null != filterMap.get("userOrg")
 					&& !"".equals(filterMap.get("userOrg"))) {
 				queryCountString.append("and collect_website = '"
@@ -266,7 +266,7 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 							+ Integer.parseInt(id) + "");
 				}
 				sql.append("('" + dit.getId() + "','" + dit.getTitle() + "','"
-						+ dit.getUrl() + "','" + dit.getImgUrl() + "','"
+						+ dit.getUrl() + "','" + dit.getImgUrl().replace("'", "''") + "','"
 						+ dit.getData_type() + "','" + dit.getCollect_time()
 						+ "','" + dit.getCollect_website() + "','"
 						+ dit.getType() + "'),");
@@ -278,7 +278,7 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 								+ "'),");
 						im = getImgById(String.valueOf(di.getImg_id()));
 						img_sql.append("('" + im.getId() + "','"
-								+ im.getImageUrl() + "','" + im.getContent()
+								+ im.getImageUrl() + "','" + im.getContent().replace("'", "''")
 								+ "'),");
 					}
 					pstmt = (PreparedStatement) dbConn
@@ -359,7 +359,7 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 						+ "'),");
 			} else {
 				sql.append("('" + dit.getTitle() + "','" + dit.getUrl() + "','"
-						+ dit.getImgUrl() + "','" + dit.getData_type() + "','"
+						+ dit.getImgUrl().replace("'", "''") + "','" + dit.getData_type() + "','"
 						+ dit.getCollect_time() + "','"
 						+ dit.getCollect_website() + "','" + dit.getType()
 						+ "'),");
@@ -370,7 +370,7 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 							+ di.getImg_id() + "','" + di.getData_id() + "'),");
 					im = getImgById(String.valueOf(di.getImg_id()));
 					img_sql.append("('" + im.getId() + "','" + im.getImageUrl()
-							+ "','" + im.getContent() + "'),");
+							+ "','" + im.getContent().replace("'", "''") + "'),");
 				}
 				pstmt = (PreparedStatement) dbConn.prepareStatement(String
 						.valueOf(img_sql.substring(0, img_sql.length() - 1)));
