@@ -35,11 +35,12 @@ body {
 	background: #ffffff;
 }
 .button_b{height: 18px;width: 36px;background-image: url(<%=request.getContextPath()%>/images/inputBg.png) ;background-size:cover;background-color: transparent;border: none ;}
+.button_b1{height: 18px;width: 89px;background-image: url(<%=request.getContextPath()%>/images/inputBg2.png) ;background-size:cover;background-color: transparent;border: none ;}
 </style>
 <script type="text/javascript">
 	$(document).ready(function(){
   		var optionsSubmit = {
-    	    url:'<%=request.getContextPath()%>/locker_saveDataImg.action',
+    	    url:'<%=request.getContextPath()%>/locker_updateDataImg.action',
     	    dataType:'json',
     	    success: function(data) {
     	    	 if(data.result=='success'){
@@ -52,7 +53,7 @@ body {
 	    	      }
     	}};
   		var optionsSubmitInsert = {
-    	    url:'<%=request.getContextPath()%>/locker_saveInsertDataImg.action',
+    	    url:'<%=request.getContextPath()%>/locker_updateDataImg.action?flag=1',
     	    dataType:'json',
     	    success: function(data) {
     	    	 if(data.result=='success'){
@@ -99,41 +100,46 @@ body {
 			alert("时间不能为空!");
 			return false;
 		}
+		
+		if ($("input[name='check']:checkbox:checked").length == 0) {
+			alert("标签不能为空!");
+			return false;
+		}
 		if ($.trim($("#collect_website").val()) == "") {
 			alert("来源网站不能为空!");
+			return false;
+		}
+		var imgUrls=document.getElementsByName("image");
+		if ($.trim($("#url").val()) == ""&&imgUrls.length==1&&imgUrls[0].files[0]==undefined) {
+			alert("图片不能空!请添加图片url或者上传图片!");
 			return false;
 		}
 		if ($.trim($("#type").val()) == "") {
 			alert("数据类型不能为空!");
 			return false;
 		}
-		if ($("input[name='check']:checkbox:checked").length == 0) {
-			alert("标签不能为空!");
-			return false;
-		}
 		var d=/\.[^\.]+$/.exec($("#url").val())+'';
 		if (d.toLowerCase() == ".gif") {
-			var select = document.getElementById("data_type");  
-			for(var i=0; i<select.options.length; i++){  
-			    if(select.options[i].innerHTML == '动态图'){  
-			        select.options[i].selected = true;  
-			        break;  
-			    }  
-			}
+			document.getElementById("data_type").value= 'gif';
 			return true;
 		}
-		if ($.trim($("#data_type").val()) == "gif") {
-			if(d.toLowerCase()!='.gif'){
-				alert("类型与url不匹配!");
-				return false;
-			}
-		}
+		
 		if (d.toLowerCase() != ".jpg"&&d.toLowerCase() != ".png") {
-			if($("#data_type").val()=='joke'||$("#data_type").val()=='news'){
-				alert("类型与url不匹配!");
-				return false;
-			}
+			document.getElementById("data_type").value= 'html';
+			alert("url格式不正确!");
+			return false;
+		}else{
+			document.getElementById("data_type").value= 'singleImg';
+			return true;
 		}
+		
+		//if ($.trim($("#data_type").val()) == "gif") 
+//		if (d.toLowerCase() != ".jpg"&&d.toLowerCase() != ".png") {
+//			if($("#data_type").val()=='joke'||$("#data_type").val()=='news'){
+//				alert("类型与url不匹配!");
+//				return false;
+//			}
+//		}
 
 		return true;
 	}
@@ -196,6 +202,9 @@ body {
     		}
     	}
         document.getElementById("imgNames").value = imgUrl;
+    };
+    function uploadImg(oldImgId) {
+    	document.getElementById(oldImgId).value = "";
     };
     
     function addHTML(){
@@ -364,7 +373,7 @@ html {
 </style>
 </head>
 <body onload="changedTag()">
-	<form action="" id="pageFrom" name="" method="post" enctype="multipart/form-data">
+	<form action="" id="pageFrom" name="" method="post" enctype="multipart/form-data" style="background-color: #F0F0F0">
 		<br />
 		<fieldset class="fieldsetStyle">
 			<legend>
@@ -382,7 +391,7 @@ html {
 						<td align="right">来源网站：</td>
 						<td align="left"><input id="collect_website"
 							name="dataImgTable.collect_website" 
-							<c:if test="${userOrg!='0'}">readonly="readonly"</c:if> value="${dataImgTable.collect_website}" style="width: 120px" />
+							<c:if test="${userOrg!='0'&&userOrg!='1'}">readonly="readonly"</c:if> value="${dataImgTable.collect_website}" style="width: 120px" />
 						</td>
 					</tr>
 					<tr>
@@ -430,13 +439,14 @@ html {
 						</td>
 					</tr>
 					</table>
-					<c:if test="${fn:length(imgList)>1 }">
+					<c:if test="${fn:length(imgList)>0 }">
 						<c:forEach var="img" items="${imgList }" varStatus="vs">
 							<table id="tab${img[2]}">
 								<tr>
 									<td align="right">上传图片：</td>
 									<td align="left"><input type="file" id="image"
-										name="image" value="${img[0]}" onchange="uploadImg()"/>
+										name="images" onchange="uploadImg('image${vs.count}')"/>
+										<input type="hidden" id="image${vs.count}" name="oldFile"  value="${img[0]}"/>
 									</td>
 									<td><input type="hidden" name="uImgId" value="${img[2] }" />
 										<a href="javascript:delTab('tab${img[2]}');" style="margin-right: 0px;">删除</a>
@@ -457,7 +467,8 @@ html {
 								<tr>
 									<td align="right">上传图片：</td>
 									<td align="left"><input type="file" id="image"
-										name="image" value="${image}" onchange="uploadImg()"/>
+										name="images" value="${image}" onchange="uploadImg('image0')"/>
+										<input type="hidden" id="image0" name="oldFile"  value="${dataImgTable.url}"/>
 									</td>
 									<td>
 										 <a href="javascript:delTab('tab');" style="margin-right: 0px;">删除</a>
@@ -476,7 +487,7 @@ html {
 						<tr>
 							<td align="right">上传图片：</td>
 							<td align="left"><input type="file" id="image"
-								name="image" value="${image}" onchange="uploadImg()"/>
+								name="images" value="${image}" onchange="uploadImg()"/>
 							</td>
 						</tr>
 						<tr>
@@ -489,14 +500,14 @@ html {
 				<table>
 				   <tr>
 				   	<td>
-					   	<input type="button" id="addHtml" value="加@@" onclick="addHTML()" /> 
-							<input type="button" id="delHtml" value="减@@" onclick="delHTML()" /> 
+					   	<input type="button" id="addHtml" value="+图片" onclick="addHTML()"  class="button_b"/> 
+							<input type="button" id="delHtml" value="-图片" onclick="delHTML()"  class="button_b"/> 
 						</td>
 				    </tr>
 					<tr>
 						<td colspan="4" align="center"><input type="button"
 							id="submitBtn" value="保 存" class="button_b" /> 
-							<c:if test="${sessionScope.USER_ORG=='0'}"><input type="button" id="saveInsert" value="保存并入云库" class="button_b" /></c:if>
+							<c:if test="${userOrg=='0'||userOrg=='1'}"><input type="button" id="saveInsert" value="保存并入云库" class="button_b1" /></c:if>
 							 <input type="button" value="取 消" id="exit"
 							class="button_b" onclick="window.close()" />
 						</td>
@@ -506,6 +517,7 @@ html {
 		</fieldset>
 		<input type="hidden" name="imgNames" id="imgNames" value="${imgNames}"/>
 		<input type="hidden" name="delImgIds" id="delImgIds" value=""/>
+		<input type="hidden" name="dataImgTable.data_type" id="data_type" value="${dataImgTable.data_type}"/>
 	</form>
 </body>
 </html>

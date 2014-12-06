@@ -34,6 +34,7 @@ body {
 	background: #ffffff;
 }
 .button_b{height: 18px;width: 36px;background-image: url(<%=request.getContextPath()%>/images/inputBg.png) ;background-size:cover;background-color: transparent;border: none ;}
+.button_b1{height: 18px;width: 89px;background-image: url(<%=request.getContextPath()%>/images/inputBg2.png) ;background-size:cover;background-color: transparent;border: none ;}
 </style>
 <script type="text/javascript">
 	$(document).ready(function(){
@@ -127,9 +128,6 @@ body {
 			document.getElementById("data_type").value= 'html';
 			alert("url格式不正确!");
 			return false;
-		}else{
-			document.getElementById("data_type").value= 'singleImg';
-			return true;
 		}else{
 			document.getElementById("data_type").value= 'singleImg';
 			return true;
@@ -245,10 +243,10 @@ body {
     //只可以选一种方式! 填url地址 或 上传图片 
     function verifyOnly(){
     	alert("11111");
-    	var url = document.getElementById("url").value；
+    	var url = document.getElementById("url").value;
     	alert(url);
     	if(url != null){
-    		alert(只可以选一种方式!! 填写url地址 或 上传图片);
+    		alert("只可以选一种方式!! 填写url地址 或 上传图片");
     		return false;
     	}
     }
@@ -382,11 +380,11 @@ html {
 </style>
 </head>
 <body onload="changedTag()">
-	<form action="" id="pageFrom" name="" method="post" enctype="multipart/form-data">
+	<form action="" id="pageFrom" name="" method="post" enctype="multipart/form-data" style="background-color: #F0F0F0">
 		<br />
 		<fieldset class="fieldsetStyle">
 			<legend>
-				<font size="3">基本信息</font>
+				<font size="5">基本信息</font>
 			</legend>
 			<div class="fieldsetContent">
 				<table width="650px;" border="0" cellspacing="0" cellpadding="0"
@@ -473,7 +471,7 @@ html {
 					<tr>
 						<td colspan="4" align="center"><input type="button"
 							id="submitBtn" value="保 存" class="button_b" /> 
-							<c:if test="${userOrg=='0'||userOrg=='1'}"><input type="button" id="saveInsert" value="保存并入云库" class="button_b" /></c:if>
+							<c:if test="${userOrg=='0'||userOrg=='1'}"><input type="button" id="saveInsert" value="保存并入云库" class="button_b1" /></c:if>
 							 <input type="button" value="取 消" id="exit"
 							class="button_b" onclick="window.close()" />
 						</td>

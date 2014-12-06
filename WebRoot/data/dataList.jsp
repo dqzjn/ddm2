@@ -32,6 +32,7 @@
 text-overflow : ellipsis;
 }
 .button_b{height: 18px;width: 36px;background-image: url(<%=request.getContextPath()%>/images/inputBg.png) ;background-size:cover;background-color: transparent;border: none ;}
+.button_b1{height: 18px;width: 89px;background-image: url(<%=request.getContextPath()%>/images/inputBg2.png) ;background-size:cover;background-color: transparent;border: none ;}
 .altclass{
 	background: #f9fdfc;
 }
@@ -344,8 +345,8 @@ text-overflow : ellipsis;
 					type='button' value='修 改' onclick='updateData()'
 					class='button_b' /> <input id="delete" type='button' value='删 除'
 					onclick='deleteData();' class='button_b' />
-					<c:if test="${sessionScope.USER_ORG=='0'}"><input id="delete" type='button' value='插入数据库' onclick='insertData();' class='button_b' /></c:if>
-					<c:if test="${sessionScope.USER_ORG=='0'}"><input id="delete" type='button' value='批量修改时间' onclick='updateTime();' class='button_b' style="width: 70px;"/></c:if>
+					<c:if test="${sessionScope.USER_ORG=='0'}"><input id="delete" type='button' value='插入数据库' onclick='insertData();' class='button_b1' /></c:if>
+					<c:if test="${sessionScope.USER_ORG=='0'}"><input id="delete" type='button' value='批量修改时间' onclick='updateTime();' class='button_b1'"/></c:if>
 					 <input id="refresh" type='button' value='刷 新' onclick='refreshIt()' class='button_b' />
 				</td>
 			</tr>

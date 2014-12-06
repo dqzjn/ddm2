@@ -34,6 +34,7 @@ body {
 	background: #ffffff;
 }
 .button_b{height: 18px;width: 36px;background-image: url(<%=request.getContextPath()%>/images/inputBg.png) ;background-size:cover;background-color: transparent;border: none ;}
+.button_b1{height: 18px;width: 89px;background-image: url(<%=request.getContextPath()%>/images/inputBg2.png) ;background-size:cover;background-color: transparent;border: none ;}
 </style>
 <script type="text/javascript">
 	$(document).ready(function(){
@@ -337,7 +338,7 @@ html {
 					<tr>
 						<td colspan="4" align="center"><input type="button"
 							id="submitBtn" value="保 存" class="button_b" /> 
-							<c:if test="${sessionScope.USER_ORG=='0'}"><input type="button" id="saveInsert" value="保存并入云库" class="button_b" /></c:if>
+							<c:if test="${sessionScope.USER_ORG=='0'}"><input type="button" id="saveInsert" value="保存并入云库" class="button_b1" /></c:if>
 							 <input id="exit" type="button" value="取 消"
 							class="button_b" onclick="window.close()" />
 						</td>
