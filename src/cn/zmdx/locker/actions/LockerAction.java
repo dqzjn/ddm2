@@ -580,7 +580,6 @@ public class LockerAction extends ActionSupport {
 						dataImg.setImg_id(img.getId());
 						lockerService.save(dataImg);
 						lockerService.save(entity);
-						lockerService.save(entity);
 					} else if (image.length > 1) {
 						for (int i = 0; i < image.length; i++) {
 							if (image[i] != null) {
@@ -607,6 +606,15 @@ public class LockerAction extends ActionSupport {
 							}
 						}
 					}
+				}else{
+					Img img = new Img();
+					img.setContent(imgUrl[0]);
+					img.setImageUrl(dataImgTable.getUrl());
+					lockerService.save(img);
+					Data_img dataImg = new Data_img();
+					dataImg.setData_id(dataImgTable.getId());
+					dataImg.setImg_id(img.getId());
+					lockerService.save(dataImg);
 				}
 			}
 			out.print("{\"result\":\"success\"}");
@@ -728,6 +736,15 @@ public class LockerAction extends ActionSupport {
 								}
 							}
 						}
+					}else{
+						Img img = new Img();
+						img.setContent(imgUrl[0]);
+						img.setImageUrl(dataImgTable.getUrl());
+						lockerService.save(img);
+						Data_img dataImg = new Data_img();
+						dataImg.setData_id(dataImgTable.getId());
+						dataImg.setImg_id(img.getId());
+						lockerService.save(dataImg);
 					}
 					int bl = lockerService.insertDataImg(dataImgTable);
 					if (bl > 0)
