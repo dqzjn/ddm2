@@ -90,10 +90,10 @@ body {
 			alert("壁纸名不能为空!");
 			return false;
 		}
-		if ($.trim($("#author").val()) == "") {
-			alert("作者不能为空!");
-			return false;
-		}
+// 		if ($.trim($("#author").val()) == "") {
+// 			alert("作者不能为空!");
+// 			return false;
+// 		}
 		if ($.trim($("#publishDATE").val()) == "") {
 			alert("发布时间不能为空!");
 			return false;
