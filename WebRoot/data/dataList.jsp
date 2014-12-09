@@ -39,20 +39,22 @@ text-overflow : ellipsis;
 </style>
 <script type="text/javascript">
 	var widthScroll=window.screen.width;
+	var heightScroll=window.screen.height;
 	$(document).ready(function(){
 		$("#gridTable").jqGrid({					
 			url:'<%=request.getContextPath()%>/locker_queryDataImgTable.action?temp='+Math.round(Math.random()*10000),
 			datatype: "json",
-			height: 460,
+			height: 500,
 			width: widthScroll/1.5, 
-			colNames:['ID','标题','类型','内容','发布日期','url','图片','发布','发布状态'],
+			colNames:['ID','标题','类型','内容','发布日期','来源','url','图片','发布','发布状态'],
 			colModel:[
 					{name:'ID',index:'ID', width:60, key:true, sorttype:"int",hidden:true},								
 					{name:'title',index:'title', width:150}, 
 					{name:'type',index:'type', width:80,align: 'center'}, 
 					{name:'imgUrl',index:'imgUrl', width:200,align: 'center'}, 
 					{name:'collect_time',index:'collect_time', width:80,align: 'center',formatter:"date",formatoptions: {srcformat:'Y-m-d',newformat:'Y-m-d'}},
-					{name:'url',index:'url', width:270,align: 'center'}, 
+					{name:'collect_website',index:'collect_website', width:80,align: 'center'},
+					{name:'url',index:'url', width:150,align: 'center'}, 
 					{name:'url',index:'url', width:200, align:'center',
 							formatter: function(cellvalue, options, rowObject) {
 								if(rowObject.url.indexOf(".")!=-1){
@@ -72,7 +74,7 @@ text-overflow : ellipsis;
 							}else if(rowObject.data_sub=='审核未通过'){
 					  			return "<p style=\"color: red;font-size: 16px;\">审核未通过</p>" ;
 							}
-		  				}},
+		  				}}
 			],
 			shrinkToFit:false,
 			sortname:'id',
@@ -114,9 +116,14 @@ text-overflow : ellipsis;
 	
 	//添加
 	function addData(){
-		//AutoSizeWindow();
-		window.showModalDialog('<%=request.getContextPath()%>/locker_addDataImg.action?temp='+new Date(),'', 'dialogWidth:700px;status:no;dialogHeight:570px;');
-		gridSearch();
+		var ua = navigator.userAgent.toLowerCase();   
+        if(ua.match(/chrome\/([\d.]+)/)){  
+        	window.open('<%=request.getContextPath()%>/locker_addDataImg.action?temp='+new Date(),'window', 'dialogWidth:700px;dialogHeight:570px;');
+    		gridSearch(); 
+        } else{
+        	window.showModalDialog('<%=request.getContextPath()%>/locker_addDataImg.action?temp='+new Date(),'window', 'dialogWidth:700px;dialogHeight:570px;');
+    		gridSearch();
+        }		
 	}
 	
 	//修改
@@ -149,8 +156,14 @@ text-overflow : ellipsis;
 // 		      },  
 // 		      success : function(data, textStatus) {
 // 		      	if(data.result=='success'){
+				var ua = navigator.userAgent.toLowerCase();   
+			        if(ua.match(/chrome\/([\d.]+)/)){  
+			        	window.open('<%=request.getContextPath()%>/locker_editDataImg.action?id='+id+'&temp='+new Date(),'', 'dialogWidth:700px;status:no;dialogHeight:570px;');
+			    		refreshIt();
+			        } else{
 		    		window.showModalDialog('<%=request.getContextPath()%>/locker_editDataImg.action?id='+id+'&temp='+new Date(),'', 'dialogWidth:700px;status:no;dialogHeight:570px;');
 		    		refreshIt();
+			        }
 // 		      	}else{
 // 		      		alert("多图文数据暂不支持修改，敬请等待。。。");
 // 		      	}
@@ -311,7 +324,7 @@ text-overflow : ellipsis;
 								<option value="multiImg">多图</option>
 						</select>
 				</td></c:if>
-				<td>&nbsp;&nbsp;<input type="button"
+				<td><input type="button"
 							class="button_b" value="查询" onclick="gridSearch()" />
 							&nbsp;&nbsp;<input type="button"
 							class="button_b" value="清空" onclick="reset()" />
@@ -331,7 +344,7 @@ text-overflow : ellipsis;
 								<option value="0">未发布</option>
 								<option value="1">已发布</option>
 						</select>
-						<c:if test="${sessionScope.USER_ORG=='0'}"><td>&nbsp;&nbsp;来源：<select id="collect_website" name="collect_website" style="width:150px;">
+						<c:if test="${sessionScope.USER_ORG=='0'}"><td>&nbsp;&nbsp;来&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;源：<select id="collect_website" name="collect_website" style="width:150px;">
 								<option value="">全部</option>
 								<option value="百度">百度</option>
 								<option value="网易">网易</option>

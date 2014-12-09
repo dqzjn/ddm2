@@ -44,10 +44,10 @@ body {
     	    success: function(data) {
     	    	 if(data.result=='success'){
 						alert("保存成功");
-						//window.returnValue = data;
+						window.returnValue = data;
 						window.close();
 	    	      }else{
-	    	      //	window.returnValue = "error";
+	    	      	window.returnValue = "error";
 	    	    	  alert("保存失败");
 	    	      }
     	}};
@@ -110,7 +110,7 @@ body {
 		}
 		
 		var imgUrls=document.getElementsByName("image");
-		if ($.trim($("#url").val()) == ""&&imgUrls.length==1&&imgUrls[0].files[0]==undefined) {
+		if ($.trim($("#url").val()) && ""&&imgUrls.length==1) {
 			alert("图片不能空!请添加图片url或者上传图片!");
 			return false;
 		}
@@ -198,15 +198,23 @@ body {
 	
     function uploadImg() {
     	var imgUrls=document.getElementsByName("image");
-    	 var imgUrl ='';
-    	 
-	    	for(var i=0;i<imgUrls.length;i++){
-	    		var f = imgUrls[i].files;
-	    		if(f[0]!='undefined'&&f[0]!=undefined){
-	    			imgUrl=imgUrl+f[0].name+'#';
-	    		}
+	   	 var imgUrl ='';
+	   	 if(!+[1,]){
+	    		for(var i=0;i<imgUrls.length;i++){
+		    		var f = imgUrls[i].value;
+		    		f=f.substring( f.lastIndexOf('\\')+1 );
+		    		imgUrl=imgUrl+f+'#';
+		    	}
+		        document.getElementById("imgNames").value = imgUrl;
+	    	} else{
+	    		for(var i=0;i<imgUrls.length;i++){
+		    		var f = imgUrls[i].files;
+		    		if(f[0]!='undefined'&&f[0]!=undefined){
+		    			imgUrl=imgUrl+f[0].name+'#';
+		    		}
+		    	}
+		        document.getElementById("imgNames").value = imgUrl;
 	    	}
-	        document.getElementById("imgNames").value = imgUrl;
     	 
     };
     

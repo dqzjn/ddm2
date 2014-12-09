@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -100,9 +101,9 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 		StringBuffer queryString = new StringBuffer();
 		StringBuffer queryCountString = new StringBuffer();
 		queryCountString
-				.append("select count(*) from (select id,title,url,imgUrl,type,collect_time from data_img_table  where 1=1  ");
+				.append("select count(*) from (select id,title,url,imgUrl,type,collect_time,data_sub,collect_website from data_img_table  where 1=1  ");
 		queryString
-				.append("select id,title,url,imgUrl,type,collect_time,data_sub from data_img_table  where 1=1 ");
+				.append("select id,title,url,imgUrl,type,collect_time,collect_website,data_sub from data_img_table  where 1=1 ");
 		if (filterMap != null && !filterMap.isEmpty()) {
 			if (null != filterMap.get("title")
 					&& !"".equals(filterMap.get("title"))) {
@@ -153,7 +154,8 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 				queryString.append("and collect_website = '"
 						+ filterMap.get("collect_website") + "' ");
 			}
-			if (!"0".equals(filterMap.get("userOrg"))&&!"1".equals(filterMap.get("userOrg"))
+			if (!"0".equals(filterMap.get("userOrg"))
+					&& !"1".equals(filterMap.get("userOrg"))
 					&& null != filterMap.get("userOrg")
 					&& !"".equals(filterMap.get("userOrg"))) {
 				queryCountString.append("and collect_website = '"
@@ -242,6 +244,7 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 			String password = p.getProperty("c3p0.cloudTestPassword");
 			Class.forName(driverName).newInstance();
 			dbConn = DriverManager.getConnection(url, userName, password);
+			dbConn.setAutoCommit(false);
 			String idss[] = ids.split(",");
 			Data_img_table dit;
 			Img im;
@@ -266,7 +269,8 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 							+ Integer.parseInt(id) + "");
 				}
 				sql.append("('" + dit.getId() + "','" + dit.getTitle() + "','"
-						+ dit.getUrl() + "','" + dit.getImgUrl().replace("'", "''") + "','"
+						+ dit.getUrl() + "','"
+						+ dit.getImgUrl().replace("'", "''") + "','"
 						+ dit.getData_type() + "','" + dit.getCollect_time()
 						+ "','" + dit.getCollect_website() + "','"
 						+ dit.getType() + "'),");
@@ -278,8 +282,8 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 								+ "'),");
 						im = getImgById(String.valueOf(di.getImg_id()));
 						img_sql.append("('" + im.getId() + "','"
-								+ im.getImageUrl() + "','" + im.getContent().replace("'", "''")
-								+ "'),");
+								+ im.getImageUrl() + "','"
+								+ im.getContent().replace("'", "''") + "'),");
 					}
 					pstmt = (PreparedStatement) dbConn
 							.prepareStatement(String.valueOf(img_sql.substring(
@@ -305,12 +309,18 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 			}
 			pstmt = (PreparedStatement) dbConn.prepareStatement(String
 					.valueOf(sql.substring(0, sql.length() - 1)));
-			return pstmt.executeUpdate();
-
+			int count = pstmt.executeUpdate();
+			dbConn.commit();
+			return count;
 		} catch (Exception e) {
 			e.printStackTrace();
+			try {
+				dbConn.rollback();
+				System.out.println("JDBC Transaction rolled back successfully");
+			} catch (SQLException e1) {
+				System.out.println("SQLException in rollback" + e.getMessage());
+			}
 		} finally {
-
 			try {
 				if (dbConn != null)
 					pstmt.close();
@@ -334,12 +344,13 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 			String password = p.getProperty("c3p0.cloudTestPassword");
 			Class.forName(driverName).newInstance();
 			dbConn = DriverManager.getConnection(url, userName, password);
+			dbConn.setAutoCommit(false);
 			Img im;
 			StringBuffer sql = new StringBuffer();
 			StringBuffer data_img_sql = new StringBuffer();
 			StringBuffer img_sql = new StringBuffer();
 			StringBuffer data_tag_sql = new StringBuffer();
-			sql.append("insert into data_img_table(title,url,imgUrl,data_type,collect_time,collect_website,type) values");
+			sql.append("insert into data_img_table(id,title,url,imgUrl,data_type,collect_time,collect_website,type) values");
 			data_img_sql
 					.append("insert into data_img(id,img_id,data_id) values");
 			img_sql.append("insert into img(id,imageUrl,content) values");
@@ -349,6 +360,8 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 			List<Data_tag> dgList = getData_TagById(String.valueOf(dit.getId()));
 			if (diList.size() > 1) {
 				sql.append("('"
+						+ dit.getId()
+						+ "','"
 						+ dit.getTitle()
 						+ "','"
 						+ dit.getUrl()
@@ -358,44 +371,55 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 						+ dit.getCollect_website() + "','" + dit.getType()
 						+ "'),");
 			} else {
-				sql.append("('" + dit.getTitle() + "','" + dit.getUrl() + "','"
-						+ dit.getImgUrl().replace("'", "''") + "','" + dit.getData_type() + "','"
-						+ dit.getCollect_time() + "','"
-						+ dit.getCollect_website() + "','" + dit.getType()
-						+ "'),");
+				sql.append("('" + dit.getId() + "','" + dit.getTitle() + "','"
+						+ dit.getUrl() + "','"
+						+ dit.getImgUrl().replace("'", "''") + "','"
+						+ dit.getData_type() + "','" + dit.getCollect_time()
+						+ "','" + dit.getCollect_website() + "','"
+						+ dit.getType() + "'),");
 			}
+			pstmt = (PreparedStatement) dbConn.prepareStatement(String
+					.valueOf(sql.substring(0, sql.length() - 1)));
+			int count = pstmt.executeUpdate();
 			if (diList.size() > 0) {
 				for (Data_img di : diList) {
 					data_img_sql.append("('" + di.getId() + "','"
 							+ di.getImg_id() + "','" + di.getData_id() + "'),");
 					im = getImgById(String.valueOf(di.getImg_id()));
 					img_sql.append("('" + im.getId() + "','" + im.getImageUrl()
-							+ "','" + im.getContent().replace("'", "''") + "'),");
+							+ "','" + im.getContent().replace("'", "''")
+							+ "'),");
 				}
-				pstmt = (PreparedStatement) dbConn.prepareStatement(String
-						.valueOf(img_sql.substring(0, img_sql.length() - 1)));
-				pstmt.executeUpdate();
-				pstmt = (PreparedStatement) dbConn.prepareStatement(String
-						.valueOf(data_img_sql.substring(0,
-								data_img_sql.length() - 1)));
-				pstmt.executeUpdate();
+				PreparedStatement img_pstmt = (PreparedStatement) dbConn
+						.prepareStatement(String.valueOf(img_sql.substring(0,
+								img_sql.length() - 1)));
+				img_pstmt.executeUpdate();
+				PreparedStatement data_img_pstmt = (PreparedStatement) dbConn
+						.prepareStatement(String.valueOf(data_img_sql
+								.substring(0, data_img_sql.length() - 1)));
+				data_img_pstmt.executeUpdate();
 			}
 			if (dgList.size() > 0) {
 				for (Data_tag dg : dgList) {
 					data_tag_sql.append("('" + dg.getId() + "','"
 							+ dg.getData_id() + "','" + dg.getTag_id() + "'),");
 				}
-				pstmt = (PreparedStatement) dbConn.prepareStatement(String
-						.valueOf(data_tag_sql.substring(0,
-								data_tag_sql.length() - 1)));
-				pstmt.executeUpdate();
+				PreparedStatement data_tag_pstmt = (PreparedStatement) dbConn
+						.prepareStatement(String.valueOf(data_tag_sql
+								.substring(0, data_tag_sql.length() - 1)));
+				data_tag_pstmt.executeUpdate();
 			}
-			pstmt = (PreparedStatement) dbConn.prepareStatement(String
-					.valueOf(sql.substring(0, sql.length() - 1)));
-			return pstmt.executeUpdate();
+			dbConn.commit();
+			return count;
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			try {
+				dbConn.rollback();
+				System.out.println("JDBC Transaction rolled back successfully");
+			} catch (SQLException e1) {
+				System.out.println("SQLException in rollback" + e.getMessage());
+			}
 		} finally {
 
 			try {
@@ -505,8 +529,8 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 					&& !"".equals(filterMap.get("p_name"))) {
 				queryCountString.append(" and p_name like '%"
 						+ filterMap.get("p_name") + "%'");
-				queryString.append(" and p_name like'%" + filterMap.get("p_name")
-						+ "%'");
+				queryString.append(" and p_name like'%"
+						+ filterMap.get("p_name") + "%'");
 			}
 			if (null != filterMap.get("start_date")
 					&& !"".equals(filterMap.get("start_date"))) {

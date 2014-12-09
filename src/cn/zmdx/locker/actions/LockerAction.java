@@ -334,7 +334,7 @@ public class LockerAction extends ActionSupport {
 	public void queryDataTable() throws IOException {
 		try {
 			ServletActionContext.getResponse().setContentType(
-					"text/json; charset=utf-8");
+					"text/html; charset=utf-8");
 			String title = ServletActionContext.getRequest().getParameter(
 					"data_title");
 			String start_date = ServletActionContext.getRequest().getParameter(
@@ -378,7 +378,7 @@ public class LockerAction extends ActionSupport {
 	public void queryDataImgTable() throws IOException {
 		try {
 			ServletActionContext.getResponse().setContentType(
-					"text/json; charset=utf-8");
+					"text/html; charset=utf-8");
 			String title = StringUtil.encodingUrl(ServletActionContext
 					.getRequest().getParameter("data_title"));
 			String start_date = StringUtil.encodingUrl(ServletActionContext
@@ -402,7 +402,7 @@ public class LockerAction extends ActionSupport {
 					"url",
 					"imgUrl",
 					"type:[{'joke':'搞笑','news':'新闻','film':'电影','game':'游戏','entertainment':'娱乐'}]",
-					"collect_time",
+					"collect_time", "collect_website",
 					"data_sub:[{'0':'审核中','1':'审核通过','2':'审核未通过'}]" };
 			if (title != null && !"".equals(title)) {
 				filterMap.put("title", title);
@@ -471,7 +471,7 @@ public class LockerAction extends ActionSupport {
 	 */
 	public String addDataImg() throws IOException {
 		ServletActionContext.getResponse().setContentType(
-				"text/json; charset=utf-8");
+				"text/html; charset=utf-8");
 		HttpSession session = ServletActionContext.getRequest().getSession();
 		String userOrg = (String) session.getAttribute("USER_ORG");
 		Data_img_table dataImgTable = new Data_img_table();
@@ -499,7 +499,7 @@ public class LockerAction extends ActionSupport {
 	 */
 	public String editDataImg() throws IOException {
 		ServletActionContext.getResponse().setContentType(
-				"text/json; charset=utf-8");
+				"text/html; charset=utf-8");
 		String id = ServletActionContext.getRequest().getParameter("id");
 		dataImgTable = lockerService.getDataImgById(id);
 		HttpSession session = ServletActionContext.getRequest().getSession();
@@ -531,7 +531,7 @@ public class LockerAction extends ActionSupport {
 	 */
 	public void saveDataImg() throws IOException {
 		ServletActionContext.getResponse().setContentType(
-				"text/json; charset=utf-8");
+				"text/html; charset=utf-8");
 		PrintWriter out = ServletActionContext.getResponse().getWriter();
 		// List<String> imageName = new ArrayList<String>();
 		String imageName = "";
@@ -606,7 +606,7 @@ public class LockerAction extends ActionSupport {
 							}
 						}
 					}
-				}else{
+				} else {
 					Img img = new Img();
 					img.setContent(imgUrl[0]);
 					img.setImageUrl(dataImgTable.getUrl());
@@ -637,7 +637,7 @@ public class LockerAction extends ActionSupport {
 		String userOrg = (String) session.getAttribute("USER_ORG");
 		if ("0".equals(userOrg)) {
 			ServletActionContext.getResponse().setContentType(
-					"text/json; charset=utf-8");
+					"text/html; charset=utf-8");
 			PrintWriter out = ServletActionContext.getResponse().getWriter();
 			try {
 				String ids = ServletActionContext.getRequest().getParameter(
@@ -666,7 +666,7 @@ public class LockerAction extends ActionSupport {
 		String userOrg = (String) session.getAttribute("USER_ORG");
 		if ("0".equals(userOrg)) {
 			ServletActionContext.getResponse().setContentType(
-					"text/json; charset=utf-8");
+					"text/html; charset=utf-8");
 			PrintWriter out = ServletActionContext.getResponse().getWriter();
 			try {
 				String imageName = "";
@@ -736,7 +736,7 @@ public class LockerAction extends ActionSupport {
 								}
 							}
 						}
-					}else{
+					} else {
 						Img img = new Img();
 						img.setContent(imgUrl[0]);
 						img.setImageUrl(dataImgTable.getUrl());
@@ -768,7 +768,7 @@ public class LockerAction extends ActionSupport {
 	 */
 	public void saveParams() throws IOException {
 		ServletActionContext.getResponse().setContentType(
-				"text/json; charset=utf-8");
+				"text/html; charset=utf-8");
 		PrintWriter out = ServletActionContext.getResponse().getWriter();
 		try {
 			String ids = ServletActionContext.getRequest().getParameter("ids");
@@ -807,7 +807,7 @@ public class LockerAction extends ActionSupport {
 	public void queryTagTable() {
 		try {
 			ServletActionContext.getResponse().setContentType(
-					"text/json; charset=utf-8");
+					"text/html; charset=utf-8");
 			String tag_name = StringUtil.encodingUrl(ServletActionContext
 					.getRequest().getParameter("tag_name"));
 			PrintWriter out = ServletActionContext.getResponse().getWriter();
@@ -834,7 +834,7 @@ public class LockerAction extends ActionSupport {
 	 */
 	public String editTag() throws IOException {
 		ServletActionContext.getResponse().setContentType(
-				"text/json; charset=utf-8");
+				"text/html; charset=utf-8");
 		String id = ServletActionContext.getRequest().getParameter("id");
 		tag = lockerService.getTagById(id);
 		return "editTag";
@@ -848,7 +848,7 @@ public class LockerAction extends ActionSupport {
 	 */
 	public void saveTag() throws IOException {
 		ServletActionContext.getResponse().setContentType(
-				"text/json; charset=utf-8");
+				"text/html; charset=utf-8");
 		PrintWriter out = ServletActionContext.getResponse().getWriter();
 		try {
 			if (0 == tag.getId()) {
@@ -949,7 +949,7 @@ public class LockerAction extends ActionSupport {
 	public void queryWallPaper() throws IOException {
 		try {
 			ServletActionContext.getResponse().setContentType(
-					"text/json; charset=utf-8");
+					"text/html; charset=utf-8");
 			String p_name = StringUtil.encodingUrl(ServletActionContext
 					.getRequest().getParameter("p_name"));
 			String start_date = StringUtil.encodingUrl(ServletActionContext
@@ -998,7 +998,7 @@ public class LockerAction extends ActionSupport {
 	 */
 	public String editWallPaper() throws IOException {
 		ServletActionContext.getResponse().setContentType(
-				"text/json; charset=utf-8");
+				"text/html; charset=utf-8");
 		String id = ServletActionContext.getRequest().getParameter("id");
 		if (!"".equals(id) && id != null) {
 			wallPaper = (WallPaper) lockerService.getObjectById(
@@ -1014,7 +1014,7 @@ public class LockerAction extends ActionSupport {
 	 */
 	public void saveWallPaper() throws IOException {
 		ServletActionContext.getResponse().setContentType(
-				"text/json; charset=utf-8");
+				"text/html; charset=utf-8");
 		PrintWriter out = ServletActionContext.getResponse().getWriter();
 		try {
 			String imageName = "";
@@ -1074,7 +1074,7 @@ public class LockerAction extends ActionSupport {
 	 */
 	public void saveInsertWallPaper() throws IOException {
 		ServletActionContext.getResponse().setContentType(
-				"text/json; charset=utf-8");
+				"text/html; charset=utf-8");
 		PrintWriter out = ServletActionContext.getResponse().getWriter();
 		try {
 			String imageName = "";
@@ -1215,7 +1215,7 @@ public class LockerAction extends ActionSupport {
 		String userOrg = (String) session.getAttribute("USER_ORG");
 		if ("0".equals(userOrg)) {
 			ServletActionContext.getResponse().setContentType(
-					"text/json; charset=utf-8");
+					"text/html; charset=utf-8");
 			PrintWriter out = ServletActionContext.getResponse().getWriter();
 			try {
 				String ids = ServletActionContext.getRequest().getParameter(
@@ -1240,7 +1240,7 @@ public class LockerAction extends ActionSupport {
 	 */
 	public void CheckedManyImgsByDataImgTableId() throws IOException {
 		ServletActionContext.getResponse().setContentType(
-				"text/json; charset=utf-8");
+				"text/html; charset=utf-8");
 		PrintWriter out = ServletActionContext.getResponse().getWriter();
 		try {
 			String id = ServletActionContext.getRequest().getParameter("id");
