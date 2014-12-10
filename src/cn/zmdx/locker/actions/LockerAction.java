@@ -3,13 +3,13 @@ package cn.zmdx.locker.actions;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import net.sf.json.JSONArray;
@@ -26,11 +26,13 @@ import cn.zmdx.locker.entity.Data_tag;
 import cn.zmdx.locker.entity.Img;
 import cn.zmdx.locker.entity.PageResult;
 import cn.zmdx.locker.entity.Tag;
+import cn.zmdx.locker.entity.User;
 import cn.zmdx.locker.entity.WallPaper;
 import cn.zmdx.locker.service.impl.LockerServiceImpl;
 import cn.zmdx.locker.util.MD5;
 import cn.zmdx.locker.util.StringUtil;
 
+import com.alibaba.fastjson.JSON;
 import com.opensymphony.xwork2.ActionSupport;
 import com.tencent.cos.Cos;
 import com.tencent.cos.CosImpl;
@@ -473,19 +475,20 @@ public class LockerAction extends ActionSupport {
 		ServletActionContext.getResponse().setContentType(
 				"text/html; charset=utf-8");
 		HttpSession session = ServletActionContext.getRequest().getSession();
+		HttpServletRequest request = ServletActionContext.getRequest();
 		String userOrg = (String) session.getAttribute("USER_ORG");
 		Data_img_table dataImgTable = new Data_img_table();
 		String sql = "select id,tag_name from tag ";
 		List<Tag> tagList = (List<Tag>) lockerService.queryAllBySql(sql);
 		if (tagList.size() > 0) {
-			session.setAttribute("tagList", tagList);
+			request.setAttribute("tagList", tagList);
 		}
 		if (!"0".equals(userOrg)) {
 			dataImgTable.setCollect_website(userOrg);
 			ServletActionContext.getRequest().setAttribute("dataImgTable",
 					dataImgTable);
 		} else {
-			session.setAttribute("userOrg", userOrg);
+			request.setAttribute("userOrg", userOrg);
 		}
 		session.removeAttribute("tagIdList");
 		return "addDataImg";
@@ -503,10 +506,11 @@ public class LockerAction extends ActionSupport {
 		String id = ServletActionContext.getRequest().getParameter("id");
 		dataImgTable = lockerService.getDataImgById(id);
 		HttpSession session = ServletActionContext.getRequest().getSession();
+		HttpServletRequest request = ServletActionContext.getRequest();
 		String sql = "select id,tag_name from tag ";
 		List<Tag> tagList = (List<Tag>) lockerService.queryAllBySql(sql);
 		if (tagList.size() > 0) {
-			session.setAttribute("tagList", tagList);
+			request.setAttribute("tagList", tagList);
 		}
 		String sqlId = "select tag_id from data_tag where data_id =" + id + "";
 		List<?> tagIdList = lockerService.queryAllBySql(sqlId);
@@ -519,7 +523,7 @@ public class LockerAction extends ActionSupport {
 		List<?> imgList = lockerService.queryAllBySql(sqlImgs);
 		ServletActionContext.getRequest().setAttribute("imgList", imgList);
 		String userOrg = (String) session.getAttribute("USER_ORG");
-		session.setAttribute("userOrg", userOrg);
+		request.setAttribute("userOrg", userOrg);
 		return "editDataImg";
 	}
 
@@ -1388,6 +1392,30 @@ public class LockerAction extends ActionSupport {
 				}
 			} else {
 				out.print("{\"result\":\"success\"}");
+			}
+		} catch (Exception e) {
+			logger.error(e);
+			e.printStackTrace();
+			out.print("{\"result\":\"error\"}");
+		}
+	}
+	/**
+	 * 加载下载
+	 * @author 张加宁
+	 * @throws IOException 
+	 */
+	public void selectInit() throws IOException{
+		ServletActionContext.getResponse().setContentType(
+				"text/html; charset=utf-8");
+		PrintWriter out = ServletActionContext.getResponse().getWriter();
+		HttpServletRequest request = ServletActionContext.getRequest();
+		try {
+			String orgSql = "select user_org from user where user_org not in ('0','1') ";
+			List<User> orgList = (List<User>) lockerService.queryAllBySql(orgSql);
+			if(orgList.size()>0){
+				out.print("{\"result\":\"success\",\"selectData\":"+ JSON.toJSONString(orgList, true) + "}");
+			}else{
+				out.print("{\"result\":\"null\"}");
 			}
 		} catch (Exception e) {
 			logger.error(e);

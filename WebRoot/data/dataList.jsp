@@ -111,7 +111,26 @@ text-overflow : ellipsis;
 					jQuery("#gridTable").jqGrid('columnChooser');                           
 					}
 		}); 
-											
+
+		var actionUrl = "<%=request.getContextPath()%>/locker_selectInit.action";  
+		$.ajax({  
+			  url : actionUrl,  
+		      type : "post", 
+		      dataType : "json",  
+		      cache : false,  
+		      error : function(textStatus, errorThrown) {  
+		          alert("系统ajax交互错误: " + textStatus.value);  
+		      },  
+		      success : function(data, textStatus) {
+		    	  var result =data.selectData;
+		    	  collect_website
+		    	  var collect_website = $("#collect_website");
+		    	  for(var i=0;i<result.length;i++){
+		    		  collect_website.append('<option value="'+result[i]+'">'+result[i]+'</option>');
+		    	  }
+		      }  
+		});
+		
 	}); 
 	
 	//添加
@@ -346,8 +365,7 @@ text-overflow : ellipsis;
 						</select>
 						<c:if test="${sessionScope.USER_ORG=='0'}"><td>&nbsp;&nbsp;来&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;源：<select id="collect_website" name="collect_website" style="width:150px;">
 								<option value="">全部</option>
-								<option value="百度">百度</option>
-								<option value="网易">网易</option>
+								<option value="0">自媒体</option>
 						</select></td></c:if>
 			</tr>
 		</table>

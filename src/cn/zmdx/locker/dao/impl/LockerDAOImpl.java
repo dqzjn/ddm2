@@ -149,10 +149,15 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 			}
 			if (null != filterMap.get("collect_website")
 					&& !"".equals(filterMap.get("collect_website"))) {
-				queryCountString.append("and collect_website = '"
-						+ filterMap.get("collect_website") + "' ");
-				queryString.append("and collect_website = '"
-						+ filterMap.get("collect_website") + "' ");
+				if ("0".equals(filterMap.get("collect_website"))) {
+					queryCountString.append("and collect_website not in('0','1') ");
+					queryString.append("and collect_website not in('0','1') ");
+				}else{
+					queryCountString.append("and collect_website = '"
+							+ filterMap.get("collect_website") + "' ");
+					queryString.append("and collect_website = '"
+							+ filterMap.get("collect_website") + "' ");
+				}
 			}
 			if (!"0".equals(filterMap.get("userOrg"))
 					&& !"1".equals(filterMap.get("userOrg"))
