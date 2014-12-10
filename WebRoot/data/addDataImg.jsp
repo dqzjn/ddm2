@@ -448,9 +448,9 @@ html {
 					<tr>
 						<td align="right">标签：</td>
 						<td align="left" colspan="3">
-						<c:forEach var="tag" items="${tagList}">
+						<c:forEach var="tag" items="${tagList}" varStatus="vs">
 							<input style="width: 30px;border: 0px;" type="checkbox"
-								name="check"  id="${tag[0]}" value="${tag[0]}"/>${tag[1]}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <c:if test="${tag[0] % 5 == 0}"></br></c:if>
+								name="check"  id="${tag[0]}" value="${tag[0]}"/>${tag[1]}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <c:if test="${(vs.count % 5)==0}"><br/></c:if>
 						</c:forEach>
 						</td>
 					</tr>

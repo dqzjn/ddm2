@@ -86,7 +86,7 @@ text-overflow : ellipsis;
 			rownumbers: false,//显示行号
 			rownumWidth: 30, //行号的宽度
 			rowNum:10,
-			rowList:[5,10,20,50,100,200,500],
+			rowList:[10,20,50,100,200,500],
 			toolbar: [false,"top"],
 			altRows:true,//隔行变色
 			altclass:'altclass',//隔行变色样式

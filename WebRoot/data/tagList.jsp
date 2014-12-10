@@ -55,8 +55,8 @@ text-overflow : ellipsis;
 			//gridview: true,  //提升速度
 			rownumbers: false,//显示行号
 			rownumWidth: 30, //行号的宽度
-			rowNum:10,
-			rowList:[5,10,20,100,500],
+			rowNum:20,
+			rowList:[10,20,50,100,500],
 			toolbar: [false,"top"],
 			jsonReader: {
 				root:"rows",		// 数据行（默认为：rows）
