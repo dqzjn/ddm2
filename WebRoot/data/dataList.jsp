@@ -358,10 +358,11 @@ text-overflow : ellipsis;
 								<option value="entertainment">娱乐</option>
 								<option value="game">游戏</option>
 						</select>
-						<td>&nbsp;&nbsp;同步：<select id="data_sub" name="data_sub" style="width:150px;">
+						<td>&nbsp;&nbsp;状态：<select id="data_sub" name="data_sub" style="width:150px;">
 								<option value="">全部</option>
 								<option value="0">未发布</option>
 								<option value="1">已发布</option>
+								<option value="2">未通过</option>
 						</select>
 						<c:if test="${sessionScope.USER_ORG=='0'}"><td>&nbsp;&nbsp;来&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;源：<select id="collect_website" name="collect_website" style="width:150px;">
 								<option value="">全部</option>

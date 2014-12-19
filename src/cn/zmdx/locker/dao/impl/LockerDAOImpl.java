@@ -150,8 +150,8 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 			if (null != filterMap.get("collect_website")
 					&& !"".equals(filterMap.get("collect_website"))) {
 				if ("0".equals(filterMap.get("collect_website"))) {
-					queryCountString.append("and collect_website not in('0','1') ");
-					queryString.append("and collect_website not in('0','1') ");
+					queryCountString.append("and collect_website not in('0') and collect_website in (select user_org from user ) ");
+					queryString.append("and collect_website not in('0') and collect_website in (select user_org from user ) ");
 				}else{
 					queryCountString.append("and collect_website = '"
 							+ filterMap.get("collect_website") + "' ");
@@ -160,13 +160,12 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 				}
 			}
 			if (!"0".equals(filterMap.get("userOrg"))
-					&& !"1".equals(filterMap.get("userOrg"))
-					&& null != filterMap.get("userOrg")
+					&&  null != filterMap.get("userOrg")
 					&& !"".equals(filterMap.get("userOrg"))) {
-				queryCountString.append("and collect_website = '"
-						+ filterMap.get("userOrg") + "'");
-				queryString.append("and collect_website = '"
-						+ filterMap.get("userOrg") + "'");
+				queryCountString.append("and userid = '"
+						+ filterMap.get("userid") + "'");
+				queryString.append("and userid = '"
+						+ filterMap.get("userid") + "'");
 			}
 		}
 		queryCountString.append(") as t");

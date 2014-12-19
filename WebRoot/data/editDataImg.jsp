@@ -394,10 +394,10 @@ html {
 							<c:if test="${userOrg!='0'&&userOrg!='1'}">readonly="readonly"</c:if> value="${dataImgTable.collect_website}" style="width: 120px" />
 						</td>
 					</tr>
+					
 					<tr>
-						<td align="right">URL：</td>
-						<td align="left" colspan="3"><input type="text" id="url"
-							name="dataImgTable.url" value="${dataImgTable.url}"
+						<td align="left" colspan="3"><input type="hidden" id="url"
+							<c:if test="${sessionScope.USER_ORG!='0'}"> readonly="readonly" </c:if> name="dataImgTable.url" value="${dataImgTable.url}"
 							style="width: 555px" />
 						</td>
 					</tr>
@@ -507,7 +507,7 @@ html {
 					<tr>
 						<td colspan="4" align="center"><input type="button"
 							id="submitBtn" value="保 存" class="button_b" /> 
-							<c:if test="${userOrg=='0'||userOrg=='1'}"><input type="button" id="saveInsert" value="保存并入云库" class="button_b1" /></c:if>
+							<c:if test="${userOrg=='0'}"><input type="button" id="saveInsert" value="保存并入云库" class="button_b1" /></c:if>
 							 <input type="button" value="取 消" id="exit"
 							class="button_b" onclick="window.close()" />
 						</td>

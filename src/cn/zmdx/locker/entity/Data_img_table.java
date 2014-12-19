@@ -16,6 +16,7 @@ public class Data_img_table {
 	private String data_type;
 	private String type;
 	private int data_sub;
+	private int userid;
 
 	public int getId() {
 		return id;
@@ -111,6 +112,14 @@ public class Data_img_table {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public int getUserid() {
+		return userid;
+	}
+
+	public void setUserid(int userid) {
+		this.userid = userid;
 	}
 
 }

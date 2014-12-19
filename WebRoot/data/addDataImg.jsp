@@ -110,9 +110,17 @@ body {
 		}
 		
 		var imgUrls=document.getElementsByName("image");
-		if ($.trim($("#url").val()) && ""&&imgUrls.length==1) {
+		if ($.trim($("#url").val()) == ""&&imgUrls.length==0) {
 			alert("图片不能空!请添加图片url或者上传图片!");
 			return false;
+		}
+		if(imgUrls.length > 1){
+			for(var i=0;i<imgUrls.length;i++){
+				if(imgUrls[i].value==null){
+					alert("上传图片不能为空");
+					return false;
+				}
+			}
 		}
 		if ($.trim($("#type").val()) == "") {
 			alert("数据类型不能为空!");
@@ -405,7 +413,7 @@ html {
 						<td align="right">来源网站：</td>
 						<td align="left"><input id="collect_website"
 							name="dataImgTable.collect_website" 
-							<c:if test="${userOrg!='0'&&userOrg!='1'}">readonly="readonly"</c:if> value="${dataImgTable.collect_website}" style="width: 120px" />
+							<c:if test="${userOrg!='0'&&dataImgTable.collect_website!='1'}">readonly="readonly"  value="${dataImgTable.collect_website}" </c:if> style="width: 120px" />
 						</td>
 					</tr>
 					<c:if test="${sessionScope.USER_ORG=='0'}">

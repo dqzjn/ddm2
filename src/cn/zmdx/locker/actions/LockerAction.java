@@ -429,14 +429,12 @@ public class LockerAction extends ActionSupport {
 			}
 			HttpSession session = ServletActionContext.getRequest()
 					.getSession();
-			String userOrg = (String) session.getAttribute("USER_ORG");
+			String userOrg = session.getAttribute("USER_ORG").toString();
 			// String userRole = (String) session.getAttribute("USER_ROLE");
 			if (!"".equals(userOrg) && null != userOrg) {
 				filterMap.put("userOrg", userOrg);
+				filterMap.put("userid", session.getAttribute("USER_ID").toString());
 			}
-			// if (!"".equals(userRole) && null != userRole) {
-			// filterMap.put("userRole", userRole);
-			// }
 			PageResult result = lockerService.queryDataImgTable(filterMap);
 			String returnStr = getColumnJson(result, viewArray);
 			out.print(returnStr);
@@ -537,6 +535,7 @@ public class LockerAction extends ActionSupport {
 		ServletActionContext.getResponse().setContentType(
 				"text/html; charset=utf-8");
 		PrintWriter out = ServletActionContext.getResponse().getWriter();
+		HttpSession session = ServletActionContext.getRequest().getSession();
 		// List<String> imageName = new ArrayList<String>();
 		String imageName = "";
 		String checks[] = check.split(",");
@@ -545,12 +544,12 @@ public class LockerAction extends ActionSupport {
 					|| "0".equals(dataImgId)) {
 				dataImgTable.setData_sub(0);
 				dataImgTable.setImgUrl(imgUrl[0]);
+				dataImgTable.setUserid(Integer.parseInt(session.getAttribute("USER_ID").toString()));
 				// if (dataImgTable.getData_type() == null
 				// || "".equals(dataImgTable.getData_type())) {
 				// dataImgTable.setData_type("singleImg");
 				// }
 				String id = lockerService.save(dataImgTable);
-				lockerService.save(dataImgTable);
 				for (String ck : checks) {
 					Data_tag dt = new Data_tag();
 					dt.setTag_id(Integer.parseInt(ck.trim()));
@@ -678,8 +677,8 @@ public class LockerAction extends ActionSupport {
 				if (null == dataImgId || "".equals(dataImgId)) {
 					dataImgTable.setData_sub(1);
 					dataImgTable.setImgUrl(imgUrl[0]);
+					dataImgTable.setUserid(Integer.parseInt(session.getAttribute("USER_ID").toString()));
 					String id = lockerService.save(dataImgTable);
-					lockerService.save(dataImgTable);
 					for (String ck : checks) {
 						Data_tag dt = new Data_tag();
 						dt.setTag_id(Integer.parseInt(ck.trim()));
@@ -934,6 +933,7 @@ public class LockerAction extends ActionSupport {
 			inParams.put("zoomType", 1);// 等比缩放
 			inParams.put("width", 720);// 缩放后宽度
 			inParams.put("height", 720);// 缩放后高度
+			inParams.put("compress", 0);// 是否需要压缩(质量为 85),(默认压缩)   0: 不压缩   1: 压缩(default)
 			Map<String, CosFile> files = new HashMap<String, CosFile>();
 			files.put("compressFile", new CosFile());
 			cos.uploadFileContentWithCompress(inParams,
@@ -1269,6 +1269,7 @@ public class LockerAction extends ActionSupport {
 	 */
 	public void updateDataImg() throws IOException {
 		PrintWriter out = ServletActionContext.getResponse().getWriter();
+		HttpSession session = ServletActionContext.getRequest().getSession();
 		try {
 			// 获取所选标签
 			String checks[] = check.split(",");
@@ -1295,6 +1296,7 @@ public class LockerAction extends ActionSupport {
 			Data_img_table dit = (Data_img_table) lockerService.getObjectById(
 					Data_img_table.class, Integer.parseInt(dataImgId));
 			dit.setTitle(dataImgTable.getTitle());
+			dit.setUserid(Integer.parseInt(session.getAttribute("USER_ID").toString()));
 			dit.setCollect_website(dataImgTable.getCollect_website());
 			dit.setType(dataImgTable.getType());
 			dit.setCollect_time(dataImgTable.getCollect_time());
@@ -1408,7 +1410,6 @@ public class LockerAction extends ActionSupport {
 		ServletActionContext.getResponse().setContentType(
 				"text/html; charset=utf-8");
 		PrintWriter out = ServletActionContext.getResponse().getWriter();
-		HttpServletRequest request = ServletActionContext.getRequest();
 		try {
 			String orgSql = "select user_org from user where user_org not in ('0','1') ";
 			List<User> orgList = (List<User>) lockerService.queryAllBySql(orgSql);

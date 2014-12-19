@@ -16,6 +16,7 @@
 		<property name="data_type" column="data_type" />
 		<property name="data_sub" column="data_sub" />
 		<property name="type" column="type" />
+		<property name="userid" column="userid" />
 	</class>
 
 </hibernate-mapping>
