@@ -257,20 +257,16 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 			StringBuffer img_sql = new StringBuffer();
 			StringBuffer data_tag_sql = new StringBuffer();
 			sql.append("insert into data_img_table(id,title,url,imgUrl,data_type,collect_time,collect_website,type) values");
-			data_img_sql
-					.append("insert into data_img(id,img_id,data_id) values");
+			data_img_sql.append("insert into data_img(id,img_id,data_id) values");
 			img_sql.append("insert into img(id,imageUrl,content) values");
-			data_tag_sql
-					.append("insert into data_tag(id,data_id,tag_id) values");
+			data_tag_sql.append("insert into data_tag(id,data_id,tag_id) values");
 			for (String id : idss) {
 				dit = getDataImgById(id);
 				dit.setData_sub(1);
 				this.getHibernateTemplate().update(dit);
 				List<Data_img> diList = getData_ImgById(id);
 				if (diList.size() > 1) {
-					dit.setImgUrl("http://pandora.hdlocker.com/pandora/locker!viewDataImg.action?id="
-
-							+ Integer.parseInt(id) + "");
+					dit.setImgUrl("http://pandora.hdlocker.com/pandora/locker!viewDataImg.action?id="+ Integer.parseInt(id) + "");
 				}
 				sql.append("('" + dit.getId() + "','" + dit.getTitle() + "','"
 						+ dit.getUrl() + "','"
@@ -289,15 +285,6 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 								+ im.getImageUrl() + "','"
 								+ im.getContent().replace("'", "''") + "'),");
 					}
-					pstmt = (PreparedStatement) dbConn
-							.prepareStatement(String.valueOf(img_sql.substring(
-									0, img_sql.length() - 1)));
-					pstmt.executeUpdate();
-					pstmt = (PreparedStatement) dbConn.prepareStatement(String
-							.valueOf(data_img_sql.substring(0,
-									data_img_sql.length() - 1)));
-					pstmt.executeUpdate();
-
 				}
 				if (dgList.size() > 0) {
 					for (Data_tag dg : dgList) {
@@ -305,12 +292,23 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 								+ dg.getData_id() + "','" + dg.getTag_id()
 								+ "'),");
 					}
-					pstmt = (PreparedStatement) dbConn.prepareStatement(String
-							.valueOf(data_tag_sql.substring(0,
-									data_tag_sql.length() - 1)));
-					pstmt.executeUpdate();
+					
 				}
 			}
+			pstmt = (PreparedStatement) dbConn
+					.prepareStatement(String.valueOf(img_sql.substring(
+							0, img_sql.length() - 1)));
+			pstmt.executeUpdate();
+			pstmt = (PreparedStatement) dbConn.prepareStatement(String
+					.valueOf(data_img_sql.substring(0,
+							data_img_sql.length() - 1)));
+			pstmt.executeUpdate();
+			
+			pstmt = (PreparedStatement) dbConn.prepareStatement(String
+					.valueOf(data_tag_sql.substring(0,
+							data_tag_sql.length() - 1)));
+			pstmt.executeUpdate();
+			
 			pstmt = (PreparedStatement) dbConn.prepareStatement(String
 					.valueOf(sql.substring(0, sql.length() - 1)));
 			int count = pstmt.executeUpdate();
