@@ -10,7 +10,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 <link href="../css/css.css" rel="stylesheet" type="text/css" />
-<title>壁纸管理</title>
+<title>通知管理</title>
 <meta http-equiv="X-UA-Compatible" content="IE=7" />
 <link rel="stylesheet" type="text/css" href="<%=request.getContextPath() %>/jqGrid/themes/cupertino/jquery-ui-1.7.2.custom.css" />
 <link rel="stylesheet" type="text/css" href="<%=request.getContextPath() %>/jqGrid/css/jqgrid.css" />
@@ -37,32 +37,25 @@ text-overflow : ellipsis;
 <script type="text/javascript">
 	$(document).ready(function(){
 		$("#gridTable").jqGrid({					
-			url:'<%=request.getContextPath()%>/locker_queryWallPaper.action?temp='+Math.round(Math.random()*10000),
+			url:'<%=request.getContextPath()%>/locker_queryNotifyTable.action?temp='+Math.round(Math.random()*10000),
 			datatype: "json",
 			height: 500,
 			//width: 1005, 
 			autowidth:true,
-			colNames:['ID','壁纸名','作者','描述','缩略图URL','缩略图URL','url','url','图片名','图片类型','发布时间','发布状态','发布状态'],
+			colNames:['id','标题','内容','类型','URL','应用','开始时间','结束时间','优先级','图标','次数','修改时间','状态','状态'],
 			colModel:[
-					{name:'ID',index:'ID', width:60, key:true, sorttype:"int",hidden:true},								
-					{name:'name',index:'name', width:100,align: 'center'}, 
-					{name:'author',index:'author', width:80,align: 'center'}, 
-					{name:'desc',index:'desc', width:300,align: 'center'}, 
-					{name:'thumbURL',index:'thumbURL', width:270,align: 'center',hidden:true}, 
-					{name:'thumbURL',index:'thumbURL', width:125, align:'center',
-							formatter: function(cellvalue, options, rowObject) {
-					  			return "<img src='"+rowObject.thumbURL+"' style='width:80px;' />" ;
-			  				}
-			  			},
-					{name:'imageURL',index:'imageURL', width:270,align: 'center',hidden:true}, 
-					{name:'imageURL',index:'imageURL', width:225, align:'center',hidden:true,
-							formatter: function(cellvalue, options, rowObject) {
-					  			return "<img src='"+rowObject.imageURL+"' style='width:120px;' />" ;
-			  				}
-			  			},
-			  		{name:'imageNAME',index:'imageNAME', width:100,align: 'center',hidden:true},
-			  		{name:'imageEXT',index:'imageEXT', width:80,align: 'center',hidden:true},
-					{name:'publishDATE',index:'publishDATE', width:80,align: 'center',formatter:"date",formatoptions: {srcformat:'Y-m-d',newformat:'Y-m-d'}},
+					{name:'id',index:'id', width:60, key:true, sorttype:"int",hidden:true},								
+					{name:'title',index:'title', width:100,align: 'center'}, 
+					{name:'content',index:'content', width:80,align: 'center'}, 
+					{name:'type',index:'type', width:300,align: 'center'}, 
+					{name:'url',index:'url', width:270,align: 'center'}, 
+					{name:'application',index:'application', width:270,align: 'center'}, 
+			  		{name:'start_time',index:'start_time', width:100,align: 'center'},
+			  		{name:'end_time',index:'end_time', width:80,align: 'center'},
+					{name:'level',index:'level', width:80,align: 'center'},
+					{name:'icon',index:'icon', width:80,align: 'center'},
+					{name:'times',index:'times', width:80,align: 'center'},
+					{name:'lastModified',index:'lastModified', width:80,align: 'center'},
 					{name:'data_sub',index:'data_sub', width:80,align: 'center',hidden:true},
 					{name:'data_sub1',index:'data_sub1', width:80,align: 'center',
 						formatter: function(cellvalue, options, rowObject) {
@@ -73,7 +66,7 @@ text-overflow : ellipsis;
 							}else if(rowObject.data_sub=='审核未通过'){
 					  			return "<p style=\"color: red;font-size: 16px;\">审核未通过</p>" ;
 							}
-		  				}},
+		  				}}
 			],
 			shrinkToFit:false,
 			sortname:'id',
@@ -113,7 +106,7 @@ text-overflow : ellipsis;
 	
 	//添加
 	function addData(){
-		window.showModalDialog('<%=request.getContextPath()%>/locker_editWallPaper.action?temp='+new Date(),'', 'dialogWidth:700px;status:no;dialogHeight:570px;');
+		window.showModalDialog('<%=request.getContextPath()%>/data/editNotify.jsp?temp='+new Date(),'', 'dialogWidth:700px;status:no;dialogHeight:570px;');
 		gridSearch();
 	}
 	
@@ -129,12 +122,12 @@ text-overflow : ellipsis;
 		        return false; 
 		}
 		var row = jQuery("#gridTable").jqGrid('getRowData',ids);//获取选中行.
-		var id = row.ID;//获取选中行的id属性
+		var id = row.id;//获取选中行的id属性
 		if(row.data_sub=='审核通过'){
 			alert("数据已发布，不能修改!");
 			return false;
 		}
-		window.showModalDialog('<%=request.getContextPath()%>/locker_editWallPaper.action?id='+id+'&temp='+new Date(),'', 'dialogWidth:700px;status:no;dialogHeight:570px;');
+		window.showModalDialog('<%=request.getContextPath()%>/locker_editNotify.action?id='+id+'&temp='+new Date(),'', 'dialogWidth:700px;status:no;dialogHeight:570px;');
 		refreshIt();
 	}
 	
@@ -150,7 +143,7 @@ text-overflow : ellipsis;
 			return false;
 		}
 		var params = {"ids": ids};  
-		var actionUrl = "<%=request.getContextPath()%>/locker_deleteWallPaperById.action";  
+		var actionUrl = "<%=request.getContextPath()%>/locker_deleteNotifyById.action";  
 		$.ajax({  
 			  url : actionUrl,  
 		      type : "post", 
@@ -173,23 +166,21 @@ text-overflow : ellipsis;
 
 	//查询
 		function gridSearch(){
-			var p_name = jQuery("#p_name").val();
-			var start_date = jQuery("#start_date").val();
-			var end_date = jQuery("#end_date").val();
-			var imageEXT = jQuery("#imageEXT").val();
+			var title = jQuery("#title").val();
+			var start_time = jQuery("#start_time").val();
+			var end_time = jQuery("#end_time").val();
 			var data_sub = jQuery("#data_sub").val();
 			var params = {  
-	            "p_name" : encodeURIComponent($.trim(p_name)),
-	            "start_date" : encodeURIComponent($.trim(start_date)),
-	            "end_date" : encodeURIComponent($.trim(end_date)),
-	            "imageEXT" : encodeURIComponent($.trim(imageEXT)),
+	            "title" : encodeURIComponent($.trim(title)),
+	            "start_time" : encodeURIComponent($.trim(start_time)),
+	            "end_time" : encodeURIComponent($.trim(end_time)),
 	            "data_sub" : encodeURIComponent($.trim(data_sub))
 			};							 
 			 var postData = $("#gridTable").jqGrid("getGridParam", "postData");
 			 $.extend(postData, params);
 			jQuery("#gridTable").jqGrid('setGridParam',
 			{
-				url:'<%=request.getContextPath()%>/locker_queryWallPaper.action'
+				url:'<%=request.getContextPath()%>/locker_queryNotifyTable.action'
 			}).trigger("reloadGrid", [{page:1}]); 
         } 
 	//刷新
@@ -216,7 +207,7 @@ text-overflow : ellipsis;
 			return false;
 		}
 		var params = {"ids": ids};  
-		var actionUrl = "<%=request.getContextPath()%>/locker_insertWallPaper.action";  
+		var actionUrl = "<%=request.getContextPath()%>/locker_insertNotify.action";  
 		$.ajax({  
 			  url : actionUrl,  
 		      type : "post", 
@@ -243,29 +234,23 @@ text-overflow : ellipsis;
 		<table width="100%" border="0" cellpadding="6" cellspacing="0"
 			class="tabman" style="width:100%;margin-bottom:0px">
 			<tr>
-				<td>&nbsp;&nbsp;壁纸名：<input type="text" id="p_name"
-					name="p_name" value="" class="input" style="width:150px;" />&nbsp;&nbsp;
-					&nbsp;&nbsp;发布时间：<input type="text" id="start_date"
-						name="start_date" value="" class="input"
-						onClick="WdatePicker({dateFmt:'yyyy-MM-dd',maxDate:'#F{$dp.$D(\'end_date\')}'})"
+				<td>&nbsp;&nbsp;标题：<input type="text" id="title"
+					name="title" value="" class="input" style="width:150px;" />&nbsp;&nbsp;
+					&nbsp;&nbsp;发布时间：<input type="text" id="start_time"
+						name="start_time" value="" class="input"
+						onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',maxDate:'#F{$dp.$D(\'end_time\')}'})"
 						readonly="readonly" style="width:150px;" />&nbsp;&nbsp;至&nbsp;&nbsp;<input
-						type="text" id="end_date" name="end_date" value=""
-						onClick="WdatePicker({dateFmt:'yyyy-MM-dd',minDate:'#F{$dp.$D(\'start_date\')}'})"
+						type="text" id="end_time" name="end_time" value=""
+						onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'#F{$dp.$D(\'start_time\')}'})"
 						readonly="readonly" class="input" style="width:150px;" />
-						&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="button"
-							class="button_b" value="查询" onclick="gridSearch()" />
-							&nbsp;&nbsp;<input type="button"
-							class="button_b" value="清空" onclick="reset()" /><br /><br />
-							&nbsp;&nbsp;壁纸格式：<select id="imageEXT" name="imageEXT" style="width:150px;">
-								<option value="" selected="selected">--请选择--</option>
-								<option value=".jpg">jpg</option>
-								<option value=".png">png</option>
-						</select>
-						&nbsp;&nbsp;&nbsp;&nbsp;同&nbsp;&nbsp;步：&nbsp;&nbsp;<select id="data_sub" name="data_sub" style="width:150px;">
+						&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;同&nbsp;&nbsp;步：&nbsp;&nbsp;<select id="data_sub" name="data_sub" style="width:150px;">
 							<option value="">全部</option>
 							<option value="0">未发布</option>
 							<option value="1">已发布</option>
-					</select>
+					</select>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="button"
+							class="button_b" value="查询" onclick="gridSearch()" />
+							&nbsp;&nbsp;<input type="button"
+							class="button_b" value="清空" onclick="reset()" /><br /><br />
 					</td>
 			</tr>
 		</table>

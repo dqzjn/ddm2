@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="cn.zmdx.locker.entity.Notification" table="notification">
+		<id name="id" column="id" type="int">
+			<generator class="native" />
+		</id>
+		<property name="title" column="title" />
+		<property name="content" column="content" />
+		<property name="type" column="type" />
+		<property name="url" column="url" />
+		<property name="application" column="application" />
+		<property name="start_time" column="start_time" />
+		<property name="end_time" column="end_time" />
+		<property name="level" column="level" />
+		<property name="icon" column="icon" />
+		<property name="times" column="times" />
+		<property name="lastModified" column="lastModified" />
+		<property name="data_sub" column="data_sub" />
+	</class>
+
+</hibernate-mapping>
+  

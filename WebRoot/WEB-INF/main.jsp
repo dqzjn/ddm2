@@ -82,6 +82,8 @@ body {
 			document.getElementById("mainframe").src = '<%=request.getContextPath()%>/data/tagList.jsp'
 		else if(id=='id3')
 			document.getElementById("mainframe").src = '<%=request.getContextPath()%>/data/wallPaperList.jsp'
+		else if(id=='id4')
+			document.getElementById("mainframe").src = '<%=request.getContextPath()%>/data/notifyList.jsp'
 	}
 	function logout(){
 		if(!confirm("是否确认退出 ？")){
@@ -142,6 +144,8 @@ body {
 			<c:if test="${sessionScope.USER_ORG=='0'}"><li class="li" style="cursor: pointer" id="id2" onclick="li(id)"><p class="innerHTML">标签管理</p>
 			</li></c:if>
 			<c:if test="${sessionScope.USER_ORG=='0'}"><li class="li" style="cursor: pointer" id="id3" onclick="li(id)"><p class="innerHTML">壁纸管理</p>
+			</li></c:if>
+			<c:if test="${sessionScope.USER_ORG=='0'}"><li class="li" style="cursor: pointer" id="id4" onclick="li(id)"><p class="innerHTML">通知管理</p>
 			</li></c:if>
 		</ul>
 	</div>

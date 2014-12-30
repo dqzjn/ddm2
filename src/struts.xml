@@ -36,6 +36,7 @@
 			<result name="editDataImg">/data/editDataImg.jsp</result>
 			<result name="editTag">/data/editTag.jsp</result>
 			<result name="editWallPaper">/data/editWallPaper.jsp</result>
+			<result name="editNotify">/data/editNotify.jsp</result>
 		</action>
 		<action name= "uplaod_*"   method= "{1}"  class="cn.zmdx.locker.actions.UploadAction">
 			<param name="savePath">/image</param>

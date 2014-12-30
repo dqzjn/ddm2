@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import cn.zmdx.locker.entity.Data_img_table;
+import cn.zmdx.locker.entity.Notification;
 import cn.zmdx.locker.entity.PageResult;
 import cn.zmdx.locker.entity.Tag;
 import cn.zmdx.locker.entity.WallPaper;
@@ -74,6 +75,12 @@ public interface LockerDAO extends ParentDAO {
 	 * @author 张加宁
 	 */
 	public PageResult queryTagTable(Map<String, String> filterMap);
+
+	/**
+	 * 查询通知数据
+	 * @author 张加宁
+	 */
+	public PageResult queryNotifyTable(Map<String, String> filterMap);
 	
 	/**
 	 * 保存标签信息
@@ -97,10 +104,21 @@ public interface LockerDAO extends ParentDAO {
 	public Tag getTagById(String id);
 	
 	/**
+	 * 根据id查询对象
+	 * @author 张加宁
+	 */
+	public Notification getNotifyById(String id);
+	
+	/**
 	 * 删除标签
 	 * @author 张加宁
 	 */
 	public void deleteTagById(String ids);
+	/**
+	 * 删除通知
+	 * @author 张加宁
+	 */
+	public void deleteNotifyById(String ids);
 	
 	/**
 	 * 根据SQL查询所有数据
@@ -144,6 +162,15 @@ public interface LockerDAO extends ParentDAO {
 	 * @return
 	 */
 	public int insertWallPaper(WallPaper wallPaper);
+	
+	/**
+	 * 保存通知到云数据库
+	 * 
+	 * @param wallPaper
+	 * @return
+	 */
+	public int insertNotify(Notification notify);
+	
 	/**
 	 * 根据id删除壁纸
 	 * @param ids
@@ -156,4 +183,10 @@ public interface LockerDAO extends ParentDAO {
 	 * @return
 	 */
 	public int insertWallPaper(String ids);
+	/**
+	 * 根据ID将通知插入云数据库中
+	 * @param ids
+	 * @return
+	 */
+	public int insertNotify(String ids);
 }

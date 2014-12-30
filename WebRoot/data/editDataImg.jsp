@@ -110,9 +110,17 @@ body {
 			return false;
 		}
 		var imgUrls=document.getElementsByName("image");
-		if ($.trim($("#url").val()) == ""&&imgUrls.length==1&&imgUrls[0].files[0]==undefined) {
+		if ($.trim($("#url").val()) == ""&&imgUrls[0].value=="") {
 			alert("图片不能空!请添加图片url或者上传图片!");
 			return false;
+		}
+		if(imgUrls.length > 1){
+			for(var i=0;i<imgUrls.length;i++){
+				if(imgUrls[i].value==null){
+					alert("上传图片不能为空");
+					return false;
+				}
+			}
 		}
 		if ($.trim($("#type").val()) == "") {
 			alert("数据类型不能为空!");
@@ -124,13 +132,12 @@ body {
 			return true;
 		}
 		
-		if (d.toLowerCase() != ".jpg"&&d.toLowerCase() != ".png") {
-			document.getElementById("data_type").value= 'html';
-			alert("url格式不正确!");
-			return false;
-		}else{
+		if (d.toLowerCase() == ".jpg"||d.toLowerCase() == ".png"||imgUrls[0].value!="") {
 			document.getElementById("data_type").value= 'singleImg';
 			return true;
+		}else{
+			alert("url格式不正确!");
+			return false;
 		}
 		
 		//if ($.trim($("#data_type").val()) == "gif") 

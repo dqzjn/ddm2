@@ -17,6 +17,7 @@ import cn.zmdx.locker.entity.Data_img;
 import cn.zmdx.locker.entity.Data_img_table;
 import cn.zmdx.locker.entity.Data_tag;
 import cn.zmdx.locker.entity.Img;
+import cn.zmdx.locker.entity.Notification;
 import cn.zmdx.locker.entity.PageResult;
 import cn.zmdx.locker.entity.Tag;
 import cn.zmdx.locker.entity.WallPaper;
@@ -150,9 +151,11 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 			if (null != filterMap.get("collect_website")
 					&& !"".equals(filterMap.get("collect_website"))) {
 				if ("0".equals(filterMap.get("collect_website"))) {
-					queryCountString.append("and collect_website not in('0') and collect_website in (select user_org from user ) ");
-					queryString.append("and collect_website not in('0') and collect_website in (select user_org from user ) ");
-				}else{
+					queryCountString
+							.append("and collect_website not in('0') and collect_website in (select user_org from user ) ");
+					queryString
+							.append("and collect_website not in('0') and collect_website in (select user_org from user ) ");
+				} else {
 					queryCountString.append("and collect_website = '"
 							+ filterMap.get("collect_website") + "' ");
 					queryString.append("and collect_website = '"
@@ -160,12 +163,12 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 				}
 			}
 			if (!"0".equals(filterMap.get("userOrg"))
-					&&  null != filterMap.get("userOrg")
+					&& null != filterMap.get("userOrg")
 					&& !"".equals(filterMap.get("userOrg"))) {
 				queryCountString.append("and userid = '"
 						+ filterMap.get("userid") + "'");
-				queryString.append("and userid = '"
-						+ filterMap.get("userid") + "'");
+				queryString.append("and userid = '" + filterMap.get("userid")
+						+ "'");
 			}
 		}
 		queryCountString.append(") as t");
@@ -257,16 +260,19 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 			StringBuffer img_sql = new StringBuffer();
 			StringBuffer data_tag_sql = new StringBuffer();
 			sql.append("insert into data_img_table(id,title,url,imgUrl,data_type,collect_time,collect_website,type) values");
-			data_img_sql.append("insert into data_img(id,img_id,data_id) values");
+			data_img_sql
+					.append("insert into data_img(id,img_id,data_id) values");
 			img_sql.append("insert into img(id,imageUrl,content) values");
-			data_tag_sql.append("insert into data_tag(id,data_id,tag_id) values");
+			data_tag_sql
+					.append("insert into data_tag(id,data_id,tag_id) values");
 			for (String id : idss) {
 				dit = getDataImgById(id);
 				dit.setData_sub(1);
 				this.getHibernateTemplate().update(dit);
 				List<Data_img> diList = getData_ImgById(id);
 				if (diList.size() > 1) {
-					dit.setImgUrl("http://pandora.hdlocker.com/pandora/locker!viewDataImg.action?id="+ Integer.parseInt(id) + "");
+					dit.setImgUrl("http://pandora.hdlocker.com/pandora/locker!viewDataImg.action?id="
+							+ Integer.parseInt(id) + "");
 				}
 				sql.append("('" + dit.getId() + "','" + dit.getTitle() + "','"
 						+ dit.getUrl() + "','"
@@ -292,23 +298,22 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 								+ dg.getData_id() + "','" + dg.getTag_id()
 								+ "'),");
 					}
-					
+
 				}
 			}
-			pstmt = (PreparedStatement) dbConn
-					.prepareStatement(String.valueOf(img_sql.substring(
-							0, img_sql.length() - 1)));
+			pstmt = (PreparedStatement) dbConn.prepareStatement(String
+					.valueOf(img_sql.substring(0, img_sql.length() - 1)));
 			pstmt.executeUpdate();
 			pstmt = (PreparedStatement) dbConn.prepareStatement(String
 					.valueOf(data_img_sql.substring(0,
 							data_img_sql.length() - 1)));
 			pstmt.executeUpdate();
-			
+
 			pstmt = (PreparedStatement) dbConn.prepareStatement(String
 					.valueOf(data_tag_sql.substring(0,
 							data_tag_sql.length() - 1)));
 			pstmt.executeUpdate();
-			
+
 			pstmt = (PreparedStatement) dbConn.prepareStatement(String
 					.valueOf(sql.substring(0, sql.length() - 1)));
 			int count = pstmt.executeUpdate();
@@ -498,6 +503,15 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 	}
 
 	@Override
+	public void deleteNotifyById(String ids) {
+		String idss[] = ids.split(",");
+		for (String id : idss) {
+			Notification notify = getNotifyById(id);
+			this.getHibernateTemplate().delete(notify);
+		}
+	}
+
+	@Override
 	public List<?> queryAllBySql(String sql) {
 		Query query = getSession().createSQLQuery(sql);
 		return query.list();
@@ -670,4 +684,142 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 		}
 	}
 
+	@Override
+	public PageResult queryNotifyTable(Map<String, String> filterMap) {
+		StringBuffer queryString = new StringBuffer();
+		StringBuffer queryCountString = new StringBuffer();
+		queryCountString
+				.append("select count(*) from (select id from notification  where 1=1  ");
+		queryString
+				.append("select id,title,content,type,url,application,start_time,end_time,level,icon,times,lastModified,data_sub from notification  where 1=1 ");
+		if (filterMap != null && !filterMap.isEmpty()) {
+			if (null != filterMap.get("title")
+					&& !"".equals(filterMap.get("title"))) {
+				queryCountString.append("and title like '%"
+						+ filterMap.get("title") + "%' ");
+				queryString.append("and title like '%" + filterMap.get("title")
+						+ "%' ");
+			}
+			if (null != filterMap.get("start_time")
+					&& !"".equals(filterMap.get("start_time"))) {
+				queryCountString.append("and start_time > '"
+						+ filterMap.get("start_time") + "' ");
+				queryString.append("and start_time > '" + filterMap.get("start_time")
+						+ "' ");
+			}
+			if (null != filterMap.get("end_time")
+					&& !"".equals(filterMap.get("end_time"))) {
+				queryCountString.append("and end_time < '"
+						+ filterMap.get("end_time") + "' ");
+				queryString.append("and end_time < '" + filterMap.get("end_time")
+						+ "' ");
+			}
+			if (null != filterMap.get("data_sub")
+					&& !"".equals(filterMap.get("data_sub"))) {
+				queryCountString.append("and data_sub = '"
+						+ filterMap.get("data_sub") + "' ");
+				queryString.append("and data_sub = '" + filterMap.get("data_sub")
+						+ "' ");
+			}
+			queryCountString.append(") as t");
+			queryString.append(" order by id desc");
+		}
+		return searchBySQL(queryCountString.toString(), queryString.toString(),
+				filterMap);
+	}
+
+	@Override
+	public Notification getNotifyById(String id) {
+		Notification notify = (Notification) this.getHibernateTemplate().get(Notification.class, Integer.parseInt(id));
+		return notify;
+	}
+
+	@Override
+	public int insertNotify(String ids) {
+		GenericsUtils genericsUtils = new GenericsUtils();
+		PreparedStatement pstmt = null;
+		Connection dbConn = null;
+		StringBuffer sql = new StringBuffer();
+		sql.append("insert into notification (title,content,type,url,application,start_time,end_time,level,icon,times,lastModified,data_sub) VALUES ");
+		String[] idss = ids.split(",");
+		for (String id : idss) {
+			Notification notify = getNotifyById(id);
+			notify.setData_sub(1);
+			saveOrUpdate(notify);// 将壁纸修改为已发布
+			sql.append("('" + notify.getTitle() + "','" + notify.getContent()
+					+ "','" + notify.getType() + "','" + notify.getUrl()
+					+ "','" + notify.getApplication() + "','"
+					+ notify.getStart_time() + "','" + notify.getEnd_time()
+					+ "','" + notify.getLevel() + "','" + notify.getIcon()
+					+ "','" + notify.getTimes() + "','"
+					+ notify.getLastModified() + "',1),");
+		}
+		try {
+			Properties p = genericsUtils.loadProperty("c3p0.properties");
+			String url = p.getProperty("c3p0.cloudTestUrl");
+			String driverName = p.getProperty("c3p0.cloudTestDriverClassName");
+			String userName = p.getProperty("c3p0.cloudTestUsername");
+			String password = p.getProperty("c3p0.cloudTestPassword");
+			Class.forName(driverName).newInstance();
+			dbConn = DriverManager.getConnection(url, userName, password);
+			pstmt = (PreparedStatement) dbConn.prepareStatement(String
+					.valueOf(sql.substring(0, sql.length() - 1)));
+			return pstmt.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return 0;
+		} finally {
+
+			try {
+				if (dbConn != null)
+					pstmt.close();
+				dbConn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+				return 0;
+			}
+		}
+	}
+
+	@Override
+	public int insertNotify(Notification notify) {
+		GenericsUtils genericsUtils = new GenericsUtils();
+		PreparedStatement pstmt = null;
+		Connection dbConn = null;
+		StringBuffer sql = new StringBuffer();
+		sql.append("insert into notification (title,content,type,url,application,start_time,end_time,level,icon,times,lastModified,data_sub) VALUES ");
+		sql.append("('" + notify.getTitle() + "','" + notify.getContent()
+				+ "','" + notify.getType() + "','" + notify.getUrl() + "','"
+				+ notify.getApplication() + "','" + notify.getStart_time()
+				+ "','" + notify.getEnd_time() + "','" + notify.getLevel()
+				+ "','" + notify.getIcon() + "','" + notify.getTimes() + "','"
+				+ notify.getLastModified() + "',1)");
+		try {
+			Properties p = genericsUtils.loadProperty("c3p0.properties");
+			String url = p.getProperty("c3p0.cloudTestUrl");
+			String driverName = p.getProperty("c3p0.cloudTestDriverClassName");
+			String userName = p.getProperty("c3p0.cloudTestUsername");
+			String password = p.getProperty("c3p0.cloudTestPassword");
+			Class.forName(driverName).newInstance();
+			dbConn = DriverManager.getConnection(url, userName, password);
+			pstmt = (PreparedStatement) dbConn.prepareStatement(String
+					.valueOf(sql));
+			return pstmt.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return 0;
+		} finally {
+
+			try {
+				if (dbConn != null)
+					pstmt.close();
+				dbConn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+				return 0;
+			}
+		}
+	}
 }

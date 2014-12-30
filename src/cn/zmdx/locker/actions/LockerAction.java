@@ -3,6 +3,7 @@ package cn.zmdx.locker.actions;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -24,6 +25,7 @@ import cn.zmdx.locker.entity.Data_img_table;
 import cn.zmdx.locker.entity.Data_table;
 import cn.zmdx.locker.entity.Data_tag;
 import cn.zmdx.locker.entity.Img;
+import cn.zmdx.locker.entity.Notification;
 import cn.zmdx.locker.entity.PageResult;
 import cn.zmdx.locker.entity.Tag;
 import cn.zmdx.locker.entity.User;
@@ -49,6 +51,7 @@ public class LockerAction extends ActionSupport {
 	private String dataImgId;
 	private Data_img dataImg;
 	private Img img;
+	private Notification notify;
 	private Tag tag;
 	private String result;
 	private String page;
@@ -124,6 +127,14 @@ public class LockerAction extends ActionSupport {
 
 	public Tag getTag() {
 		return tag;
+	}
+
+	public Notification getNotify() {
+		return notify;
+	}
+
+	public void setNotify(Notification notify) {
+		this.notify = notify;
 	}
 
 	public void setTag(Tag tag) {
@@ -433,7 +444,8 @@ public class LockerAction extends ActionSupport {
 			// String userRole = (String) session.getAttribute("USER_ROLE");
 			if (!"".equals(userOrg) && null != userOrg) {
 				filterMap.put("userOrg", userOrg);
-				filterMap.put("userid", session.getAttribute("USER_ID").toString());
+				filterMap.put("userid", session.getAttribute("USER_ID")
+						.toString());
 			}
 			PageResult result = lockerService.queryDataImgTable(filterMap);
 			String returnStr = getColumnJson(result, viewArray);
@@ -544,7 +556,8 @@ public class LockerAction extends ActionSupport {
 					|| "0".equals(dataImgId)) {
 				dataImgTable.setData_sub(0);
 				dataImgTable.setImgUrl(imgUrl[0]);
-				dataImgTable.setUserid(Integer.parseInt(session.getAttribute("USER_ID").toString()));
+				dataImgTable.setUserid(Integer.parseInt(session.getAttribute(
+						"USER_ID").toString()));
 				// if (dataImgTable.getData_type() == null
 				// || "".equals(dataImgTable.getData_type())) {
 				// dataImgTable.setData_type("singleImg");
@@ -677,7 +690,8 @@ public class LockerAction extends ActionSupport {
 				if (null == dataImgId || "".equals(dataImgId)) {
 					dataImgTable.setData_sub(1);
 					dataImgTable.setImgUrl(imgUrl[0]);
-					dataImgTable.setUserid(Integer.parseInt(session.getAttribute("USER_ID").toString()));
+					dataImgTable.setUserid(Integer.parseInt(session
+							.getAttribute("USER_ID").toString()));
 					String id = lockerService.save(dataImgTable);
 					for (String ck : checks) {
 						Data_tag dt = new Data_tag();
@@ -933,7 +947,8 @@ public class LockerAction extends ActionSupport {
 			inParams.put("zoomType", 1);// 等比缩放
 			inParams.put("width", 720);// 缩放后宽度
 			inParams.put("height", 720);// 缩放后高度
-			inParams.put("compress", 0);// 是否需要压缩(质量为 85),(默认压缩)   0: 不压缩   1: 压缩(default)
+			inParams.put("compress", 0);// 是否需要压缩(质量为 85),(默认压缩) 0: 不压缩 1:
+										// 压缩(default)
 			Map<String, CosFile> files = new HashMap<String, CosFile>();
 			files.put("compressFile", new CosFile());
 			cos.uploadFileContentWithCompress(inParams,
@@ -1296,7 +1311,8 @@ public class LockerAction extends ActionSupport {
 			Data_img_table dit = (Data_img_table) lockerService.getObjectById(
 					Data_img_table.class, Integer.parseInt(dataImgId));
 			dit.setTitle(dataImgTable.getTitle());
-			dit.setUserid(Integer.parseInt(session.getAttribute("USER_ID").toString()));
+			dit.setUserid(Integer.parseInt(session.getAttribute("USER_ID")
+					.toString()));
 			dit.setCollect_website(dataImgTable.getCollect_website());
 			dit.setType(dataImgTable.getType());
 			dit.setCollect_time(dataImgTable.getCollect_time());
@@ -1401,27 +1417,220 @@ public class LockerAction extends ActionSupport {
 			out.print("{\"result\":\"error\"}");
 		}
 	}
+
 	/**
-	 * 加载下载
+	 * 加载来源下拉内容
+	 * 
 	 * @author 张加宁
-	 * @throws IOException 
+	 * @throws IOException
 	 */
-	public void selectInit() throws IOException{
+	public void selectInit() throws IOException {
 		ServletActionContext.getResponse().setContentType(
 				"text/html; charset=utf-8");
 		PrintWriter out = ServletActionContext.getResponse().getWriter();
 		try {
 			String orgSql = "select user_org from user where user_org not in ('0','1') ";
-			List<User> orgList = (List<User>) lockerService.queryAllBySql(orgSql);
-			if(orgList.size()>0){
-				out.print("{\"result\":\"success\",\"selectData\":"+ JSON.toJSONString(orgList, true) + "}");
-			}else{
+			List<User> orgList = (List<User>) lockerService
+					.queryAllBySql(orgSql);
+			if (orgList.size() > 0) {
+				out.print("{\"result\":\"success\",\"selectData\":"
+						+ JSON.toJSONString(orgList, true) + "}");
+			} else {
 				out.print("{\"result\":\"null\"}");
 			}
 		} catch (Exception e) {
 			logger.error(e);
 			e.printStackTrace();
 			out.print("{\"result\":\"error\"}");
+		}
+	}
+
+	/**
+	 * 查询通知数据
+	 * 
+	 * @author 张加宁
+	 */
+	public void queryNotifyTable() {
+		try {
+			ServletActionContext.getResponse().setContentType(
+					"text/html; charset=utf-8");
+			String title = StringUtil.encodingUrl(ServletActionContext
+					.getRequest().getParameter("title"));
+			String start_time = StringUtil.encodingUrl(ServletActionContext
+					.getRequest().getParameter("start_time"));
+			String end_time = StringUtil.encodingUrl(ServletActionContext
+					.getRequest().getParameter("end_time"));
+			String data_sub = StringUtil.encodingUrl(ServletActionContext
+					.getRequest().getParameter("data_sub"));
+			PrintWriter out = ServletActionContext.getResponse().getWriter();
+			Map<String, String> filterMap = getPagerMap();
+			String[] viewArray = { "id", "title", "content", "type", "url",
+					"application", "start_time", "end_time", "level", "icon",
+					"times", "lastModified","data_sub:[{'0':'审核中','1':'审核通过','2':'审核未通过'}]" };
+			if (title != null && !"".equals(title)) {
+				filterMap.put("title", title);
+			}
+			if (start_time != null && !"".equals(start_time)) {
+				filterMap.put("start_time", start_time);
+			}
+			if (end_time != null && !"".equals(end_time)) {
+				filterMap.put("end_time", end_time);
+			}
+			if (data_sub != null && !"".equals(data_sub)) {
+				filterMap.put("data_sub", data_sub);
+			}
+			PageResult result = lockerService.queryNotifyTable(filterMap);
+			String returnStr = getColumnJson(result, viewArray);
+			out.print(returnStr);
+		} catch (IOException e) {
+			logger.error(e);
+			e.printStackTrace();
+		}
+
+	}
+
+	/**
+	 * 修改通知数据
+	 * 
+	 * @throws IOException
+	 * @author 张加宁
+	 */
+	public String editNotify() throws IOException {
+		ServletActionContext.getResponse().setContentType(
+				"text/html; charset=utf-8");
+		String id = ServletActionContext.getRequest().getParameter("id");
+		notify = lockerService.getNotifyById(id);
+		return "editNotify";
+	}
+
+	/**
+	 * 保存通知信息
+	 * 
+	 * @throws IOException
+	 * @author 张加宁
+	 */
+	public void saveNotify() throws IOException {
+		ServletActionContext.getResponse().setContentType(
+				"text/html; charset=utf-8");
+		PrintWriter out = ServletActionContext.getResponse().getWriter();
+		try {
+			if (0 == notify.getId()) {
+				notify.setLastModified(new Timestamp(System.currentTimeMillis()));
+				lockerService.saveOrUpdate(notify);
+			} else {
+				Notification entity = lockerService.getNotifyById(String
+						.valueOf(notify.getId()));
+				entity.setId(notify.getId());
+				entity.setTitle(notify.getTitle());
+				entity.setContent(notify.getContent());
+				entity.setType(notify.getType());
+				entity.setUrl(notify.getUrl());
+				entity.setApplication(notify.getApplication());
+				entity.setStart_time(notify.getStart_time());
+				entity.setEnd_time(notify.getEnd_time());
+				entity.setLevel(notify.getLevel());
+				entity.setIcon(notify.getIcon());
+				entity.setTimes(notify.getTimes());
+				entity.setLastModified(new Timestamp(System.currentTimeMillis()));
+				lockerService.saveOrUpdate(entity);
+			}
+			out.print("{\"result\":\"success\"}");
+
+		} catch (Exception e) {
+			out.print("{\"result\":\"error\"}");
+			logger.error(e);
+			e.printStackTrace();
+		}
+
+	}
+
+	/**
+	 * 根据ID删除通知
+	 * 
+	 * @throws IOException
+	 * @author 张加宁
+	 */
+	public void deleteNotifyById() throws IOException {
+		PrintWriter out = ServletActionContext.getResponse().getWriter();
+		try {
+			String ids = ServletActionContext.getRequest().getParameter("ids");
+			lockerService.deleteNotifyById(ids);
+			out.print("{\"result\":\"success\"}");
+		} catch (Exception e) {
+			logger.error(e);
+			e.printStackTrace();
+			out.print("{\"result\":\"error\"}");
+		}
+	}
+
+	/**
+	 * 根据ID将通知插入云数据库中
+	 * 
+	 * @throws IOException
+	 */
+	public void insertNotify() throws IOException {
+		HttpSession session = ServletActionContext.getRequest().getSession();
+		String userOrg = (String) session.getAttribute("USER_ORG");
+		if ("0".equals(userOrg)) {
+			ServletActionContext.getResponse().setContentType(
+					"text/html; charset=utf-8");
+			PrintWriter out = ServletActionContext.getResponse().getWriter();
+			try {
+				String ids = ServletActionContext.getRequest().getParameter(
+						"ids");
+				int bl = lockerService.insertNotify(ids);
+				if (bl > 0)
+					out.print("{\"result\":\"success\"}");
+				else
+					out.print("{\"result\":\"error\"}");
+			} catch (Exception e) {
+				logger.error(e);
+				e.printStackTrace();
+				out.print("{\"result\":\"error\"}");
+			}
+		}
+	}
+	
+	/**
+	 * 保存通知到云数据库
+	 * 
+	 * @throws IOException
+	 */
+	public void saveInsertNotify() throws IOException{
+		ServletActionContext.getResponse().setContentType(
+				"text/html; charset=utf-8");
+		PrintWriter out = ServletActionContext.getResponse().getWriter();
+		try {
+			if (0 == notify.getId()) {
+				notify.setLastModified(new Timestamp(System.currentTimeMillis()));
+				notify.setData_sub(1);
+				lockerService.saveOrUpdate(notify);
+				lockerService.insertNotify(notify);
+			} else {
+				Notification entity = lockerService.getNotifyById(String
+						.valueOf(notify.getId()));
+				entity.setId(notify.getId());
+				entity.setTitle(notify.getTitle());
+				entity.setContent(notify.getContent());
+				entity.setType(notify.getType());
+				entity.setUrl(notify.getUrl());
+				entity.setApplication(notify.getApplication());
+				entity.setStart_time(notify.getStart_time());
+				entity.setEnd_time(notify.getEnd_time());
+				entity.setLevel(notify.getLevel());
+				entity.setIcon(notify.getIcon());
+				entity.setTimes(notify.getTimes());
+				entity.setLastModified(new Timestamp(System.currentTimeMillis()));
+				entity.setData_sub(1);
+				lockerService.saveOrUpdate(entity);
+				lockerService.insertNotify(entity);
+			}
+			out.print("{\"result\":\"success\"}");
+
+		} catch (Exception e) {
+			out.print("{\"result\":\"error\"}");
+			logger.error(e);
+			e.printStackTrace();
 		}
 	}
 }
