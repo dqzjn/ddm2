@@ -133,6 +133,22 @@ body {
         document.getElementById("imgName").value=f[0].name;
     };
     
+    function olrapp(){
+    	var url = document.getElementById("url").value;
+    	if(url!='')
+    		document.getElementById("application").readOnly=true;
+    	else
+    		document.getElementById("application").readOnly=false;
+    }
+ 
+    function olrurl(){
+    	var application = document.getElementById("application").value;
+    	if(application!='')
+    		document.getElementById("url").readOnly=true;
+    	else
+    		document.getElementById("url").readOnly=false;
+    }
+    
 </script>
 <style type="text/css">
 html {
@@ -278,25 +294,26 @@ html {
 							value="${notify.title}" style="width: 500px" />
 						</td>
 					</tr>
-					<tr>
+					<!-- <tr>
 						<td align="right">类型：</td>
 						<td align="left"><input type="text" id="type"
 							name="notify.type" value="${notify.type}"
 							style="width: 500px" />
 						</td>
 					</tr>
+					 -->
 					<tr>
 						<td align="right">URL：</td>
 						<td align="left"><input type="text" id="url"
 							name="notify.url" value="${notify.url}"
-							style="width: 500px" />
+							style="width: 500px" onchange="olrapp()" />
 						</td>
 					</tr>
 					<tr>
 						<td align="right">应用：</td>
 						<td align="left"><input type="text" id="application"
 							name="notify.application" value="${notify.application}"
-							style="width: 500px" />
+							style="width: 500px" onchange="olrurl()" />
 						</td>
 					</tr>
 					<tr>
@@ -318,12 +335,10 @@ html {
 					</tr>
 					<tr>
 						<td align="right">图标：</td>
-						<td align="left"><input id="icon" name="notify.icon"
-							value="${notify.icon}" style="width: 500px" />
+						<td align="left"><input type="file" id="image" name="image" value="${image}" style="width: 500px" />
 						</td>
 					</tr>
 					<tr>
-						
 					</tr>
 					<tr>
 						<td align="right">时间：</td>

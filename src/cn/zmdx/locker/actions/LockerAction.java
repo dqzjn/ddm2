@@ -31,6 +31,7 @@ import cn.zmdx.locker.entity.Tag;
 import cn.zmdx.locker.entity.User;
 import cn.zmdx.locker.entity.WallPaper;
 import cn.zmdx.locker.service.impl.LockerServiceImpl;
+import cn.zmdx.locker.util.FileUtil;
 import cn.zmdx.locker.util.MD5;
 import cn.zmdx.locker.util.StringUtil;
 
@@ -1516,6 +1517,9 @@ public class LockerAction extends ActionSupport {
 		try {
 			if (0 == notify.getId()) {
 				notify.setLastModified(new Timestamp(System.currentTimeMillis()));
+				if(image.length>0&&image[0]!=null){
+					notify.setIcon(FileUtil.encodeBase64File(image[0]));
+				}
 				lockerService.saveOrUpdate(notify);
 			} else {
 				Notification entity = lockerService.getNotifyById(String
@@ -1529,7 +1533,9 @@ public class LockerAction extends ActionSupport {
 				entity.setStart_time(notify.getStart_time());
 				entity.setEnd_time(notify.getEnd_time());
 				entity.setLevel(notify.getLevel());
-				entity.setIcon(notify.getIcon());
+				if(image.length>0&&image[0]!=null){
+					notify.setIcon(FileUtil.encodeBase64File(image[0]));
+				}
 				entity.setTimes(notify.getTimes());
 				entity.setLastModified(new Timestamp(System.currentTimeMillis()));
 				lockerService.saveOrUpdate(entity);
