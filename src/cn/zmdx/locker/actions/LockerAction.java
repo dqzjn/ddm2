@@ -549,7 +549,6 @@ public class LockerAction extends ActionSupport {
 				"text/html; charset=utf-8");
 		PrintWriter out = ServletActionContext.getResponse().getWriter();
 		HttpSession session = ServletActionContext.getRequest().getSession();
-		// List<String> imageName = new ArrayList<String>();
 		String imageName = "";
 		String checks[] = check.split(",");
 		try {
@@ -573,31 +572,31 @@ public class LockerAction extends ActionSupport {
 				if (image != null && image[0] != null) {
 					String[] imgNamess = imgNames.substring(0,
 							imgNames.length() - 1).split("#");
-					if (image.length == 1 && image[0] != null) {
-						imageName = uploadImg(imgNamess[0], image[0]);
-						Data_img_table entity = lockerService
-								.getDataImgById(id);
-						entity.setUrl("http://cos.myqcloud.com/11000436/data/image/"
-								+ imageName);
-						entity.setImgUrl(imgUrl[0]);
-						if (!"gif".equals(imageName.substring(
-								imageName.indexOf(".") + 1).toLowerCase())
-								&& !"html".equals(imageName.substring(
-										imageName.indexOf(".") + 1)
-										.toLowerCase())) {
-							entity.setData_type("singleImg");
-						}
-						Img img = new Img();
-						img.setContent(imgUrl[0]);
-						img.setImageUrl("http://cos.myqcloud.com/11000436/data/image/"
-								+ imageName);
-						lockerService.save(img);
-						Data_img dataImg = new Data_img();
-						dataImg.setData_id(entity.getId());
-						dataImg.setImg_id(img.getId());
-						lockerService.save(dataImg);
-						lockerService.save(entity);
-					} else if (image.length > 1) {
+//					if (image.length == 1 && image[0] != null) {
+//						imageName = uploadImg(imgNamess[0], image[0]);
+//						Data_img_table entity = lockerService
+//								.getDataImgById(id);
+//						entity.setUrl("http://cos.myqcloud.com/11000436/data/image/"
+//								+ imageName);
+//						entity.setImgUrl(imgUrl[0]);
+//						if (!"gif".equals(imageName.substring(
+//								imageName.indexOf(".") + 1).toLowerCase())
+//								&& !"html".equals(imageName.substring(
+//										imageName.indexOf(".") + 1)
+//										.toLowerCase())) {
+//							entity.setData_type("singleImg");
+//						}
+//						Img img = new Img();
+//						img.setContent(imgUrl[0]);
+//						img.setImageUrl("http://cos.myqcloud.com/11000436/data/image/"
+//								+ imageName);
+//						lockerService.save(img);
+//						Data_img dataImg = new Data_img();
+//						dataImg.setData_id(entity.getId());
+//						dataImg.setImg_id(img.getId());
+//						lockerService.save(dataImg);
+//						lockerService.save(entity);
+//					} else if (image.length > 1) {
 						for (int i = 0; i < image.length; i++) {
 							if (image[i] != null) {
 								imageName = uploadImg(imgNamess[i], image[i]);
@@ -621,7 +620,7 @@ public class LockerAction extends ActionSupport {
 									lockerService.save(entity);
 								}
 							}
-						}
+//						}
 					}
 				} else {
 					Img img = new Img();
