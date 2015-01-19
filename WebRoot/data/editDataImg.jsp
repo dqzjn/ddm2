@@ -105,10 +105,6 @@ body {
 			alert("标签不能为空!");
 			return false;
 		}
-		if ($.trim($("#collect_website").val()) == "") {
-			alert("来源网站不能为空!");
-			return false;
-		}
 		var imgUrls=document.getElementsByName("image");
 		if ($.trim($("#url").val()) == ""&&imgUrls[0].value=="") {
 			alert("图片不能空!请添加图片url或者上传图片!");
@@ -121,10 +117,6 @@ body {
 					return false;
 				}
 			}
-		}
-		if ($.trim($("#type").val()) == "") {
-			alert("数据类型不能为空!");
-			return false;
 		}
 		var d=/\.[^\.]+$/.exec($("#url").val())+'';
 		if (d.toLowerCase() == ".gif") {

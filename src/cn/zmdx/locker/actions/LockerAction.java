@@ -614,7 +614,7 @@ public class LockerAction extends ActionSupport {
 											.getDataImgById(id);
 									entity.setUrl("http://cos.myqcloud.com/11000436/data/image/"
 											+ imageName);
-									entity.setImgUrl("http://nb.hdlocker.com/pandora/locker!viewDataImg.action?id="
+									entity.setImgUrl("http://nb.hdlocker.com:8080/essay/locker!viewDataImg.action?id="
 											+ Integer.parseInt(id) + "");
 									entity.setData_type("multiImg");
 									lockerService.save(entity);
@@ -745,7 +745,7 @@ public class LockerAction extends ActionSupport {
 												.getDataImgById(id);
 										entity.setUrl("http://cos.myqcloud.com/11000436/data/image/"
 												+ imageName);
-										entity.setImgUrl("http://nb.hdlocker.com/pandora/locker!viewDataImg.action?id="
+										entity.setImgUrl("http://nb.hdlocker.com:8080/essay/locker!viewDataImg.action?id="
 												+ Integer.parseInt(id) + "");
 										entity.setData_type("multiImg");
 										lockerService.save(entity);
@@ -1392,12 +1392,12 @@ public class LockerAction extends ActionSupport {
 			if (list.size() > 0) {
 				Object[] obj = (Object[]) list.get(0);
 				dit.setUrl(obj[1] + "");
-				if (list.size() > 1) {
-					dit.setImgUrl("http://nb.hdlocker.com/pandora/locker!viewDataImg.action?id="
+//				if (list.size() > 1) {
+					dit.setImgUrl("http://nb.hdlocker.com:8080/essay/locker!viewDataImg.action?id="
 							+ Integer.parseInt(dataImgId));
-				} else if (list.size() == 1) {
-					dit.setImgUrl(obj[2] + "");
-				}
+//				} else if (list.size() == 1) {
+//					dit.setImgUrl(obj[2] + "");
+//				}
 			}
 			// 保存dit对象
 			lockerService.save(dit);

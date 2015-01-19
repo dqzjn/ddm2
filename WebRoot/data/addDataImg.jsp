@@ -104,11 +104,7 @@ body {
 			alert("标签不能为空!");
 			return false;
 		}
-		if ($.trim($("#collect_website").val()) == "") {
-			alert("来源网站不能为空!");
-			return false;
-		}
-		
+
 		var imgUrls=document.getElementsByName("image");
 		if ($.trim($("#url").val()) == ""&&imgUrls[0].value=="") {
 			alert("图片不能空!请添加图片url或者上传图片!");
@@ -121,10 +117,6 @@ body {
 					return false;
 				}
 			}
-		}
-		if ($.trim($("#type").val()) == "") {
-			alert("数据类型不能为空!");
-			return false;
 		}
 		var d=/\.[^\.]+$/.exec($("#url").val())+'';
 		if (d.toLowerCase() == ".gif") {
@@ -139,14 +131,6 @@ body {
 			return false;
 		}
 		
-		//if ($.trim($("#data_type").val()) == "gif") 
-//		if (d.toLowerCase() != ".jpg"&&d.toLowerCase() != ".png") {
-//			if($("#data_type").val()=='joke'||$("#data_type").val()=='news'){
-//				alert("类型与url不匹配!");
-//				return false;
-//			}
-//		}
-
 		return true;
 	}
 	
@@ -425,22 +409,6 @@ html {
 					</tr>
 					</c:if>
 					<tr>
-						<td align="right">数据类型：</td>
-						<td align="left"><select id="type"
-							name="dataImgTable.type" style="width:200px;">
-								<option value="">--请选择--</option>
-								<option value="joke"
-									<c:if test="${dataImgTable.type=='joke'}">selected="selected"</c:if>>搞笑</option>
-								<option value="news"
-									<c:if test="${dataImgTable.type=='news'}">selected="selected"</c:if>>新闻</option>
-								<option value="film"
-									<c:if test="${dataImgTable.type=='film'}">selected="selected"</c:if>>影视</option>
-								<option value="entertainment"
-									<c:if test="${dataImgTable.type=='entertainment'}">selected="selected"</c:if>>娱乐</option>
-								<option value="game"
-									<c:if test="${dataImgTable.type=='game'}">selected="selected"</c:if>>游戏</option>
-						</select>
-						</td>
 						<td align="right">发布时间：</td>
 						<td align="left"><input id="collect_time"
 							name="dataImgTable.collect_time" readonly="readonly"

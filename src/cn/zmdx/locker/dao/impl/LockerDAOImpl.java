@@ -271,7 +271,7 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 				this.getHibernateTemplate().update(dit);
 				List<Data_img> diList = getData_ImgById(id);
 				if (diList.size() > 1) {
-					dit.setImgUrl("http://pandora.hdlocker.com/pandora/locker!viewDataImg.action?id="
+					dit.setImgUrl("http://pandora.hdlocker.com:8080/essay/locker!viewDataImg.action?id="
 							+ Integer.parseInt(id) + "");
 				}
 				sql.append("('" + dit.getId() + "','" + dit.getTitle() + "','"
@@ -372,7 +372,7 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 						+ dit.getTitle()
 						+ "','"
 						+ dit.getUrl()
-						+ "','http://pandora.hdlocker.com/pandora/locker!viewDataImg.action?id="
+						+ "','http://pandora.hdlocker.com:8080/essay/locker!viewDataImg.action?id="
 						+ dit.getId() + "','" + dit.getData_type() + "','"
 						+ dit.getCollect_time() + "','"
 						+ dit.getCollect_website() + "','" + dit.getType()
