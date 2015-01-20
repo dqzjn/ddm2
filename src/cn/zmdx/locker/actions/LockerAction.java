@@ -399,6 +399,8 @@ public class LockerAction extends ActionSupport {
 					.getRequest().getParameter("start_date"));
 			String end_date = StringUtil.encodingUrl(ServletActionContext
 					.getRequest().getParameter("end_date"));
+			String custom_user = StringUtil.encodingUrl(ServletActionContext
+					.getRequest().getParameter("custom_user"));
 			String type = StringUtil.encodingUrl(ServletActionContext
 					.getRequest().getParameter("type"));
 			String edit_date = StringUtil.encodingUrl(ServletActionContext
@@ -417,7 +419,8 @@ public class LockerAction extends ActionSupport {
 					"imgUrl",
 					"type:[{'joke':'搞笑','news':'新闻','film':'电影','game':'游戏','entertainment':'娱乐'}]",
 					"collect_time", "collect_website",
-					"data_sub:[{'0':'审核中','1':'审核通过','2':'审核未通过'}]" };
+					"data_sub:[{'0':'审核中','1':'审核通过','2':'审核未通过'}]",
+					"user_org", "username" };
 			if (title != null && !"".equals(title)) {
 				filterMap.put("title", title);
 			}
@@ -426,6 +429,9 @@ public class LockerAction extends ActionSupport {
 			}
 			if (end_date != null && !"".equals(end_date)) {
 				filterMap.put("end_date", end_date);
+			}
+			if (custom_user != null && !"".equals(custom_user)) {
+				filterMap.put("custom_user", custom_user);
 			}
 			if (type != null && !"".equals(type)) {
 				filterMap.put("type", type);
@@ -572,55 +578,55 @@ public class LockerAction extends ActionSupport {
 				if (image != null && image[0] != null) {
 					String[] imgNamess = imgNames.substring(0,
 							imgNames.length() - 1).split("#");
-//					if (image.length == 1 && image[0] != null) {
-//						imageName = uploadImg(imgNamess[0], image[0]);
-//						Data_img_table entity = lockerService
-//								.getDataImgById(id);
-//						entity.setUrl("http://cos.myqcloud.com/11000436/data/image/"
-//								+ imageName);
-//						entity.setImgUrl(imgUrl[0]);
-//						if (!"gif".equals(imageName.substring(
-//								imageName.indexOf(".") + 1).toLowerCase())
-//								&& !"html".equals(imageName.substring(
-//										imageName.indexOf(".") + 1)
-//										.toLowerCase())) {
-//							entity.setData_type("singleImg");
-//						}
-//						Img img = new Img();
-//						img.setContent(imgUrl[0]);
-//						img.setImageUrl("http://cos.myqcloud.com/11000436/data/image/"
-//								+ imageName);
-//						lockerService.save(img);
-//						Data_img dataImg = new Data_img();
-//						dataImg.setData_id(entity.getId());
-//						dataImg.setImg_id(img.getId());
-//						lockerService.save(dataImg);
-//						lockerService.save(entity);
-//					} else if (image.length > 1) {
-						for (int i = 0; i < image.length; i++) {
-							if (image[i] != null) {
-								imageName = uploadImg(imgNamess[i], image[i]);
-								Img img = new Img();
-								Data_img dataImg = new Data_img();
-								img.setImageUrl("http://cos.myqcloud.com/11000436/data/image/"
+					// if (image.length == 1 && image[0] != null) {
+					// imageName = uploadImg(imgNamess[0], image[0]);
+					// Data_img_table entity = lockerService
+					// .getDataImgById(id);
+					// entity.setUrl("http://cos.myqcloud.com/11000436/data/image/"
+					// + imageName);
+					// entity.setImgUrl(imgUrl[0]);
+					// if (!"gif".equals(imageName.substring(
+					// imageName.indexOf(".") + 1).toLowerCase())
+					// && !"html".equals(imageName.substring(
+					// imageName.indexOf(".") + 1)
+					// .toLowerCase())) {
+					// entity.setData_type("singleImg");
+					// }
+					// Img img = new Img();
+					// img.setContent(imgUrl[0]);
+					// img.setImageUrl("http://cos.myqcloud.com/11000436/data/image/"
+					// + imageName);
+					// lockerService.save(img);
+					// Data_img dataImg = new Data_img();
+					// dataImg.setData_id(entity.getId());
+					// dataImg.setImg_id(img.getId());
+					// lockerService.save(dataImg);
+					// lockerService.save(entity);
+					// } else if (image.length > 1) {
+					for (int i = 0; i < image.length; i++) {
+						if (image[i] != null) {
+							imageName = uploadImg(imgNamess[i], image[i]);
+							Img img = new Img();
+							Data_img dataImg = new Data_img();
+							img.setImageUrl("http://cos.myqcloud.com/11000436/data/image/"
+									+ imageName);
+							img.setContent(imgUrl[i]);
+							String img_id = lockerService.save(img);
+							dataImg.setData_id(Integer.parseInt(id));
+							dataImg.setImg_id(Integer.parseInt(img_id));
+							lockerService.save(dataImg);
+							if (i == 0) {
+								Data_img_table entity = lockerService
+										.getDataImgById(id);
+								entity.setUrl("http://cos.myqcloud.com/11000436/data/image/"
 										+ imageName);
-								img.setContent(imgUrl[i]);
-								String img_id = lockerService.save(img);
-								dataImg.setData_id(Integer.parseInt(id));
-								dataImg.setImg_id(Integer.parseInt(img_id));
-								lockerService.save(dataImg);
-								if (i == 0) {
-									Data_img_table entity = lockerService
-											.getDataImgById(id);
-									entity.setUrl("http://cos.myqcloud.com/11000436/data/image/"
-											+ imageName);
-									entity.setImgUrl("http://nb.hdlocker.com/pandora/locker!viewDataImg.action?id="
-											+ Integer.parseInt(id) + "");
-									entity.setData_type("multiImg");
-									lockerService.save(entity);
-								}
+								entity.setImgUrl("http://nb.hdlocker.com/pandora/locker!viewDataImg.action?id="
+										+ Integer.parseInt(id) + "");
+								entity.setData_type("multiImg");
+								lockerService.save(entity);
 							}
-//						}
+						}
+						// }
 					}
 				} else {
 					Img img = new Img();
@@ -1430,11 +1436,16 @@ public class LockerAction extends ActionSupport {
 		PrintWriter out = ServletActionContext.getResponse().getWriter();
 		try {
 			String orgSql = "select user_org from user where user_org not in ('0','1') ";
+			String cusUserSql = "select userid,username from user where user_org = '1' ";
 			List<User> orgList = (List<User>) lockerService
 					.queryAllBySql(orgSql);
+			List<User> cusUserList = (List<User>) lockerService
+					.queryAllBySql(cusUserSql);
 			if (orgList.size() > 0) {
 				out.print("{\"result\":\"success\",\"selectData\":"
-						+ JSON.toJSONString(orgList, true) + "}");
+						+ JSON.toJSONString(orgList, true)
+						+ ",\"cusUserData\":"
+						+ JSON.toJSONString(cusUserList, true) + "}");
 			} else {
 				out.print("{\"result\":\"null\"}");
 			}
@@ -1466,7 +1477,8 @@ public class LockerAction extends ActionSupport {
 			Map<String, String> filterMap = getPagerMap();
 			String[] viewArray = { "id", "title", "content", "type", "url",
 					"application", "start_time", "end_time", "level", "icon",
-					"times", "lastModified","data_sub:[{'0':'审核中','1':'审核通过','2':'审核未通过'}]" };
+					"times", "lastModified",
+					"data_sub:[{'0':'审核中','1':'审核通过','2':'审核未通过'}]" };
 			if (title != null && !"".equals(title)) {
 				filterMap.put("title", title);
 			}
@@ -1516,7 +1528,7 @@ public class LockerAction extends ActionSupport {
 		try {
 			if (0 == notify.getId()) {
 				notify.setLastModified(new Timestamp(System.currentTimeMillis()));
-				if(image.length>0&&image[0]!=null){
+				if (image.length > 0 && image[0] != null) {
 					notify.setIcon(FileUtil.encodeBase64File(image[0]));
 				}
 				lockerService.saveOrUpdate(notify);
@@ -1532,7 +1544,7 @@ public class LockerAction extends ActionSupport {
 				entity.setStart_time(notify.getStart_time());
 				entity.setEnd_time(notify.getEnd_time());
 				entity.setLevel(notify.getLevel());
-				if(image.length>0&&image[0]!=null){
+				if (image.length > 0 && image[0] != null) {
 					notify.setIcon(FileUtil.encodeBase64File(image[0]));
 				}
 				entity.setTimes(notify.getTimes());
@@ -1595,13 +1607,13 @@ public class LockerAction extends ActionSupport {
 			}
 		}
 	}
-	
+
 	/**
 	 * 保存通知到云数据库
 	 * 
 	 * @throws IOException
 	 */
-	public void saveInsertNotify() throws IOException{
+	public void saveInsertNotify() throws IOException {
 		ServletActionContext.getResponse().setContentType(
 				"text/html; charset=utf-8");
 		PrintWriter out = ServletActionContext.getResponse().getWriter();

@@ -102,73 +102,80 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 		StringBuffer queryString = new StringBuffer();
 		StringBuffer queryCountString = new StringBuffer();
 		queryCountString
-				.append("select count(*) from (select id,title,url,imgUrl,type,collect_time,data_sub,collect_website from data_img_table  where 1=1  ");
+				.append("select count(*) from (select dit.id,dit.title,dit.url,dit.imgUrl,dit.type,dit.collect_time,dit.collect_website,dit.data_sub,u.user_org,u.username from data_img_table dit left join user u on dit.userid = u.userid where 1=1  ");
 		queryString
-				.append("select id,title,url,imgUrl,type,collect_time,collect_website,data_sub from data_img_table  where 1=1 ");
+				.append("select dit.id,dit.title,dit.url,dit.imgUrl,dit.type,dit.collect_time,dit.collect_website,dit.data_sub,u.user_org,u.username from data_img_table dit left join user u on dit.userid = u.userid  where 1=1 ");
 		if (filterMap != null && !filterMap.isEmpty()) {
 			if (null != filterMap.get("title")
 					&& !"".equals(filterMap.get("title"))) {
-				queryCountString.append("and title like '%"
+				queryCountString.append("and dit.title like '%"
 						+ filterMap.get("title") + "%' ");
-				queryString.append("and title like '%" + filterMap.get("title")
+				queryString.append("and dit.title like '%" + filterMap.get("title")
 						+ "%' ");
 			}
 			if (null != filterMap.get("type")
 					&& !"".equals(filterMap.get("type"))) {
-				queryCountString.append("and type = '" + filterMap.get("type")
+				queryCountString.append("and dit.type = '" + filterMap.get("type")
 						+ "'  ");
-				queryString.append("and type = '" + filterMap.get("type")
+				queryString.append("and dit.type = '" + filterMap.get("type")
 						+ "'  ");
 			}
 			if (null != filterMap.get("start_date")
 					&& !"".equals(filterMap.get("start_date"))) {
-				queryCountString.append("and collect_time > '"
+				queryCountString.append("and dit.collect_time > '"
 						+ filterMap.get("start_date") + "' ");
-				queryString.append("and collect_time > '"
+				queryString.append("and dit.collect_time > '"
 						+ filterMap.get("start_date") + "' ");
 			}
 			if (null != filterMap.get("end_date")
 					&& !"".equals(filterMap.get("end_date"))) {
-				queryCountString.append("and collect_time < '"
+				queryCountString.append("and dit.collect_time < '"
 						+ filterMap.get("end_date") + "' ");
-				queryString.append("and collect_time < '"
+				queryString.append("and dit.collect_time < '"
 						+ filterMap.get("end_date") + "' ");
 			}
 			if (null != filterMap.get("edit_date")
 					&& !"".equals(filterMap.get("edit_date"))) {
-				queryCountString.append("and collect_time like '%"
+				queryCountString.append("and dit.collect_time like '%"
 						+ filterMap.get("edit_date") + "%' ");
-				queryString.append("and collect_time like '%"
+				queryString.append("and dit.collect_time like '%"
 						+ filterMap.get("edit_date") + "%' ");
 			}
 			if (null != filterMap.get("data_sub")
 					&& !"".equals(filterMap.get("data_sub"))) {
-				queryCountString.append("and data_sub = "
+				queryCountString.append("and dit.data_sub = "
 						+ filterMap.get("data_sub") + " ");
-				queryString.append("and data_sub = "
+				queryString.append("and dit.data_sub = "
 						+ filterMap.get("data_sub") + " ");
+			}
+			if (null != filterMap.get("custom_user")
+					&& !"".equals(filterMap.get("custom_user"))) {
+				queryCountString.append("and u.userid = "
+						+ filterMap.get("custom_user") + " ");
+				queryString.append("and u.userid = "
+						+ filterMap.get("custom_user") + " ");
 			}
 			if (null != filterMap.get("collect_website")
 					&& !"".equals(filterMap.get("collect_website"))) {
 				if ("0".equals(filterMap.get("collect_website"))) {
 					queryCountString
-							.append("and collect_website not in('0') and collect_website in (select user_org from user ) ");
+							.append("and dit.collect_website not in('0') and dit.collect_website in (select user_org from user ) ");
 					queryString
 							.append("and collect_website not in('0') and collect_website in (select user_org from user ) ");
 				} else {
-					queryCountString.append("and collect_website = '"
+					queryCountString.append("and dit.collect_website = '"
 							+ filterMap.get("collect_website") + "' ");
-					queryString.append("and collect_website = '"
+					queryString.append("and dit.collect_website = '"
 							+ filterMap.get("collect_website") + "' ");
 				}
 			}
 			if (!"0".equals(filterMap.get("userOrg"))
 					&& null != filterMap.get("userOrg")
 					&& !"".equals(filterMap.get("userOrg"))) {
-				queryCountString.append("and userid = '"
+				queryCountString.append("and dit.userid = '"
 						+ filterMap.get("userid") + "'");
-				queryString.append("and userid = '" + filterMap.get("userid")
-						+ "'");
+				queryString.append("and dit.userid = '"
+						+ filterMap.get("userid") + "'");
 			}
 		}
 		queryCountString.append(") as t");

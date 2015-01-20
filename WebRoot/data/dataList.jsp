@@ -46,7 +46,7 @@ text-overflow : ellipsis;
 			datatype: "json",
 			height: 500,
 			width: widthScroll/1.5, 
-			colNames:['ID','标题','类型','内容','发布日期','来源','url','图片','发布','发布状态'],
+			colNames:['ID','标题','类型','内容','发布日期','来源','url','图片','发布','发布状态','来源','发布人'],
 			colModel:[
 					{name:'ID',index:'ID', width:60, key:true, sorttype:"int",hidden:true},								
 					{name:'title',index:'title', width:150}, 
@@ -74,7 +74,9 @@ text-overflow : ellipsis;
 							}else if(rowObject.data_sub=='审核未通过'){
 					  			return "<p style=\"color: red;font-size: 16px;\">审核未通过</p>" ;
 							}
-		  				}}
+		  				}},
+			  		{name:'user_org',index:'user_org', width:150,align: 'center'},
+			  		{name:'username',index:'username', width:150,align: 'center'} 
 			],
 			shrinkToFit:false,
 			sortname:'id',
@@ -101,7 +103,11 @@ text-overflow : ellipsis;
 			pager:"#gridPager",
 			caption: "数据列表"									
 	});
-				
+				if(${sessionScope.USER_ORG=='1'}){
+					jQuery("#gridTable").hideCol("user_org").trigger("reloadGrid");
+				}else if(${sessionScope.USER_ORG != '0'}){
+					jQuery("#gridTable").hideCol("username").trigger("reloadGrid");
+				}
 	 jQuery("#gridTable").jqGrid('navGrid','#gridPager',{add:false,edit:false,del:false,search:false,refresh:false});
 		jQuery("#gridTable").jqGrid('navButtonAdd','#gridPager',
 					{ 	
@@ -123,10 +129,12 @@ text-overflow : ellipsis;
 		      },  
 		      success : function(data, textStatus) {
 		    	  var result =data.selectData;
-		    	  collect_website
+		    	  var cusUserResult =data.cusUserData;
 		    	  var collect_website = $("#collect_website");
+		    	  var custom_user = $("#custom_user");
 		    	  for(var i=0;i<result.length;i++){
 		    		  collect_website.append('<option value="'+result[i]+'">'+result[i]+'</option>');
+		    		  custom_user.append('<option value="'+cusUserResult[i][0]+'">'+cusUserResult[i][1]+'</option>');
 		    	  }
 		      }  
 		});
@@ -242,7 +250,7 @@ text-overflow : ellipsis;
 			var data_title = jQuery("#data_title").val();
 			var start_date = jQuery("#start_date").val();
 			var end_date = jQuery("#end_date").val();
-			var data_type = jQuery("#data_type").val();
+			var custom_user = jQuery("#custom_user").val();
 			var type = jQuery("#type").val();
 			var edit_date = jQuery("#edit_date").val();
 			var data_sub = jQuery("#data_sub").val();
@@ -251,7 +259,7 @@ text-overflow : ellipsis;
 	            "data_title" : encodeURIComponent($.trim(data_title)),
 	            "start_date" : encodeURIComponent($.trim(start_date)),
 	            "end_date" : encodeURIComponent($.trim(end_date)),
-	            "data_type" : encodeURIComponent($.trim(data_type)),
+	            "custom_user" : encodeURIComponent($.trim(custom_user)),
 	            "type" : encodeURIComponent($.trim(type)),
 	            "edit_date" : encodeURIComponent($.trim(edit_date)),
 	            "data_sub" : encodeURIComponent($.trim(data_sub)),
@@ -273,7 +281,7 @@ text-overflow : ellipsis;
 		jQuery("#data_title").val("");
 		jQuery("#start_date").val("");
 		jQuery("#end_date").val("");
-		jQuery("#data_type").val("");
+		jQuery("#custom_user").val("");
 		jQuery("#type").val("");
 		jQuery("#edit_date").val("");
 		jQuery("#data_sub").val("");
@@ -335,12 +343,8 @@ text-overflow : ellipsis;
 						onClick="WdatePicker()"
 						readonly="readonly" style="width:150px;" />
 				</td>
-				<c:if test="${sessionScope.USER_ORG=='0'}"><td>&nbsp;&nbsp;数据类型：<select id="data_type" name="data_type" style="width:150px;">
+				<c:if test="${sessionScope.USER_ORG=='0'}"><td>&nbsp;&nbsp;自  定  义：<select id="custom_user" name="custom_user" style="width:150px;">
 								<option value="" selected="selected">--请选择--</option>
-								<option value="html">HTML</option>
-								<option value="gif">动态图</option>
-								<option value="singleImg">单图</option>
-								<option value="multiImg">多图</option>
 						</select>
 				</td></c:if>
 				<td><input type="button"
