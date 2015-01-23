@@ -110,13 +110,13 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 					&& !"".equals(filterMap.get("title"))) {
 				queryCountString.append("and dit.title like '%"
 						+ filterMap.get("title") + "%' ");
-				queryString.append("and dit.title like '%" + filterMap.get("title")
-						+ "%' ");
+				queryString.append("and dit.title like '%"
+						+ filterMap.get("title") + "%' ");
 			}
 			if (null != filterMap.get("type")
 					&& !"".equals(filterMap.get("type"))) {
-				queryCountString.append("and dit.type = '" + filterMap.get("type")
-						+ "'  ");
+				queryCountString.append("and dit.type = '"
+						+ filterMap.get("type") + "'  ");
 				queryString.append("and dit.type = '" + filterMap.get("type")
 						+ "'  ");
 			}
@@ -450,8 +450,14 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 	@Override
 	public int saveParams(Map<String, String> filterMap) {
 		StringBuffer sql = new StringBuffer();
-		sql.append("update data_img_table t set t.collect_time = '"
-				+ filterMap.get("edit_date") + "' where t.id in ( :idList ) ");
+		if (filterMap != null && !filterMap.isEmpty()) {
+			if (null != filterMap.get("edit_date") && !"".equals(filterMap.get("edit_date"))) {
+				sql.append("update data_img_table t set t.collect_time = '" + filterMap.get("edit_date") + "' where t.id in ( :idList ) ");
+			}
+			if (null != filterMap.get("data_sub") && !"".equals(filterMap.get("data_sub"))) {
+				sql.append("update data_img_table t set t.data_sub = 2 where t.id in ( :idList ) and t.data_sub != 1 ");
+			}
+		}
 		Query query = getSession().createSQLQuery(String.valueOf(sql));
 		query.setParameterList("idList",
 				String2list2mapUtil.StringToList(filterMap.get("ids"))
@@ -711,22 +717,22 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 					&& !"".equals(filterMap.get("start_time"))) {
 				queryCountString.append("and start_time > '"
 						+ filterMap.get("start_time") + "' ");
-				queryString.append("and start_time > '" + filterMap.get("start_time")
-						+ "' ");
+				queryString.append("and start_time > '"
+						+ filterMap.get("start_time") + "' ");
 			}
 			if (null != filterMap.get("end_time")
 					&& !"".equals(filterMap.get("end_time"))) {
 				queryCountString.append("and end_time < '"
 						+ filterMap.get("end_time") + "' ");
-				queryString.append("and end_time < '" + filterMap.get("end_time")
-						+ "' ");
+				queryString.append("and end_time < '"
+						+ filterMap.get("end_time") + "' ");
 			}
 			if (null != filterMap.get("data_sub")
 					&& !"".equals(filterMap.get("data_sub"))) {
 				queryCountString.append("and data_sub = '"
 						+ filterMap.get("data_sub") + "' ");
-				queryString.append("and data_sub = '" + filterMap.get("data_sub")
-						+ "' ");
+				queryString.append("and data_sub = '"
+						+ filterMap.get("data_sub") + "' ");
 			}
 			queryCountString.append(") as t");
 			queryString.append(" order by id desc");
@@ -737,7 +743,8 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 
 	@Override
 	public Notification getNotifyById(String id) {
-		Notification notify = (Notification) this.getHibernateTemplate().get(Notification.class, Integer.parseInt(id));
+		Notification notify = (Notification) this.getHibernateTemplate().get(
+				Notification.class, Integer.parseInt(id));
 		return notify;
 	}
 

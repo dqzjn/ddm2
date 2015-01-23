@@ -33,7 +33,7 @@
 body {
 	background: #ffffff;
 }
-.button_b{height: 18px;width: 36px;background-image: url(<%=request.getContextPath()%>/images/inputBg.png) ;background-size:cover;background-color: transparent;border: none ;}
+.button_b{height: 18px;width: 58.5px;background-image: url(<%=request.getContextPath()%>/images/inputBg3.png) ;background-size:cover;background-color: transparent;border: none ;}
 .button_b1{height: 18px;width: 89px;background-image: url(<%=request.getContextPath()%>/images/inputBg2.png) ;background-size:cover;background-color: transparent;border: none ;}
 </style>
 <script type="text/javascript">
@@ -45,6 +45,8 @@ body {
     	    	 if(data.result=='success'){
 						alert("保存成功");
 						window.returnValue = data;
+						opener.gridSearch();
+						window.opener=null;
 						window.close();
 	    	      }else{
 	    	      	window.returnValue = "error";
@@ -58,6 +60,8 @@ body {
     	    	 if(data.result=='success'){
 						alert("保存并插入成功!");
 						window.returnValue = data;
+						opener.gridSearch();
+						window.opener=null;
 						window.close();
 	    	      }else{
 	    	      	window.returnValue = "error";
@@ -471,23 +475,20 @@ html {
 					</tr>
 					<tr>
 						<td align="right">内容：</td>
-						<td align="left"><textarea rows="10" cols="5" id="imgUrl"
+						<td align="left"><textarea rows="5" cols="3" id="imgUrl"
 							name="imgUrl" value="${dataImgTable.imgUrl}" style="width: 270px">${dataImgTable.imgUrl}</textarea>
 						</td>
 					</tr>
-					<tr><td><br/></td></tr>
 				</table>
+				<br><br><br>
 				<table>
-				    <tr>
-				    	<input type="button" id="addHtml" value="+图片" onclick="addHTML()" class="button_b" /> 
-						<input type="button" id="delHtml" value="-图片" onclick="delHTML()" class="button_b" /> 
-				    </tr>
 					<tr>
-						<td colspan="4" align="center"><input type="button"
-							id="submitBtn" value="保 存" class="button_b" /> 
-							<c:if test="${userOrg=='0'||userOrg=='1'}"><input type="button" id="saveInsert" value="保存并入云库" class="button_b1" /></c:if>
-							 <input type="button" value="取 消" id="exit"
-							class="button_b" onclick="window.close()" />
+						<td colspan="4" align="center">
+							<input type="button" id="addHtml" value="+图片" onclick="addHTML()" class="button_b" /> &nbsp;
+							<input type="button" id="delHtml" value="-图片" onclick="delHTML()" class="button_b" /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							<input type="button" id="submitBtn" value=" 保  存 " class="button_b" />&nbsp;
+							<c:if test="${userOrg=='0'}"><input type="button" id="saveInsert" value="保存并入云库" class="button_b1" />&nbsp;</c:if>
+							 <input type="button" value=" 取  消 " id="exit" class="button_b" onclick="opener.gridSearch();window.opener=null;window.close();" />
 						</td>
 					</tr>
 				</table>

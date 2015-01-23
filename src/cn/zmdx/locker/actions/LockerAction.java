@@ -795,6 +795,7 @@ public class LockerAction extends ActionSupport {
 		PrintWriter out = ServletActionContext.getResponse().getWriter();
 		try {
 			String ids = ServletActionContext.getRequest().getParameter("ids");
+			String data_sub = ServletActionContext.getRequest().getParameter("data_sub");
 			String edit_date = StringUtil.encodingUrl(ServletActionContext
 					.getRequest().getParameter("edit_date"));
 			Map filterMap = new HashMap();// 存储参数的map
@@ -803,6 +804,9 @@ public class LockerAction extends ActionSupport {
 			}
 			if (ids != null && !"".equals(ids)) {
 				filterMap.put("ids", ids);
+			}
+			if (data_sub != null && !"".equals(data_sub)) {
+				filterMap.put("data_sub", data_sub);
 			}
 			if (filterMap.size() > 1) {
 				int count = lockerService.saveParams(filterMap);
@@ -1650,4 +1654,5 @@ public class LockerAction extends ActionSupport {
 			e.printStackTrace();
 		}
 	}
+	
 }

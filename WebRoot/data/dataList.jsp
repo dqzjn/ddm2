@@ -45,8 +45,9 @@ text-overflow : ellipsis;
 			url:'<%=request.getContextPath()%>/locker_queryDataImgTable.action?temp='+Math.round(Math.random()*10000),
 			datatype: "json",
 			height: 500,
+			autoheight: true,
 			width: widthScroll/1.5, 
-			colNames:['ID','标题','类型','内容','发布日期','来源','url','图片','发布','发布状态','来源','发布人'],
+			colNames:['ID','标题','类型','内容','发布日期','来源','url','图片','发布','发布状态','发布人','来源'],
 			colModel:[
 					{name:'ID',index:'ID', width:60, key:true, sorttype:"int",hidden:true},								
 					{name:'title',index:'title', width:150}, 
@@ -75,8 +76,8 @@ text-overflow : ellipsis;
 					  			return "<p style=\"color: red;font-size: 16px;\">审核未通过</p>" ;
 							}
 		  				}},
-			  		{name:'user_org',index:'user_org', width:150,align: 'center'},
-			  		{name:'username',index:'username', width:150,align: 'center'} 
+		  				{name:'username',index:'username', width:150,align: 'center'},
+		  				{name:'user_org',index:'user_org', width:150,align: 'center'}
 			],
 			shrinkToFit:false,
 			sortname:'id',
@@ -103,6 +104,11 @@ text-overflow : ellipsis;
 			pager:"#gridPager",
 			caption: "数据列表"									
 	});
+		$(function(){
+            $(window).resize(function(){   
+         $("#gridTable").setGridHeight($(window).height());
+        });
+       }); 
 				if(${sessionScope.USER_ORG=='1'}){
 					jQuery("#gridTable").hideCol("user_org").trigger("reloadGrid");
 				}else if(${sessionScope.USER_ORG != '0'}){
@@ -141,16 +147,20 @@ text-overflow : ellipsis;
 		
 	}); 
 	
+	function OpenWindow(url,width,height,name,options)
+	{
+		var left = (screen.width-width)/2;
+		var top = (screen.height-height)/2;
+		if(options ==null)
+		options ="";
+		var newWin =  window.open(url,name,"left=" +left+",top="+top+",width="+width+",height="+height+",toolbar=no,menubar=no,scrollbars=yes,resizable=no,location=no,status=no"+options);
+		newWin.focus();
+		return newWin;
+
+	}
 	//添加
 	function addData(){
-		var ua = navigator.userAgent.toLowerCase();   
-        if(ua.match(/chrome\/([\d.]+)/)){  
-        	window.open('<%=request.getContextPath()%>/locker_addDataImg.action?temp='+new Date(),'window', 'dialogWidth:700px;dialogHeight:570px;');
-    		gridSearch(); 
-        } else{
-        	window.showModalDialog('<%=request.getContextPath()%>/locker_addDataImg.action?temp='+new Date(),'window', 'dialogWidth:700px;dialogHeight:570px;');
-    		gridSearch();
-        }		
+		OpenWindow('<%=request.getContextPath()%>/locker_addDataImg.action?temp='+new Date(),700,550,'newwindow');
 	}
 	
 	//修改
@@ -166,7 +176,7 @@ text-overflow : ellipsis;
 		}
 		var row = jQuery("#gridTable").jqGrid('getRowData',ids);//获取选中行.
 		var id = row.ID;//获取选中行的id属性
-		if(row.data_sub==1){
+		if(row.data_sub=='审核通过'){
 			alert("数据已发布，不能修改!");
 			return false;
 		}
@@ -293,7 +303,12 @@ text-overflow : ellipsis;
 	    	alert("请先选择记录!");  
 			return false;  
 		} 
-       
+	    var row = jQuery("#gridTable").jqGrid('getRowData',ids);//获取选中行.
+		var id = row.ID;//获取选中行的id属性
+		if(row.data_sub=='审核未通过'){
+			alert("审核未通过数据，不能入云库!");
+			return false;
+		}
 		if(!confirm("是否确认插入云数据 ？")){
 			return false;
 		}
@@ -318,6 +333,49 @@ text-overflow : ellipsis;
 		    }  
 		});
 	}
+	
+	//审核不通过
+	function exRefuse(){
+		var ids = $("#gridTable").jqGrid("getGridParam", "selarrrow") + "";
+	    if (!ids) {
+	    	alert("请先选择记录!");  
+			return false;  
+		} 
+	    var row = jQuery("#gridTable").jqGrid('getRowData',ids);//获取选中行.
+		var id = row.ID;//获取选中行的id属性
+		if(row.data_sub=='审核通过'){
+			alert("数据已发布!");
+			return false;
+		}
+		if(!confirm("确认审核不通过 ？")){
+			return false;
+		}
+		var params = {"ids": ids};  
+		var actionUrl = "<%=request.getContextPath()%>/locker_saveParams.action?data_sub=1";  
+		$.ajax({
+			url : actionUrl,
+			type : "post",
+			data : params,
+			dataType : "json",
+			cache : false,
+			error : function(textStatus, errorThrown) {
+				alert("系统ajax交互错误: " + textStatus.value);
+			},
+			success : function(data, textStatus) {
+				if (data.result == 'success') {
+					alert("操作成功！");
+					gridSearch();
+				} else if(data.result == 'empty'){
+					alert("更新数据null 请重新操作！");
+					gridSearch();
+				}else {
+					alert("操作失败！");
+					gridSearch();
+				}
+			}
+		});
+	}
+	
 	//批量修改时间
 	function updateTime(){
 		var ids = $("#gridTable").jqGrid("getGridParam", "selarrrow") + "";
@@ -327,6 +385,29 @@ text-overflow : ellipsis;
 		} 
 		window.showModalDialog('<%=request.getContextPath()%>/data/editTimePage.jsp?ids='+ids+'&temp='+new Date(),'', 'dialogWidth:300px;status:no;dialogHeight:200px;');
 		gridSearch();
+	}
+	
+	//查看
+	function preview(){
+		var ids= $("#gridTable").jqGrid("getGridParam", "selarrrow") + "";
+		if (!ids) {
+		    alert("请先选择记录!");  
+		    return false;  
+		}
+		if(ids.indexOf(",")!=-1){
+			  alert("只能选择一条记录!");  
+		        return false; 
+		}
+		var row = jQuery("#gridTable").jqGrid('getRowData',ids);//获取选中行.
+		var id = row.ID;//获取选中行的id属性
+		if(row.imgUrl.indexOf("http://")!=-1){
+			OpenWindow('http://nb.hdlocker.com/pandora/locker!viewDataImg.action?id='+id,window.screen.availWidth-10,window.screen.availHeight-30,'newwindow');
+			refreshIt();
+		}else{
+			alert("数据无法查看!");
+			refreshIt();
+			return false; 
+		}
 	}
 </script>
 </head>
@@ -368,7 +449,7 @@ text-overflow : ellipsis;
 								<option value="1">已发布</option>
 								<option value="2">未通过</option>
 						</select>
-						<c:if test="${sessionScope.USER_ORG=='0'}"><td>&nbsp;&nbsp;来&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;源：<select id="collect_website" name="collect_website" style="width:150px;">
+						<c:if test="${sessionScope.USER_ORG=='0'}"><td>&nbsp;&nbsp;来&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;源：<select id="collect_website" name="collect_website" style="width:150px;">
 								<option value="">全部</option>
 								<option value="0">自媒体</option>
 						</select></td></c:if>
@@ -376,14 +457,15 @@ text-overflow : ellipsis;
 		</table>
 		<table style="width: 100%;" class="tableCont">
 			<tr>
-				<td><input id="add" type='button' value='添 加'
-					onclick="addData();" class='button_b' /> <input id="update"
-					type='button' value='修 改' onclick='updateData()'
-					class='button_b' /> <input id="delete" type='button' value='删 除'
-					onclick='deleteData();' class='button_b' />
-					<c:if test="${sessionScope.USER_ORG=='0'}"><input id="delete" type='button' value='插入数据库' onclick='insertData();' class='button_b1' /></c:if>
+				<td>
+					<input id="add" type='button' value='添 加' onclick="addData();" class='button_b' />
+					<input id="update" type='button' value='修 改' onclick='updateData()' class='button_b' />
+					<input id="refresh" type='button' value='查 看' onclick='preview()' class='button_b' />
+					<input id="delete" type='button' value='删 除' onclick='deleteData();' class='button_b' />
+					<c:if test="${sessionScope.USER_ORG=='0'}"><input id="insertDB" type='button' value='插入数据库' onclick='insertData();' class='button_b1' /></c:if>
+					<c:if test="${sessionScope.USER_ORG=='0'}"><input id="refuse" type='button' value='审核不通过' onclick='exRefuse();' class='button_b1' /></c:if>
 					<c:if test="${sessionScope.USER_ORG=='0'}"><input id="delete" type='button' value='批量修改时间' onclick='updateTime();' class='button_b1'"/></c:if>
-					 <input id="refresh" type='button' value='刷 新' onclick='refreshIt()' class='button_b' />
+					<input id="refresh" type='button' value='刷 新' onclick='refreshIt()' class='button_b' />
 				</td>
 			</tr>
 			<tr>
