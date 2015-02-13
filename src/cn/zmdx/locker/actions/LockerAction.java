@@ -564,6 +564,9 @@ public class LockerAction extends ActionSupport {
 				dataImgTable.setImgUrl(imgUrl[0]);
 				dataImgTable.setUserid(Integer.parseInt(session.getAttribute(
 						"USER_ID").toString()));
+				if (imgUrl[0].startsWith("http")) {
+					dataImgTable.setData_type("html");
+				}
 				// if (dataImgTable.getData_type() == null
 				// || "".equals(dataImgTable.getData_type())) {
 				// dataImgTable.setData_type("singleImg");
@@ -620,9 +623,13 @@ public class LockerAction extends ActionSupport {
 										.getDataImgById(id);
 								entity.setUrl("http://cos.myqcloud.com/11000436/data/image/"
 										+ imageName);
-								entity.setImgUrl("http://nb.hdlocker.com/pandora/locker!viewDataImg.action?id="
-										+ Integer.parseInt(id) + "");
-								entity.setData_type("multiImg");
+								if (imgUrl[0].startsWith("http")) {
+									entity.setData_type("html");
+								} else {
+									entity.setImgUrl("http://nb.hdlocker.com/pandora/locker!viewDataImg.action?id="
+											+ Integer.parseInt(id) + "");
+									entity.setData_type("multiImg");
+								}
 								lockerService.save(entity);
 							}
 						}
@@ -795,7 +802,8 @@ public class LockerAction extends ActionSupport {
 		PrintWriter out = ServletActionContext.getResponse().getWriter();
 		try {
 			String ids = ServletActionContext.getRequest().getParameter("ids");
-			String data_sub = ServletActionContext.getRequest().getParameter("data_sub");
+			String data_sub = ServletActionContext.getRequest().getParameter(
+					"data_sub");
 			String edit_date = StringUtil.encodingUrl(ServletActionContext
 					.getRequest().getParameter("edit_date"));
 			Map filterMap = new HashMap();// 存储参数的map
@@ -1654,5 +1662,5 @@ public class LockerAction extends ActionSupport {
 			e.printStackTrace();
 		}
 	}
-	
+
 }
