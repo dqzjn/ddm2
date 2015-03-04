@@ -1245,19 +1245,6 @@ public class LockerAction extends ActionSupport {
 			// 验证是否是保存并插入数据库1，是
 			String flag = ServletActionContext.getRequest()
 					.getParameter("flag");
-			if (!"".equals(delImgIds) && delImgIds != null) {
-				if (!"".equals(delImgIds.substring(0, delImgIds.length() - 1))) {
-					// 根据id删除相应img
-					lockerService.executeBySQL("delete from img where id in ("
-							+ delImgIds.substring(0, delImgIds.length() - 1)
-							+ ")");
-					// 删除相应的data_img中间表数据
-					lockerService
-							.executeBySQL("delete from data_img where img_id in ("
-									+ delImgIds.substring(0,
-											delImgIds.length() - 1) + ")");
-				}
-			}
 			Data_img_table dit = (Data_img_table) lockerService.getObjectById(
 					Data_img_table.class, Integer.parseInt(dataImgId));
 			dit.setTitle(dataImgTable.getTitle());
@@ -1287,12 +1274,18 @@ public class LockerAction extends ActionSupport {
 				if(content1.indexOf("<img ")<0){//多图文改为单图文
 					//删除原有的图文记录
 					// 根据id删除相应img
-					lockerService.executeBySQL("delete from img where id in (" + dataImgId + ")");
+					lockerService.executeBySQL("delete from img where id =" + dataImgId );
 					// 删除相应的data_img中间表数据
 					lockerService
-							.executeBySQL("delete from data_img where img_id in (" + dataImgId+ ")");
+							.executeBySQL("delete from data_img where data_id =" + dataImgId);
 					dit.setImgUrl(content1);
 				}else{
+					//删除原有的图文记录
+					// 根据id删除相应img
+					lockerService.executeBySQL("delete from img where id =" + dataImgId );
+					// 删除相应的data_img中间表数据
+					lockerService
+							.executeBySQL("delete from data_img where data_id =" + dataImgId);
 					Img img = new Img();
 					img.setContent(content1);
 					String img_id = lockerService.save(img);

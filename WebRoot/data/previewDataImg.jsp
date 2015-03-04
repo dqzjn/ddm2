@@ -30,6 +30,9 @@
 	</script>
 	<style type="text/css">
 	
+img{
+	width: 100%;
+}
 	</style>
 <body id="activity-detail" class="zh_CN " onload="hiddenDiv()">           
     <div class="rich_media " style="">  
@@ -49,7 +52,7 @@
     				<div class="rich_media_content" id="js_content">
     					<c:forEach items="${list }" var="obj" varStatus="vs">
     						<c:if test="${vs.count==1 }">
-	    						<p style="text-align: center;margin-top: 10px;"><img alt="" src="${obj[1] }" style="width: 100%;"></p>
+	    						<p style="text-align: center;margin-top: 10px;"><img alt="" src="${dataImgTable.url}" style="width: 100%;"></p>
 	    						<h2 class="rich_media_title" style="text-align: center;margin-top: 15px;color: #7e695b;padding-left: 25px;padding-right: 30px;line-height: 30px;" id="activity-name">${dataImgTable.title }</h2>
 	    						<p style="margin-top: 12px;padding-left: 7px;"><span style="max-width: 100%; word-wrap: break-word !important; box-sizing: border-box !important;padding-top: 100px;">${obj[2] }</span></p>
     						</c:if>

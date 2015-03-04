@@ -52,9 +52,6 @@ body {
 				allowFileManager : true,
 				afterBlur: function(){this.sync();}
 			});
-			//prettyPrint();
-			//alert(document.getElementById("content1").value);
-			//alert(document.getElementById("content1").value.length);
 		});
 	</script>
 <script type="text/javascript">
@@ -90,12 +87,9 @@ body {
 	    	      }
     	}};
       	$('#submitBtn').click(function(){
-      		alert(document.getElementById("content1").value);
-      		alert(document.getElementById("content1").value.length);
-			//return false;
 	    	if(checkedForm()){
-	    		//$("#submitBtn").attr("disabled", true);  
-	    		//$("#saveInsert").attr("disabled", true);  
+	    		$("#submitBtn").attr("disabled", true);  
+	    		$("#saveInsert").attr("disabled", true);  
 	    		$("#exit").attr("disabled", true);  
 	    		$("#addHtml").attr("disabled", true);  
 	    		$("#delHtml").attr("disabled", true);  
@@ -106,8 +100,8 @@ body {
 	     });
       	$('#saveInsert').click(function(){
 	    	if(checkedForm()){
-	    		//$("#submitBtn").attr("disabled", true);  
-	    		//$("#saveInsert").attr("disabled", true);  
+	    		$("#submitBtn").attr("disabled", true);  
+	    		$("#saveInsert").attr("disabled", true);  
 	    		$("#exit").attr("disabled", true);  
 	    		$("#addHtml").attr("disabled", true);  
 	    		$("#delHtml").attr("disabled", true);  
@@ -495,12 +489,6 @@ html {
 							name="image" value="${image}" onchange="uploadImg()" />
 						</td>
 					</tr>
-<%--					<tr>--%>
-<%--						<td align="right">内容：</td>--%>
-<%--						<td align="left" colspan="3"><textarea rows="5" cols="3" id="imgUrl"--%>
-<%--							name="imgUrl" value="${dataImgTable.imgUrl}" style="width: 270px">${dataImgTable.imgUrl}</textarea>--%>
-<%--						</td>--%>
-<%--					</tr>--%>
 					<tr>
 						<td colspan="4">
 							<textarea id="content1" name="content1" cols="100" rows="8" style="width:669px;height:200px;visibility:hidden;"><%=htmlspecialchars(htmlData)%></textarea>
@@ -510,8 +498,6 @@ html {
 				<table>
 					<tr>
 						<td colspan="4" align="center">
-							<input type="button" id="addHtml" value="+图片" onclick="addHTML()" class="button_b" /> &nbsp;
-							<input type="button" id="delHtml" value="-图片" onclick="delHTML()" class="button_b" /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 							<input type="button" id="submitBtn" value=" 保  存 " class="button_b" />&nbsp;
 							<c:if test="${userOrg=='0'}"><input type="button" id="saveInsert" value="保存并入云库" class="button_b1" />&nbsp;</c:if>
 							 <input type="button" value=" 取  消 " id="exit" class="button_b" onclick="opener.gridSearch();window.opener=null;window.close();" />
@@ -523,7 +509,6 @@ html {
 		<input type="hidden" name="imgNames" id="imgNames" value="${imgNames}"/>
 		<input type="hidden" name="dataImgTable.data_type" id="data_type" value="${dataImgTable.data_type}"/>
 	</form>
-	<%=htmlData%>
 </body>
 </html>
 <%!

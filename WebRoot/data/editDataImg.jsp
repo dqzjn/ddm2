@@ -5,6 +5,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="s" uri="/struts-tags"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme() + "://"
@@ -51,9 +52,6 @@ body {
 				allowFileManager : true,
 				afterBlur: function(){this.sync();}
 			});
-			//prettyPrint();
-			//alert(document.getElementById("content1").value);
-			//alert(document.getElementById("content1").value.length);
 		});
 	</script>
 <script type="text/javascript">
@@ -85,13 +83,10 @@ body {
 	    	      }
     	}};
       	$('#submitBtn').click(function(){
-      		alert(document.getElementById("content1").value);
-      		alert(document.getElementById("content1").value.length);
-			//return false;
 	    	if(checkedForm()){
 	    		//uploadImg();
-	    		//$("#submitBtn").attr("disabled", true);  
-	    		//$("#saveInsert").attr("disabled", true);
+	    		$("#submitBtn").attr("disabled", true);  
+	    		$("#saveInsert").attr("disabled", true);
 	    		$("#exit").attr("disabled", true); 
 	    		$("#addHtml").attr("disabled", true);  
 	    		$("#delHtml").attr("disabled", true);  
@@ -456,7 +451,7 @@ html {
 						<td align="right">发布时间：</td>
 						<td align="left"><input id="collect_time"
 							name="dataImgTable.collect_time" readonly="readonly"
-							value="${dataImgTable.collect_time}"
+							value='<fmt:formatDate value="${dataImgTable.collect_time}" pattern="yyyy-MM-dd HH:mm:ss"  />'
 							onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"
 							style="width: 120px" />
 						</td>
@@ -494,12 +489,6 @@ html {
 					</tr>
 					</table>
 				<table>
-				   <tr>
-				   	<td>
-					   	<input type="button" id="addHtml" value="+图片" onclick="addHTML()"  class="button_b"/> 
-							<input type="button" id="delHtml" value="-图片" onclick="delHTML()"  class="button_b"/> 
-						</td>
-				    </tr>
 					<tr>
 						<td colspan="4" align="center"><input type="button"
 							id="submitBtn" value="保 存" class="button_b" /> 
