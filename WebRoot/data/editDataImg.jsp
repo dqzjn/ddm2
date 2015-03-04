@@ -30,6 +30,11 @@
 	src="<%=request.getContextPath()%>/js/jqueryui/jquery.easyui.min.js"></script>
 <link rel="stylesheet" type="text/css"
 	href="<%=request.getContextPath()%>/web/style/layout2.css" />
+	<link rel="stylesheet" href="<%=request.getContextPath()%>/data/kindEditor/themes/default/default.css" />
+	<link rel="stylesheet" href="<%=request.getContextPath()%>/data/kindEditor/plugins/code/prettify.css" />
+	<script charset="utf-8" src="<%=request.getContextPath()%>/data/kindEditor/kindeditor.js"></script>
+	<script charset="utf-8" src="<%=request.getContextPath()%>/data/kindEditor/lang/zh_CN.js"></script>
+	<script charset="utf-8" src="<%=request.getContextPath()%>/data/kindEditor/plugins/code/prettify.js"></script>
 <style type="text/css">
 body {
 	background: #ffffff;
@@ -37,6 +42,20 @@ body {
 .button_b{height: 18px;width: 36px;background-image: url(<%=request.getContextPath()%>/images/inputBg.png) ;background-size:cover;background-color: transparent;border: none ;}
 .button_b1{height: 18px;width: 89px;background-image: url(<%=request.getContextPath()%>/images/inputBg2.png) ;background-size:cover;background-color: transparent;border: none ;}
 </style>
+<script>
+		KindEditor.ready(function(K) {
+			var editor1 = K.create('textarea[name="content1"]', {
+				cssPath : '<%=request.getContextPath()%>/data/kindEditor/plugins/code/prettify.css',
+				uploadJson : '<%=request.getContextPath()%>/data/kindEditor/jsp/upload_json.jsp',
+				fileManagerJson : '<%=request.getContextPath()%>/data/kindEditor/jsp/file_manager_json.jsp',
+				allowFileManager : true,
+				afterBlur: function(){this.sync();}
+			});
+			//prettyPrint();
+			//alert(document.getElementById("content1").value);
+			//alert(document.getElementById("content1").value.length);
+		});
+	</script>
 <script type="text/javascript">
 	$(document).ready(function(){
   		var optionsSubmit = {
@@ -66,10 +85,13 @@ body {
 	    	      }
     	}};
       	$('#submitBtn').click(function(){
+      		alert(document.getElementById("content1").value);
+      		alert(document.getElementById("content1").value.length);
+			//return false;
 	    	if(checkedForm()){
 	    		//uploadImg();
-	    		$("#submitBtn").attr("disabled", true);  
-	    		$("#saveInsert").attr("disabled", true);  
+	    		//$("#submitBtn").attr("disabled", true);  
+	    		//$("#saveInsert").attr("disabled", true);
 	    		$("#exit").attr("disabled", true); 
 	    		$("#addHtml").attr("disabled", true);  
 	    		$("#delHtml").attr("disabled", true);  
@@ -197,22 +219,27 @@ body {
 		}); 
 	} 
 	
-    function uploadImg() {
+	function uploadImg() {
     	var imgUrls=document.getElementsByName("image");
-    	 var imgUrl ='';
-    	for(var i=0;i<imgUrls.length;i++){
-    		var f = imgUrls[i].files;
-    		if(f[0]!=null&&f[0]!=undefined){
-        		imgUrl=imgUrl+f[0].name+'#';
-    		}else{
-    			imgUrl=imgUrl+'#';
-    		}
-    	}
-        document.getElementById("imgNames").value = imgUrl;
-    };
-    function uploadImg(oldImgId) {
-    	document.getElementById(oldImgId).value = "";
-    };
+	   	 var imgUrl ='';
+	   	 if(!+[1,]){
+	    		for(var i=0;i<imgUrls.length;i++){
+		    		var f = imgUrls[i].value;
+		    		f=f.substring( f.lastIndexOf('\\')+1 );
+		    		imgUrl=imgUrl+f+'#';
+		    	}
+		        document.getElementById("imgNames").value = imgUrl;
+	    	} else{
+	    		for(var i=0;i<imgUrls.length;i++){
+		    		var f = imgUrls[i].files;
+		    		if(f[0]!='undefined'&&f[0]!=undefined){
+		    			imgUrl=imgUrl+f[0].name+'#';
+		    		}
+		    	}
+		        document.getElementById("imgNames").value = imgUrl;
+	    	}
+    	 
+    }
     
     function addHTML(){
     	 var d=document.getElementById('tableId').lastChild;
@@ -403,7 +430,8 @@ html {
 					</tr>
 					
 					<tr>
-						<td align="left" colspan="3"><input type="hidden" id="url"
+						<td align="right">URL：</td>
+						<td align="left" colspan="3"><input type="text" id="url"
 							<c:if test="${sessionScope.USER_ORG!='0'}"> readonly="readonly" </c:if> name="dataImgTable.url" value="${dataImgTable.url}"
 							style="width: 555px" />
 						</td>
@@ -445,64 +473,25 @@ html {
 						</c:forEach>
 						</td>
 					</tr>
-					</table>
-					<c:if test="${fn:length(imgList)>0 }">
-						<c:forEach var="img" items="${imgList }" varStatus="vs">
-							<table id="tab${img[2]}">
-								<tr>
-									<td align="right">上传图片：</td>
-									<td align="left"><input type="file" id="image"
-										name="images" onchange="uploadImg('image${vs.count}')"/>
-										<input type="hidden" id="image${vs.count}" name="oldFile"  value="${img[0]}"/>
-									</td>
-									<td><input type="hidden" name="uImgId" value="${img[2] }" />
-										<a href="javascript:delTab('tab${img[2]}');" style="margin-right: 0px;">删除</a>
-									</td>
-								</tr>
-								<tr>
-									<td align="right">内容：</td>
-									<td align="left" colspan="2"><textarea rows="10" cols="5" id="imgUrl"
-										name="imgUrl" style="width: 270px">${img[1]}</textarea>
-									</td>
-								</tr>
-							</table>
-						</c:forEach>
-					</c:if>
-					<c:if test="${fn:length(imgList)==0 }">
-						<c:if test="${image!=null||image!=''||dataImgTable.imgUrl!=null||dataImgTable.imgUrl!=''}">
-							<table id="tab">
-								<tr>
-									<td align="right">上传图片：</td>
-									<td align="left"><input type="file" id="image"
-										name="images" value="${image}" onchange="uploadImg('image0')"/>
-										<input type="hidden" id="image0" name="oldFile"  value="${dataImgTable.url}"/>
-									</td>
-									<td>
-										 <a href="javascript:delTab('tab');" style="margin-right: 0px;">删除</a>
-									</td>
-								</tr>
-								<tr>
-									<td align="right">内容：</td>
-									<td align="left" colspan="2"><textarea rows="10" cols="5" id="imgUrl"
-										name="imgUrl" style="width: 270px">${dataImgTable.imgUrl}</textarea>
-									</td>
-								</tr>
-							</table>
-						</c:if>
-					</c:if>
-					<table id="tableId">
 						<tr>
-							<td align="right">上传图片：</td>
-							<td align="left"><input type="file" id="image"
-								name="images" value="${image}" onchange="uploadImg()"/>
+							<td align="right">上传封面：</td>
+							<td align="left" colspan="3"><input type="file" id="image"
+								name="image" value="${image}" onchange="uploadImg()"/>
+								<input type="hidden" name="cover" <c:if test="${fn:length(imgList)>0 }">value="${dataImgTable.url }"</c:if> />
 							</td>
 						</tr>
 						<tr>
-							<td align="right">内容：</td>
-							<td align="left"><textarea rows="10" cols="5" id="imgUrl"
-								name="imgUrl" style="width: 270px">${img[1]}</textarea>
-							</td>
-						</tr>
+						<td colspan="4">
+							<c:if test="${fn:length(imgList)>0 }">
+								<c:forEach var="img" items="${imgList }" varStatus="vs">
+									<textarea id="content1" name="content1" cols="100" rows="8" style="width:669px;height:200px;visibility:hidden;">${img[1]}</textarea>
+								</c:forEach>
+							</c:if>
+							<c:if test="${fn:length(imgList)==0 }">
+								<textarea id="content1" name="content1" cols="100" rows="8" style="width:669px;height:200px;visibility:hidden;">${dataImgTable.imgUrl}</textarea>
+							</c:if>
+						</td>
+					</tr>
 					</table>
 				<table>
 				   <tr>

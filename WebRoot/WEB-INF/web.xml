@@ -34,7 +34,7 @@
     </init-param>
     <init-param>
       <param-name>ignoreList</param-name>
-      <param-value>/,/login.jsp,/login.action,/uplaod_execute.action</param-value>
+      <param-value>/,/login.jsp,/login.action,/uplaod_execute.action,/data/kindEditor/jsp/upload_json.jsp</param-value>
     </init-param>
   </filter>
   <filter-mapping>

@@ -9,8 +9,9 @@
 	String basePath = request.getScheme() + "://"
 			+ request.getServerName() + ":" + request.getServerPort()
 			+ path + "/";
+request.setCharacterEncoding("UTF-8");
+String htmlData = request.getParameter("content1") != null ? request.getParameter("content1") : "";
 %>
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
@@ -29,6 +30,12 @@
 	src="<%=request.getContextPath()%>/js/jqueryui/jquery.easyui.min.js"></script>
 <link rel="stylesheet" type="text/css"
 	href="<%=request.getContextPath()%>/web/style/layout2.css" />
+	
+	<link rel="stylesheet" href="<%=request.getContextPath()%>/data/kindEditor/themes/default/default.css" />
+	<link rel="stylesheet" href="<%=request.getContextPath()%>/data/kindEditor/plugins/code/prettify.css" />
+	<script charset="utf-8" src="<%=request.getContextPath()%>/data/kindEditor/kindeditor.js"></script>
+	<script charset="utf-8" src="<%=request.getContextPath()%>/data/kindEditor/lang/zh_CN.js"></script>
+	<script charset="utf-8" src="<%=request.getContextPath()%>/data/kindEditor/plugins/code/prettify.js"></script>
 <style type="text/css">
 body {
 	background: #ffffff;
@@ -36,6 +43,20 @@ body {
 .button_b{height: 18px;width: 58.5px;background-image: url(<%=request.getContextPath()%>/images/inputBg3.png) ;background-size:cover;background-color: transparent;border: none ;}
 .button_b1{height: 18px;width: 89px;background-image: url(<%=request.getContextPath()%>/images/inputBg2.png) ;background-size:cover;background-color: transparent;border: none ;}
 </style>
+<script>
+		KindEditor.ready(function(K) {
+			var editor1 = K.create('textarea[name="content1"]', {
+				cssPath : '<%=request.getContextPath()%>/data/kindEditor/plugins/code/prettify.css',
+				uploadJson : '<%=request.getContextPath()%>/data/kindEditor/jsp/upload_json.jsp',
+				fileManagerJson : '<%=request.getContextPath()%>/data/kindEditor/jsp/file_manager_json.jsp',
+				allowFileManager : true,
+				afterBlur: function(){this.sync();}
+			});
+			//prettyPrint();
+			//alert(document.getElementById("content1").value);
+			//alert(document.getElementById("content1").value.length);
+		});
+	</script>
 <script type="text/javascript">
 	$(document).ready(function(){
   		var optionsSubmit = {
@@ -69,9 +90,12 @@ body {
 	    	      }
     	}};
       	$('#submitBtn').click(function(){
+      		alert(document.getElementById("content1").value);
+      		alert(document.getElementById("content1").value.length);
+			//return false;
 	    	if(checkedForm()){
-	    		$("#submitBtn").attr("disabled", true);  
-	    		$("#saveInsert").attr("disabled", true);  
+	    		//$("#submitBtn").attr("disabled", true);  
+	    		//$("#saveInsert").attr("disabled", true);  
 	    		$("#exit").attr("disabled", true);  
 	    		$("#addHtml").attr("disabled", true);  
 	    		$("#delHtml").attr("disabled", true);  
@@ -82,8 +106,8 @@ body {
 	     });
       	$('#saveInsert').click(function(){
 	    	if(checkedForm()){
-	    		$("#submitBtn").attr("disabled", true);  
-	    		$("#saveInsert").attr("disabled", true);  
+	    		//$("#submitBtn").attr("disabled", true);  
+	    		//$("#saveInsert").attr("disabled", true);  
 	    		$("#exit").attr("disabled", true);  
 	    		$("#addHtml").attr("disabled", true);  
 	    		$("#delHtml").attr("disabled", true);  
@@ -227,7 +251,7 @@ body {
 		        document.getElementById("imgNames").value = imgUrl;
 	    	}
     	 
-    };
+    }
     
     function addHTML(){
     	 var d=document.getElementById('tableId').lastChild;
@@ -398,7 +422,7 @@ html {
 </style>
 </head>
 <body onload="changedTag()">
-	<form action="" id="pageFrom" name="" method="post" enctype="multipart/form-data" style="background-color: #F0F0F0">
+	<form action="" id="pageFrom" name="" method="post" enctype="multipart/form-data" style="background-color: #FFFFFF">
 		<br />
 		<fieldset class="fieldsetStyle">
 			<legend>
@@ -465,22 +489,24 @@ html {
 						</c:forEach>
 						</td>
 					</tr>
-					</table>
-					<table id="tableId">
 					<tr>
-						<td align="right">上传图片：</td>
-						<td align="left"><input type="file" id="image"
+						<td align="right">上传封面：</td>
+						<td align="left" colspan="3"><input type="file" id="image"
 							name="image" value="${image}" onchange="uploadImg()" />
 						</td>
 					</tr>
+<%--					<tr>--%>
+<%--						<td align="right">内容：</td>--%>
+<%--						<td align="left" colspan="3"><textarea rows="5" cols="3" id="imgUrl"--%>
+<%--							name="imgUrl" value="${dataImgTable.imgUrl}" style="width: 270px">${dataImgTable.imgUrl}</textarea>--%>
+<%--						</td>--%>
+<%--					</tr>--%>
 					<tr>
-						<td align="right">内容：</td>
-						<td align="left"><textarea rows="5" cols="3" id="imgUrl"
-							name="imgUrl" value="${dataImgTable.imgUrl}" style="width: 270px">${dataImgTable.imgUrl}</textarea>
+						<td colspan="4">
+							<textarea id="content1" name="content1" cols="100" rows="8" style="width:669px;height:200px;visibility:hidden;"><%=htmlspecialchars(htmlData)%></textarea>
 						</td>
 					</tr>
 				</table>
-				<br><br><br>
 				<table>
 					<tr>
 						<td colspan="4" align="center">
@@ -497,5 +523,15 @@ html {
 		<input type="hidden" name="imgNames" id="imgNames" value="${imgNames}"/>
 		<input type="hidden" name="dataImgTable.data_type" id="data_type" value="${dataImgTable.data_type}"/>
 	</form>
+	<%=htmlData%>
 </body>
 </html>
+<%!
+private String htmlspecialchars(String str) {
+	str = str.replaceAll("&", "&amp;");
+	str = str.replaceAll("<", "&lt;");
+	str = str.replaceAll(">", "&gt;");
+	str = str.replaceAll("\"", "&quot;");
+	return str;
+}
+%>
