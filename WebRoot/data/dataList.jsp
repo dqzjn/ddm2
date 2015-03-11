@@ -437,11 +437,11 @@ text-overflow : ellipsis;
 			<tr>
 				<td>&nbsp;&nbsp;类型：<select id="type" name="type" style="width:150px;">
 								<option value="" selected="selected">--请选择--</option>
-								<option value="joke">搞笑</option>
-								<option value="news">新闻</option>
-								<option value="film">影视</option>
-								<option value="entertainment">娱乐</option>
-								<option value="game">游戏</option>
+								<option value="1">头条</option>
+								<option value="2">八卦</option>
+								<option value="3">微精选</option>
+								<option value="4">美女</option>
+								<option value="5">搞笑</option>
 						</select>
 						<td>&nbsp;&nbsp;状态：<select id="data_sub" name="data_sub" style="width:150px;">
 								<option value="">全部</option>

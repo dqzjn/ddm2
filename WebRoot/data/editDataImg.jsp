@@ -402,7 +402,7 @@ html {
 </style>
 </head>
 <body onload="changedTag()">
-	<form action="" id="pageFrom" name="" method="post" enctype="multipart/form-data" style="background-color: #F0F0F0">
+	<form action="" id="pageFrom" name="" method="post" enctype="multipart/form-data" >
 		<br />
 		<fieldset class="fieldsetStyle">
 			<legend>
@@ -420,7 +420,7 @@ html {
 						<td align="right">来源网站：</td>
 						<td align="left"><input id="collect_website"
 							name="dataImgTable.collect_website" 
-							<c:if test="${userOrg!='0'&&userOrg!='1'}">readonly="readonly"</c:if> value="${dataImgTable.collect_website}" style="width: 120px" />
+							<c:if test="${userOrg!='0'&&userOrg!='1'}">readonly="readonly"</c:if> value="${dataImgTable.collect_website}" style="width: 220px" />
 						</td>
 					</tr>
 					
@@ -428,24 +428,24 @@ html {
 						<td align="right">URL：</td>
 						<td align="left" colspan="3"><input type="text" id="url"
 							<c:if test="${sessionScope.USER_ORG!='0'}"> readonly="readonly" </c:if> name="dataImgTable.url" value="${dataImgTable.url}"
-							style="width: 555px" />
+							style="width: 595px" />
 						</td>
 					</tr>
 					<tr>
 						<td align="right">数据类型：</td>
 						<td align="left"><select id="type"
-							name="dataImgTable.type" style="width:200px;">
+							name="dataImgTable.type" style="width:195px;">
 								<option value="">--请选择--</option>
-								<option value="joke"
-									<c:if test="${dataImgTable.type=='joke'}">selected="selected"</c:if>>搞笑</option>
-								<option value="news"
-									<c:if test="${dataImgTable.type=='news'}">selected="selected"</c:if>>新闻</option>
-								<option value="film"
-									<c:if test="${dataImgTable.type=='film'}">selected="selected"</c:if>>影视</option>
-								<option value="entertainment"
-									<c:if test="${dataImgTable.type=='entertainment'}">selected="selected"</c:if>>娱乐</option>
-								<option value="game"
-									<c:if test="${dataImgTable.type=='game'}">selected="selected"</c:if>>游戏</option>
+								<option value="1"
+									<c:if test="${dataImgTable.type=='1'}">selected="selected"</c:if>>头条</option>
+								<option value="2"
+									<c:if test="${dataImgTable.type=='2'}">selected="selected"</c:if>>八卦</option>
+								<option value="3"
+									<c:if test="${dataImgTable.type=='3'}">selected="selected"</c:if>>微精选</option>
+								<option value="4"
+									<c:if test="${dataImgTable.type=='4'}">selected="selected"</c:if>>美女</option>
+								<option value="5"
+									<c:if test="${dataImgTable.type=='5'}">selected="selected"</c:if>>搞笑</option>
 						</select>
 						</td>
 						<td align="right">发布时间：</td>
@@ -453,7 +453,7 @@ html {
 							name="dataImgTable.collect_time" readonly="readonly"
 							value='<fmt:formatDate value="${dataImgTable.collect_time}" pattern="yyyy-MM-dd HH:mm:ss"  />'
 							onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"
-							style="width: 120px" />
+							style="width: 220px" />
 						</td>
 					</tr>
 					<tr>
