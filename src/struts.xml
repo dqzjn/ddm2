@@ -10,7 +10,7 @@
 	<constant name="struts.ui.theme" value="simple" />
 	<!-- 指定允许上传的文件最大字节数。默认值是2097152(2M) -->
 	<constant name="struts.multipart.maxSize" value="220971520" />
-	
+	<constant name="struts.objectFactory" value="spring"/>
 	<package name="struts2" namespace="/" extends="struts-default">
 		<interceptors>
 			<interceptor-stack name="extStack">
