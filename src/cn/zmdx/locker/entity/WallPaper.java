@@ -15,6 +15,7 @@ public class WallPaper {
 	private String imageEXT;
 	private Timestamp publishDATE;
 	private int data_sub;
+	private int top;
 	
 	public int getId() {
 		return id;
@@ -75,6 +76,12 @@ public class WallPaper {
 	}
 	public void setData_sub(int data_sub) {
 		this.data_sub = data_sub;
+	}
+	public int getTop() {
+		return top;
+	}
+	public void setTop(int top) {
+		this.top = top;
 	}
 	
 }

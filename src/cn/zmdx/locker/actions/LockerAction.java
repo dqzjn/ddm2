@@ -417,7 +417,7 @@ public class LockerAction extends ActionSupport {
 					"title",
 					"url",
 					"imgUrl",
-					"type:[{'joke':'搞笑','news':'新闻','film':'电影','game':'游戏','entertainment':'娱乐'}]",
+					"type:[{'1':'头条','2':'八卦','3':'微精选','4':'美女','5':'搞笑'}]",
 					"collect_time", "collect_website",
 					"data_sub:[{'0':'审核中','1':'审核通过','2':'审核未通过'}]",
 					"user_org", "username" };
@@ -571,6 +571,8 @@ public class LockerAction extends ActionSupport {
 				// || "".equals(dataImgTable.getData_type())) {
 				// dataImgTable.setData_type("singleImg");
 				// }
+				int top=(int) Math.round(Math.random()*(300-100)+100);
+				dataImgTable.setTop(top);
 				String id = lockerService.save(dataImgTable);
 				//添加标签
 				for (String ck : checks) {
@@ -671,6 +673,8 @@ public class LockerAction extends ActionSupport {
 					// || "".equals(dataImgTable.getData_type())) {
 					// dataImgTable.setData_type("singleImg");
 					// }
+					int top=(int) Math.round(Math.random()*(300-100)+100);
+					dataImgTable.setTop(top);
 					String id = lockerService.save(dataImgTable);
 					//添加标签
 					for (String ck : checks) {
@@ -999,6 +1003,8 @@ public class LockerAction extends ActionSupport {
 					String imageEXT = imgName.substring(imgName
 							.lastIndexOf("."));
 					wallPaper.setImageEXT(imageEXT);
+					int top=(int) Math.round(Math.random()*300+300);
+					wallPaper.setTop(top);
 				}
 				wallPaper.setData_sub(0);// 保存至本地
 				lockerService.save(wallPaper);
@@ -1060,6 +1066,8 @@ public class LockerAction extends ActionSupport {
 					String imageEXT = imgName.substring(imgName
 							.lastIndexOf("."));
 					wallPaper.setImageEXT(imageEXT);
+					int top=(int) Math.round(Math.random()*300+300);
+					wallPaper.setTop(top);
 				}
 				wallPaper.setData_sub(1);// 已上传至云服务器
 				lockerService.save(wallPaper);
@@ -1138,8 +1146,9 @@ public class LockerAction extends ActionSupport {
 		inParams.put("uploadFilePath", "/image/" + fileName);
 		inParams.put("compressFilePath", "/thumb/" + fileName);
 		inParams.put("zoomType", 1);// 等比缩放
-		inParams.put("width", 180);// 缩放后宽度
-		inParams.put("height", 324);// 缩放后高度
+		inParams.put("width", 720);// 缩放后宽度
+		inParams.put("height", 720);// 缩放后高度
+		//inParams.put("compress", 0);
 		Map<String, CosFile> files = new HashMap<String, CosFile>();
 		files.put("uploadFile", new CosFile());
 		files.put("compressFile", new CosFile());

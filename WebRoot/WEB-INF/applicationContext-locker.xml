@@ -18,7 +18,7 @@
 			<ref bean="lockerDAO" />
 		</constructor-arg>
 	</bean>
-	<bean id="lockerAction" class="cn.zmdx.locker.actions.LockerAction">
+	<bean id="lockerAction" class="cn.zmdx.locker.actions.LockerAction" scope="prototype">
 		<property name="lockerService">
 			<ref bean="lockerService" />
 		</property>

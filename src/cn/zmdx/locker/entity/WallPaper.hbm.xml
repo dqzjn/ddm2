@@ -14,6 +14,7 @@
 		<property name="imageEXT" column="imageEXT" />
 		<property name="publishDATE" column="publishDATE" />
 		<property name="data_sub" column="data_sub" />
+		<property name="top" column="top" />
 	</class>
 
 </hibernate-mapping>
