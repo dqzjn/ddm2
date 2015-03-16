@@ -572,6 +572,8 @@ public class LockerAction extends ActionSupport {
 				// dataImgTable.setData_type("singleImg");
 				// }
 				int top=(int) Math.round(Math.random()*(300-100)+100);
+				int views=top+(int) Math.round(Math.random()*(300-100));
+				dataImgTable.setViews(views);
 				dataImgTable.setTop(top);
 				String id = lockerService.save(dataImgTable);
 				//添加标签
