@@ -305,7 +305,10 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 								+ dg.getData_id() + "','" + dg.getTag_id()
 								+ "'),");
 					}
-
+					pstmt = (PreparedStatement) dbConn.prepareStatement(String
+							.valueOf(data_tag_sql.substring(0,
+									data_tag_sql.length() - 1)));
+					pstmt.executeUpdate();
 				}
 			}
 			pstmt = (PreparedStatement) dbConn.prepareStatement(String
@@ -314,11 +317,6 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 			pstmt = (PreparedStatement) dbConn.prepareStatement(String
 					.valueOf(data_img_sql.substring(0,
 							data_img_sql.length() - 1)));
-			pstmt.executeUpdate();
-
-			pstmt = (PreparedStatement) dbConn.prepareStatement(String
-					.valueOf(data_tag_sql.substring(0,
-							data_tag_sql.length() - 1)));
 			pstmt.executeUpdate();
 
 			pstmt = (PreparedStatement) dbConn.prepareStatement(String
@@ -451,10 +449,14 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 	public int saveParams(Map<String, String> filterMap) {
 		StringBuffer sql = new StringBuffer();
 		if (filterMap != null && !filterMap.isEmpty()) {
-			if (null != filterMap.get("edit_date") && !"".equals(filterMap.get("edit_date"))) {
-				sql.append("update data_img_table t set t.collect_time = '" + filterMap.get("edit_date") + "' where t.id in ( :idList ) ");
+			if (null != filterMap.get("edit_date")
+					&& !"".equals(filterMap.get("edit_date"))) {
+				sql.append("update data_img_table t set t.collect_time = '"
+						+ filterMap.get("edit_date")
+						+ "' where t.id in ( :idList ) ");
 			}
-			if (null != filterMap.get("data_sub") && !"".equals(filterMap.get("data_sub"))) {
+			if (null != filterMap.get("data_sub")
+					&& !"".equals(filterMap.get("data_sub"))) {
 				sql.append("update data_img_table t set t.data_sub = 2 where t.id in ( :idList ) and t.data_sub != 1 ");
 			}
 		}
