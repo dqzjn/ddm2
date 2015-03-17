@@ -160,7 +160,9 @@ text-overflow : ellipsis;
 	}
 	//添加
 	function addData(){
-		OpenWindow('<%=request.getContextPath()%>/locker_addDataImg.action?temp='+new Date(),700,550,'newwindow');
+		var width = screen.width;
+		var height = screen.height;
+		OpenWindow('<%=request.getContextPath()%>/locker_addDataImg.action?temp='+new Date(),width,height,'newwindow');
 	}
 	
 	//修改
@@ -193,12 +195,14 @@ text-overflow : ellipsis;
 // 		      },  
 // 		      success : function(data, textStatus) {
 // 		      	if(data.result=='success'){
+		var width = screen.width;
+		var height = screen.height;
 				var ua = navigator.userAgent.toLowerCase();   
 			        if(ua.match(/chrome\/([\d.]+)/)){  
-			        	window.open('<%=request.getContextPath()%>/locker_editDataImg.action?id='+id+'&temp='+new Date(),'', 'dialogWidth:700px;status:no;dialogHeight:570px;');
+			        	window.open('<%=request.getContextPath()%>/locker_editDataImg.action?id='+id+'&temp='+new Date(),'', 'dialogWidth:'+width+';status:no;dialogHeight:'+height+';');
 			    		refreshIt();
 			        } else{
-		    		window.showModalDialog('<%=request.getContextPath()%>/locker_editDataImg.action?id='+id+'&temp='+new Date(),'', 'dialogWidth:700px;status:no;dialogHeight:570px;');
+		    		window.showModalDialog('<%=request.getContextPath()%>/locker_editDataImg.action?id='+id+'&temp='+new Date(),'', 'dialogWidth:'+width+';status:no;dialogHeight:'+height+';');
 		    		refreshIt();
 			        }
 // 		      	}else{

@@ -423,7 +423,7 @@ html {
 				<font size="5">基本信息</font>
 			</legend>
 			<div class="fieldsetContent">
-				<table width="650px;" border="0" cellspacing="0" cellpadding="0"
+				<table width="100%;" border="0" cellspacing="0" cellpadding="0"
 					class="infoTableSpace" o>
 					<input type="hidden" id="id" name="dataImgId" value="${dataImgTable.id}" />
 					<tr>

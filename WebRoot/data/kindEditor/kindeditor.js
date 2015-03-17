@@ -250,8 +250,8 @@ K.options = {
 	indentChar : '\t',
 	cssPath : '',
 	cssData : '',
-	minWidth : 650,
-	minHeight : 100,
+	minWidth : screen.width*0.98,
+	minHeight : screen.height*0.5,
 	minChangeSize : 50,
 	zIndex : 811213,
 	items : [
@@ -4919,7 +4919,7 @@ KEditor.prototype = {
 			editDiv = K('.edit', container),
 			statusbar = self.statusbar = K('.statusbar', container);
 		container.removeClass('container')
-			.addClass('ke-container ke-container-' + self.themeType).css('width', width);
+			.addClass('ke-container ke-container-' + self.themeType).css('width', screen.width*0.98).css('width', screen.height*0.5);
 		if (fullscreenMode) {
 			container.css({
 				position : 'absolute',
@@ -5139,7 +5139,7 @@ KEditor.prototype = {
 		if (width) {
 			if (!/%/.test(width)) {
 				width = _removeUnit(width);
-				width = width < self.minWidth ? self.minWidth : width;
+				width = screen.width*0.98;
 			}
 			self.container.css('width', _addUnit(width));
 			if (updateProp) {
@@ -5150,7 +5150,7 @@ KEditor.prototype = {
 			height = _removeUnit(height);
 			editHeight = _removeUnit(height) - self.toolbar.div.height() - self.statusbar.height();
 			editHeight = editHeight < self.minHeight ? self.minHeight : editHeight;
-			self.edit.setHeight(editHeight);
+			self.edit.setHeight(screen.height*0.5);
 			if (updateProp) {
 				self.height = _addUnit(height);
 			}
