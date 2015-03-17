@@ -1282,13 +1282,12 @@ public class LockerAction extends ActionSupport {
 			}
 			if (cover != null && !"".equals(cover)) {//原多图文
 			//if (dataImgTable.getUrl()==null||"".equals(dataImgTable.getUrl())) {//多图文
-				if(content1.indexOf("<img ")<0){//多图文改为单图文
+				if(dataImgTable.getUrl().indexOf("http://cos.myqcloud.com/11000436/data/image/")<0){//多图文改为单图文
 					//删除原有的图文记录
 					// 根据id删除相应img
 					lockerService.executeBySQL("delete from img where id =" + dataImgId );
 					// 删除相应的data_img中间表数据
-					lockerService
-							.executeBySQL("delete from data_img where data_id =" + dataImgId);
+					lockerService.executeBySQL("delete from data_img where data_id =" + dataImgId);
 					dit.setImgUrl(content1);
 				}else{
 					//删除原有的图文记录
