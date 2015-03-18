@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -272,6 +273,7 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 			img_sql.append("insert into img(id,imageUrl,content) values");
 			data_tag_sql
 					.append("insert into data_tag(id,data_id,tag_id) values");
+			List<Data_tag> dgList = new ArrayList<Data_tag>();
 			for (String id : idss) {
 				dit = getDataImgById(id);
 				dit.setData_sub(1);
@@ -287,7 +289,6 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 						+ dit.getData_type() + "','" + dit.getCollect_time()
 						+ "','" + dit.getCollect_website() + "','"
 						+ dit.getType() + "'),");
-				List<Data_tag> dgList = getData_TagById(id);
 				if (diList.size() > 0) {
 					for (Data_img di : diList) {
 						data_img_sql.append("('" + di.getId() + "','"
@@ -299,17 +300,20 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 								+ im.getContent().replace("'", "''") + "'),");
 					}
 				}
+				dgList = getData_TagById(id);
 				if (dgList.size() > 0) {
 					for (Data_tag dg : dgList) {
 						data_tag_sql.append("('" + dg.getId() + "','"
 								+ dg.getData_id() + "','" + dg.getTag_id()
 								+ "'),");
 					}
-					pstmt = (PreparedStatement) dbConn.prepareStatement(String
-							.valueOf(data_tag_sql.substring(0,
-									data_tag_sql.length() - 1)));
-					pstmt.executeUpdate();
 				}
+			}
+			if (dgList.size() > 0) {
+				pstmt = (PreparedStatement) dbConn.prepareStatement(String
+						.valueOf(data_tag_sql.substring(0,
+								data_tag_sql.length() - 1)));
+				pstmt.executeUpdate();
 			}
 			pstmt = (PreparedStatement) dbConn.prepareStatement(String
 					.valueOf(img_sql.substring(0, img_sql.length() - 1)));
