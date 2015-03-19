@@ -153,7 +153,7 @@ body {
 			document.getElementById("data_type").value= 'gif';
 			return true;
 		}
-		if (d.toLowerCase() == ".jpg"||d.toLowerCase() == ".png"||imgUrls[0].value!="") {
+		if (d.toLowerCase() == ".jpg"||d.toLowerCase() == ".jpeg"||d.toLowerCase() == ".png"||imgUrls[0].value!="") {
 			document.getElementById("data_type").value= 'singleImg';
 			return true;
 		}else{

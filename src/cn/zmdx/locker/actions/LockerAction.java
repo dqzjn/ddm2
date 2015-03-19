@@ -896,8 +896,8 @@ public class LockerAction extends ActionSupport {
 			inParams.put("compressBucketId", bucketId);
 			inParams.put("compressFilePath", "/image/" + fileName);
 			inParams.put("zoomType", 1);// 等比缩放
-			inParams.put("width", 720);// 缩放后宽度
-			inParams.put("height", 720);// 缩放后高度
+			inParams.put("width", 1024);// 缩放后宽度
+			inParams.put("height", 1024);// 缩放后高度
 			inParams.put("compress", 0);// 是否需要压缩(质量为 85),(默认压缩) 0: 不压缩 1:
 										// 压缩(default)
 			Map<String, CosFile> files = new HashMap<String, CosFile>();
