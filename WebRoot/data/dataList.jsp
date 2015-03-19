@@ -40,9 +40,11 @@ text-overflow : ellipsis;
 <script type="text/javascript">
 	var widthScroll=window.screen.width;
 	var heightScroll=window.screen.height;
+	var now = new Date();
+	var dateStr = now.getFullYear()+"-"+((now.getMonth()+1)<10?"0":"")+(now.getMonth()+1)+"-"+(now.getDate()<10?"0":"")+now.getDate()
 	$(document).ready(function(){
 		$("#gridTable").jqGrid({					
-			url:'<%=request.getContextPath()%>/locker_queryDataImgTable.action?temp='+Math.round(Math.random()*10000),
+			url:'<%=request.getContextPath()%>/locker_queryDataImgTable.action?edit_date='+dateStr+'&temp='+Math.round(Math.random()*10000),
 			datatype: "json",
 			height: 500,
 			autoheight: true,
@@ -406,7 +408,6 @@ text-overflow : ellipsis;
 		var id = row.ID;//获取选中行的id属性
 		if(row.imgUrl.indexOf("http://")!=-1){
 			OpenWindow('http://nb.hdlocker.com/pandora/locker!viewDataImg.action?id='+id,window.screen.availWidth-10,window.screen.availHeight-30,'newwindow');
-			refreshIt();
 		}else{
 			alert("数据无法查看!");
 			refreshIt();
