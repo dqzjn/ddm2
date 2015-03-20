@@ -571,8 +571,8 @@ public class LockerAction extends ActionSupport {
 				// || "".equals(dataImgTable.getData_type())) {
 				// dataImgTable.setData_type("singleImg");
 				// }
-				int top=(int) Math.round(Math.random()*(300-100)+100);
-				int views=top+(int) Math.round(Math.random()*(300-100));
+				int top=(int) Math.round(Math.random()*200+100);
+				int views=top+(int) Math.round(Math.random()*200+300);
 				dataImgTable.setViews(views);
 				dataImgTable.setTop(top);
 				String id = lockerService.save(dataImgTable);
@@ -675,7 +675,9 @@ public class LockerAction extends ActionSupport {
 					// || "".equals(dataImgTable.getData_type())) {
 					// dataImgTable.setData_type("singleImg");
 					// }
-					int top=(int) Math.round(Math.random()*(300-100)+100);
+					int top=(int) Math.round(Math.random()*200+100);
+					int views=top+(int) Math.round(Math.random()*200+300);
+					dataImgTable.setViews(views);
 					dataImgTable.setTop(top);
 					String id = lockerService.save(dataImgTable);
 					//添加标签
