@@ -174,14 +174,12 @@ text-overflow : ellipsis;
 	//查询
 		function gridSearch(){
 			var p_name = jQuery("#p_name").val();
-			var start_date = jQuery("#start_date").val();
-			var end_date = jQuery("#end_date").val();
+			var publishdate = jQuery("#publishdate").val();
 			var imageEXT = jQuery("#imageEXT").val();
 			var data_sub = jQuery("#data_sub").val();
 			var params = {  
 	            "p_name" : encodeURIComponent($.trim(p_name)),
-	            "start_date" : encodeURIComponent($.trim(start_date)),
-	            "end_date" : encodeURIComponent($.trim(end_date)),
+	            "publishdate" : encodeURIComponent($.trim(publishdate)),
 	            "imageEXT" : encodeURIComponent($.trim(imageEXT)),
 	            "data_sub" : encodeURIComponent($.trim(data_sub))
 			};							 
@@ -199,8 +197,7 @@ text-overflow : ellipsis;
 	//清空
 	function reset() {
 		jQuery("#p_name").val("");
-		jQuery("#start_date").val("");
-		jQuery("#end_date").val("");
+		jQuery("#publishdate").val("");
 		jQuery("#imageEXT").val("");
 		jQuery("#data_sub").val("");
 	}
@@ -245,13 +242,10 @@ text-overflow : ellipsis;
 			<tr>
 				<td>&nbsp;&nbsp;壁纸名：<input type="text" id="p_name"
 					name="p_name" value="" class="input" style="width:150px;" />&nbsp;&nbsp;
-					&nbsp;&nbsp;发布时间：<input type="text" id="start_date"
-						name="start_date" value="" class="input"
-						onClick="WdatePicker({dateFmt:'yyyy-MM-dd',maxDate:'#F{$dp.$D(\'end_date\')}'})"
-						readonly="readonly" style="width:150px;" />&nbsp;&nbsp;至&nbsp;&nbsp;<input
-						type="text" id="end_date" name="end_date" value=""
-						onClick="WdatePicker({dateFmt:'yyyy-MM-dd',minDate:'#F{$dp.$D(\'start_date\')}'})"
-						readonly="readonly" class="input" style="width:150px;" />
+					&nbsp;&nbsp;&nbsp;发布时间：<input type="text" id="publishdate"
+						name="publishdate" value="" class="input"
+						onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})"
+						readonly="readonly" style="width:150px;" />
 						&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="button"
 							class="button_b" value="查询" onclick="gridSearch()" />
 							&nbsp;&nbsp;<input type="button"
@@ -261,7 +255,7 @@ text-overflow : ellipsis;
 								<option value=".jpg">jpg</option>
 								<option value=".png">png</option>
 						</select>
-						&nbsp;&nbsp;&nbsp;&nbsp;同&nbsp;&nbsp;步：&nbsp;&nbsp;<select id="data_sub" name="data_sub" style="width:150px;">
+						&nbsp;&nbsp;&nbsp;&nbsp;同&nbsp;&nbsp;步：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<select id="data_sub" name="data_sub" style="width:160px;">
 							<option value="">全部</option>
 							<option value="0">未发布</option>
 							<option value="1">已发布</option>

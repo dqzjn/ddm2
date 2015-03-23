@@ -924,10 +924,8 @@ public class LockerAction extends ActionSupport {
 					"text/html; charset=utf-8");
 			String p_name = StringUtil.encodingUrl(ServletActionContext
 					.getRequest().getParameter("p_name"));
-			String start_date = StringUtil.encodingUrl(ServletActionContext
-					.getRequest().getParameter("start_date"));
-			String end_date = StringUtil.encodingUrl(ServletActionContext
-					.getRequest().getParameter("end_date"));
+			String publishdate = StringUtil.encodingUrl(ServletActionContext
+					.getRequest().getParameter("publishdate"));
 			String imageEXT = StringUtil.encodingUrl(ServletActionContext
 					.getRequest().getParameter("imageEXT"));
 			String data_sub = StringUtil.encodingUrl(ServletActionContext
@@ -940,11 +938,8 @@ public class LockerAction extends ActionSupport {
 			if (p_name != null && !"".equals(p_name)) {
 				filterMap.put("p_name", p_name);
 			}
-			if (start_date != null && !"".equals(start_date)) {
-				filterMap.put("start_date", start_date);
-			}
-			if (end_date != null && !"".equals(end_date)) {
-				filterMap.put("end_date", end_date);
+			if (publishdate != null && !"".equals(publishdate)) {
+				filterMap.put("publishdate", publishdate);
 			}
 			if (imageEXT != null && !"".equals(imageEXT)) {
 				filterMap.put("imageEXT", imageEXT);

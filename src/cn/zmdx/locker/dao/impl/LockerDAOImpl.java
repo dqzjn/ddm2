@@ -558,7 +558,7 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 		queryCountString
 				.append("select count(*) from (select ID,p_name,p_desc,p_author,thumbURL,imageURL,imageNAME,imageEXT,publishDATE,data_sub from wallpaper as t where 1=1  ");
 		queryString
-				.append("select ID,p_name,p_desc,p_author,thumbURL,imageURL,imageNAME,imageEXT,publishDATE,data_sub from wallpaper as t where 1=1");
+				.append("select ID,p_name,p_desc,p_author,thumbURL,imageURL,imageNAME,imageEXT,publishDATE,data_sub from wallpaper as t where 1=1 ");
 		if (filterMap != null && !filterMap.isEmpty()) {
 			if (null != filterMap.get("p_name")
 					&& !"".equals(filterMap.get("p_name"))) {
@@ -567,19 +567,12 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 				queryString.append(" and p_name like'%"
 						+ filterMap.get("p_name") + "%'");
 			}
-			if (null != filterMap.get("start_date")
-					&& !"".equals(filterMap.get("start_date"))) {
-				queryCountString.append("and publishDATE > '"
-						+ filterMap.get("start_date") + "' ");
-				queryString.append("and publishDATE > '"
-						+ filterMap.get("start_date") + "' ");
-			}
-			if (null != filterMap.get("end_date")
-					&& !"".equals(filterMap.get("end_date"))) {
-				queryCountString.append("and publishDATE < '"
-						+ filterMap.get("end_date") + "' ");
-				queryString.append("and publishDATE < '"
-						+ filterMap.get("end_date") + "' ");
+			if (null != filterMap.get("publishdate")
+					&& !"".equals(filterMap.get("publishdate"))) {
+				queryCountString.append("and publishDATE like '%"
+						+ filterMap.get("publishdate") + "%' ");
+				queryString.append("and publishDATE like '%"
+						+ filterMap.get("publishdate") + "%' ");
 			}
 			if (null != filterMap.get("imageEXT")
 					&& !"".equals(filterMap.get("imageEXT"))) {
