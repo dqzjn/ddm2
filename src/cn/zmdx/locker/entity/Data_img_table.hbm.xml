@@ -18,6 +18,7 @@
 		<property name="type" column="type" />
 		<property name="userid" column="userid" />
 		<property name="views" column="views" />
+		<property name="data_view" column="data_view" />
 	</class>
 
 </hibernate-mapping>

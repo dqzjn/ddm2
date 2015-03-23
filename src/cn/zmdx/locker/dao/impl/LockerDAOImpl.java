@@ -267,7 +267,7 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 			StringBuffer data_img_sql = new StringBuffer();
 			StringBuffer img_sql = new StringBuffer();
 			StringBuffer data_tag_sql = new StringBuffer();
-			sql.append("insert into data_img_table(id,title,url,imgUrl,data_type,collect_time,collect_website,type) values");
+			sql.append("insert into data_img_table(id,title,url,imgUrl,data_type,collect_time,collect_website,type,top,views,data_view) values");
 			data_img_sql
 					.append("insert into data_img(id,img_id,data_id) values");
 			img_sql.append("insert into img(id,imageUrl,content) values");
@@ -279,16 +279,28 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 				dit.setData_sub(1);
 				this.getHibernateTemplate().update(dit);
 				List<Data_img> diList = getData_ImgById(id);
-				if (diList.size() > 1) {
-					dit.setImgUrl("http://pandora.hdlocker.com/pandora/locker!viewDataImg.action?id="
-							+ Integer.parseInt(id) + "");
-				}
-				sql.append("('" + dit.getId() + "','" + dit.getTitle() + "','"
-						+ dit.getUrl() + "','"
-						+ dit.getImgUrl().replace("'", "''") + "','"
-						+ dit.getData_type() + "','" + dit.getCollect_time()
-						+ "','" + dit.getCollect_website() + "','"
-						+ dit.getType() + "'),");
+//				if (diList.size() > 1) {
+//					dit.setImgUrl("http://pandora.hdlocker.com/pandora/locker!viewDataImg.action?id="
+//							+ Integer.parseInt(id) + "");
+//				}
+//				sql.append("('" + dit.getId() + "','" + dit.getTitle() + "','"
+//						+ dit.getUrl() + "','"
+//						+ dit.getImgUrl().replace("'", "''") + "','"
+//						+ dit.getData_type() + "','" + dit.getCollect_time()
+//						+ "','" + dit.getCollect_website() + "','"
+//						+ dit.getType() + "'),");
+				sql.append("('"
+						+ dit.getId()
+						+ "','"
+						+ dit.getTitle()
+						+ "','"
+						+ dit.getUrl()
+						+ "','http://pandora.hdlocker.com/pandora/locker!viewDataImg.action?id="
+						+ dit.getId() + "','" + dit.getData_type() + "','"
+						+ dit.getCollect_time() + "','"
+						+ dit.getCollect_website() + "','" + dit.getType()+ "','"
+						+ dit.getTop() + "','" + dit.getViews()+ "','" + dit.getData_view()
+						+ "'),");
 				if (diList.size() > 0) {
 					for (Data_img di : diList) {
 						data_img_sql.append("('" + di.getId() + "','"
@@ -366,7 +378,7 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 			StringBuffer data_img_sql = new StringBuffer();
 			StringBuffer img_sql = new StringBuffer();
 			StringBuffer data_tag_sql = new StringBuffer();
-			sql.append("insert into data_img_table(id,title,url,imgUrl,data_type,collect_time,collect_website,type) values");
+			sql.append("insert into data_img_table(id,title,url,imgUrl,data_type,collect_time,collect_website,type,top,views,data_view) values");
 			data_img_sql
 					.append("insert into data_img(id,img_id,data_id) values");
 			img_sql.append("insert into img(id,imageUrl,content) values");
@@ -374,7 +386,7 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 					.append("insert into data_tag(id,data_id,tag_id) values");
 			List<Data_img> diList = getData_ImgById(String.valueOf(dit.getId()));
 			List<Data_tag> dgList = getData_TagById(String.valueOf(dit.getId()));
-			if (diList.size() > 1) {
+//			if (diList.size() > 1) {
 				sql.append("('"
 						+ dit.getId()
 						+ "','"
@@ -384,16 +396,18 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 						+ "','http://pandora.hdlocker.com/pandora/locker!viewDataImg.action?id="
 						+ dit.getId() + "','" + dit.getData_type() + "','"
 						+ dit.getCollect_time() + "','"
-						+ dit.getCollect_website() + "','" + dit.getType()
+						+ dit.getCollect_website() + "','" + dit.getType()+ "','"
+						+ dit.getTop() + "','" + dit.getViews()+ "','" + dit.getData_view()
 						+ "'),");
-			} else {
-				sql.append("('" + dit.getId() + "','" + dit.getTitle() + "','"
-						+ dit.getUrl() + "','"
-						+ dit.getImgUrl().replace("'", "''") + "','"
-						+ dit.getData_type() + "','" + dit.getCollect_time()
-						+ "','" + dit.getCollect_website() + "','"
-						+ dit.getType() + "'),");
-			}
+//			} 
+//			else {
+//				sql.append("('" + dit.getId() + "','" + dit.getTitle() + "','"
+//						+ dit.getUrl() + "','"
+//						+ dit.getImgUrl().replace("'", "''") + "','"
+//						+ dit.getData_type() + "','" + dit.getCollect_time()
+//						+ "','" + dit.getCollect_website() + "','"
+//						+ dit.getType() + "','" + dit.getTop() + "','" + dit.getViews()+ "','" + dit.getData_view() + "'),");
+//			}
 			pstmt = (PreparedStatement) dbConn.prepareStatement(String
 					.valueOf(sql.substring(0, sql.length() - 1)));
 			int count = pstmt.executeUpdate();
