@@ -103,9 +103,9 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 		StringBuffer queryString = new StringBuffer();
 		StringBuffer queryCountString = new StringBuffer();
 		queryCountString
-				.append("select count(*) from (select dit.id,dit.title,dit.url,dit.imgUrl,dit.type,dit.collect_time,dit.collect_website,dit.data_sub,u.user_org,u.username from data_img_table dit left join user u on dit.userid = u.userid where 1=1  ");
+				.append("select count(*) from (select dit.id,dit.title,dit.url,dit.imgUrl,dit.type,dit.collect_time,dit.collect_website,dit.data_sub,u.user_org,u.username,data_view from data_img_table dit left join user u on dit.userid = u.userid where 1=1  ");
 		queryString
-				.append("select dit.id,dit.title,dit.url,dit.imgUrl,dit.type,dit.collect_time,dit.collect_website,dit.data_sub,u.user_org,u.username from data_img_table dit left join user u on dit.userid = u.userid  where 1=1 ");
+				.append("select dit.id,dit.title,dit.url,dit.imgUrl,dit.type,dit.collect_time,dit.collect_website,dit.data_sub,u.user_org,u.username,data_view from data_img_table dit left join user u on dit.userid = u.userid  where 1=1 ");
 		if (filterMap != null && !filterMap.isEmpty()) {
 			if (null != filterMap.get("title")
 					&& !"".equals(filterMap.get("title"))) {

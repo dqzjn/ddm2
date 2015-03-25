@@ -420,7 +420,7 @@ public class LockerAction extends ActionSupport {
 					"type:[{'1':'头条','2':'八卦','3':'微精选','4':'美女','5':'搞笑'}]",
 					"collect_time", "collect_website",
 					"data_sub:[{'0':'审核中','1':'审核通过','2':'审核未通过'}]",
-					"user_org", "username" };
+					"user_org", "username","data_view" };
 			if (title != null && !"".equals(title)) {
 				filterMap.put("title", title);
 			}

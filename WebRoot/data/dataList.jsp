@@ -49,7 +49,7 @@ text-overflow : ellipsis;
 			height: 500,
 			autoheight: true,
 			width: widthScroll/1.5, 
-			colNames:['ID','标题','类型','内容','发布日期','来源','url','图片','发布','发布状态','发布人','来源'],
+			colNames:['ID','标题','类型','内容','发布日期','来源','url','图片','发布','发布状态','发布人','来源'<c:if test="${sessionScope.USER_ORG=='0'}">,'浏览量'</c:if>],
 			colModel:[
 					{name:'ID',index:'ID', width:60, key:true, sorttype:"int",hidden:true},								
 					{name:'title',index:'title', width:150}, 
@@ -80,6 +80,7 @@ text-overflow : ellipsis;
 		  				}},
 		  				{name:'username',index:'username', width:150,align: 'center'},
 		  				{name:'user_org',index:'user_org', width:150,align: 'center'}
+		  				<c:if test="${sessionScope.USER_ORG=='0'}">,{name:'data_view',index:'data_view', width:150,align: 'center'}</c:if>
 			],
 			shrinkToFit:false,
 			sortname:'id',
