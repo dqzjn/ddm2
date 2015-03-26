@@ -1,13 +1,18 @@
 package cn.zmdx.locker.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 
-import org.hibernate.Query;
+
+import com.tencent.cos.Cos;
+import com.tencent.cos.CosImpl;
+import com.tencent.cos.bean.Message;
+import com.tencent.cos.constant.Common;
 
 import cn.zmdx.locker.dao.interfaces.LockerDAO;
 import cn.zmdx.locker.entity.Data_img_table;
-import cn.zmdx.locker.entity.Data_table;
 import cn.zmdx.locker.entity.Notification;
 import cn.zmdx.locker.entity.PageResult;
 import cn.zmdx.locker.entity.Tag;
@@ -151,9 +156,40 @@ public class LockerServiceImpl implements LockerService {
 	@Override
 	public void deleteWallPaperById(String ids) {
 		String idss[] = ids.split(",");
+		int accessId = 11000436; // accessId
+		String accessKey = "7OgnLklEIptHNwZCS0RDNk1rUXrxXJfP"; // accessKey
+		String bucketId = "wallpaper"; // bucket id
+		String secretId = "AKIDBvY9dcNUS2LeFTxI2ThzgrKxuWuNROIr";
+		Cos cos = null;
+		try {
+			cos = new CosImpl(accessId, accessKey, Common.COS_HOST,
+					Common.DOWNLOAD_HOST, secretId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		for (String id : idss) {
 			WallPaper wallPaper = (WallPaper) lockerDAO.getObjectById(
 					WallPaper.class, Integer.parseInt(id));
+			String imgName=wallPaper.getThumbURL();
+			imgName=imgName.substring(imgName.indexOf("thumb/")+6);
+			// 返回消息体, 包含错误码和错误消息
+			Message msg = new Message();
+			Message thumbMsg = new Message();
+			List<String> fileList = new Vector<String>();
+			List<String> thumbFileList = new Vector<String>();
+			Map<String, Object> deParams = new HashMap<String, Object>();
+			Map<String, Object> thumbDeParams = new HashMap<String, Object>();
+    		deParams.put("bucketId", bucketId);
+    		deParams.put("path", "/image");
+    		fileList.add(imgName);
+    		thumbDeParams.put("bucketId", bucketId);
+    		thumbDeParams.put("path", "/thumb");
+    		thumbFileList.add(imgName);
+    		//删除原有文件
+    		cos.deleteFile(deParams, fileList, msg);
+    		cos.deleteFile(thumbDeParams, thumbFileList, thumbMsg);
+    		System.out.println(msg);
+    		System.out.println(thumbMsg);
 			lockerDAO.delete(wallPaper);
 		}
 	}
