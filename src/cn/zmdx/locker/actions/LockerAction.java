@@ -1584,5 +1584,30 @@ public class LockerAction extends ActionSupport {
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+	 * 删除图片过高的新闻数据
+	 * @author louxiaojian
+	 * @date： 日期：2015-3-26 时间：上午10:53:15
+	 * @throws IOException
+	 */
+	public void delDataImgTableByTooHeight() throws IOException {
+		ServletActionContext.getResponse().setContentType(
+				"text/html; charset=utf-8");
+		PrintWriter out = ServletActionContext.getResponse().getWriter();
+		try {
+			String ids=ServletActionContext.getRequest().getParameter("ids");
+			int count=lockerService.delDataImgTableByTooHeight(ids);
+			if(count>0){
+				out.print("{\"result\":\""+count+"\"}");
+			}else{
+				out.print("{\"result\":\"0\"}");
+			}
+		} catch (Exception e) {
+			out.print("{\"result\":\"error\"}");
+			logger.error(e);
+			e.printStackTrace();
+		}
+	}
 
 }

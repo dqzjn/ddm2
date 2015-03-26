@@ -849,4 +849,11 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 			}
 		}
 	}
+
+	@Override
+	public int delDataImgTableByTooHeight(String ids) {
+		Query query=this.getSession().createSQLQuery("update data_img_table set data_sub=2 where data_sub=0 and id in ("+ids+")");
+		int count=query.executeUpdate();
+		return count;
+	}
 }

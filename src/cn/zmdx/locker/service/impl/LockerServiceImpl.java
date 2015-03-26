@@ -172,4 +172,9 @@ public class LockerServiceImpl implements LockerService {
 	public PageResult queryNotifyTable(Map<String, String> filterMap) {
 		return lockerDAO.queryNotifyTable(filterMap);
 	}
+	
+	@Override
+	public int delDataImgTableByTooHeight(String ids) {
+		return lockerDAO.delDataImgTableByTooHeight(ids);
+	}
 }

@@ -216,4 +216,12 @@ public interface LockerService {
 	 * @return
 	 */
 	public int insertNotify(String ids);
+
+	/**
+	 * 删除图片过高的新闻数据
+	 * @author louxiaojian
+	 * @date： 日期：2015-3-26 时间：上午10:55:50
+	 * @param ids
+	 */
+	public int delDataImgTableByTooHeight(String ids);
 }
