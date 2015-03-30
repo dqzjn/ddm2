@@ -180,7 +180,7 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 			}
 		}
 		queryCountString.append(") as t");
-		queryString.append(" order by id desc");
+		queryString.append(" order by "+filterMap.get("sidx")+" "+filterMap.get("sord")+"");
 		return searchBySQL(queryCountString.toString(), queryString.toString(),
 				filterMap);
 	}
@@ -276,8 +276,8 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 			List<Data_tag> dgList = new ArrayList<Data_tag>();
 			for (String id : idss) {
 				dit = getDataImgById(id);
-				dit.setData_sub(1);
-				this.getHibernateTemplate().update(dit);
+//				dit.setData_sub(1);
+//				this.getHibernateTemplate().update(dit);
 				List<Data_img> diList = getData_ImgById(id);
 //				if (diList.size() > 1) {
 //					dit.setImgUrl("http://pandora.hdlocker.com/pandora/locker!viewDataImg.action?id="
@@ -338,6 +338,7 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 			pstmt = (PreparedStatement) dbConn.prepareStatement(String
 					.valueOf(sql.substring(0, sql.length() - 1)));
 			int count = pstmt.executeUpdate();
+			this.executeBySQL("update data_img_table set data_sub=1 where id in ("+ids+")");
 			dbConn.commit();
 			return count;
 		} catch (Exception e) {
@@ -502,7 +503,7 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 						+ filterMap.get("tag_name") + "%' ");
 			}
 			queryCountString.append(") as t");
-			queryString.append(" order by id desc");
+			queryString.append(" order by "+filterMap.get("sidx")+" "+filterMap.get("sord")+"");
 		}
 		return searchBySQL(queryCountString.toString(), queryString.toString(),
 				filterMap);
@@ -603,7 +604,7 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 						+ filterMap.get("data_sub") + "'");
 			}
 			queryCountString.append(") as a");
-			queryString.append(" order by id desc");
+			queryString.append(" order by "+filterMap.get("sidx")+" "+filterMap.get("sord")+"");
 		}
 		return searchBySQL(queryCountString.toString(), queryString.toString(),
 				filterMap);
@@ -855,5 +856,18 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 		Query query=this.getSession().createSQLQuery("update data_img_table set data_sub=2 where data_sub=0 and id in ("+ids+")");
 		int count=query.executeUpdate();
 		return count;
+	}
+
+	@Override
+	public String getIdsByEntity(String tableName) {
+		try {
+			Query query=this.getSession().createSQLQuery("select id from "+tableName+" where data_sub= 0 ");
+			List list=query.list();
+			String str=String2list2mapUtil.ListToString(list);
+			return str;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "";
+		}
 	}
 }

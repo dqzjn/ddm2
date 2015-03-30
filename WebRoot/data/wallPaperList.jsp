@@ -45,9 +45,9 @@ text-overflow : ellipsis;
 			colNames:['ID','壁纸名','作者','描述','缩略图URL','缩略图URL','url','url','图片名','图片类型','发布时间','发布状态','发布状态'],
 			colModel:[
 					{name:'ID',index:'ID', width:60, key:true, sorttype:"int",hidden:true},								
-					{name:'name',index:'name', width:100,align: 'center'}, 
-					{name:'author',index:'author', width:80,align: 'center'}, 
-					{name:'desc',index:'desc', width:300,align: 'center'}, 
+					{name:'p_name',index:'p_name', width:100,align: 'center'}, 
+					{name:'p_author',index:'p_author', width:80,align: 'center'}, 
+					{name:'p_desc',index:'p_desc', width:300,align: 'center'}, 
 					{name:'thumbURL',index:'thumbURL', width:270,align: 'center',hidden:true}, 
 					{name:'thumbURL',index:'thumbURL', width:125, align:'center',
 							formatter: function(cellvalue, options, rowObject) {
@@ -64,7 +64,7 @@ text-overflow : ellipsis;
 			  		{name:'imageEXT',index:'imageEXT', width:80,align: 'center',hidden:true},
 					{name:'publishDATE',index:'publishDATE', width:80,align: 'center',formatter:"date",formatoptions: {srcformat:'Y-m-d',newformat:'Y-m-d'}},
 					{name:'data_sub',index:'data_sub', width:80,align: 'center',hidden:true},
-					{name:'data_sub1',index:'data_sub1', width:80,align: 'center',
+					{name:'data_sub',index:'data_sub', width:80,align: 'center',
 						formatter: function(cellvalue, options, rowObject) {
 							if(rowObject.data_sub=='审核通过'){
 					  			return "<p style=\"color: #FFC125;font-size: 16px;\">审核通过</p>" ;

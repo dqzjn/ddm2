@@ -224,4 +224,13 @@ public interface LockerService {
 	 * @param ids
 	 */
 	public int delDataImgTableByTooHeight(String ids);
+	
+	/**
+	 * 根据表名获取审核中的所有数据id
+	 * @author louxiaojian
+	 * @date： 日期：2015-3-30 时间：下午12:13:09
+	 * @param tableName
+	 * @return
+	 */
+	public String getIdsByEntity(String tableName);
 }

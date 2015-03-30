@@ -585,7 +585,7 @@ public class LockerAction extends ActionSupport {
 				}
 				if (image != null && image[0] != null) {//多图文
 					//封面图
-					imageName=uploadImg(imgNames.substring(0,imgNames.length() - 1), image[0]);
+					imageName=uploadImg(imgNames.substring(0,imgNames.length() - 1), image[0],0);
 					Img img = new Img();
 					img.setContent(content1);
 					String img_id = lockerService.save(img);
@@ -689,7 +689,7 @@ public class LockerAction extends ActionSupport {
 					}
 					if (image != null && image[0] != null) {//多图文
 						//封面图
-						imageName=uploadImg(imgNames.substring(0,imgNames.length() - 1), image[0]);
+						imageName=uploadImg(imgNames.substring(0,imgNames.length() - 1), image[0],0);
 						Img img = new Img();
 						img.setContent(content1);
 						String img_id = lockerService.save(img);
@@ -864,11 +864,12 @@ public class LockerAction extends ActionSupport {
 	 * 
 	 * @param imageNameStr
 	 * @param imageFile
+	 * @param type  0封面，1内容
 	 * @return
 	 * @throws Exception
 	 * @author 张加宁
 	 */
-	public String uploadImg(String imageNameStr, File imageFile)
+	public String uploadImg(String imageNameStr, File imageFile,int type)
 			throws Exception {
 		// 用户定义变量
 		int accessId = 11000436; // accessId
@@ -897,9 +898,11 @@ public class LockerAction extends ActionSupport {
 			String fileName = uploadImg + imgType;
 			inParams.put("compressBucketId", bucketId);
 			inParams.put("compressFilePath", "/image/" + fileName);
-			inParams.put("zoomType", 1);// 等比缩放
-			inParams.put("width", 1024);// 缩放后宽度
-			inParams.put("height", 1024);// 缩放后高度
+			if(type==0){
+				inParams.put("zoomType", 1);// 等比缩放
+				inParams.put("width", 1024);// 缩放后宽度
+				inParams.put("height", 1024);// 缩放后高度
+			}
 			inParams.put("compress", 0);// 是否需要压缩(质量为 85),(默认压缩) 0: 不压缩 1:
 										// 压缩(default)
 			Map<String, CosFile> files = new HashMap<String, CosFile>();
@@ -932,7 +935,7 @@ public class LockerAction extends ActionSupport {
 					.getRequest().getParameter("data_sub"));
 			PrintWriter out = ServletActionContext.getResponse().getWriter();
 			Map<String, String> filterMap = getPagerMap();
-			String[] viewArray = { "ID", "name", "desc", "author", "thumbURL",
+			String[] viewArray = { "ID", "p_name", "p_desc", "p_author", "thumbURL",
 					"imageURL", "imageNAME", "imageEXT", "publishDATE",
 					"data_sub:[{'0':'审核中','1':'审核通过','2':'审核未通过'}]" };
 			if (p_name != null && !"".equals(p_name)) {
@@ -1303,7 +1306,7 @@ public class LockerAction extends ActionSupport {
 					lockerService.save(dataImg);
 					if(imgNames!=null&&!"".equals(imgNames)){
 						//封面图
-						imageName=uploadImg(imgNames.substring(0,imgNames.length() - 1), image[0]);
+						imageName=uploadImg(imgNames.substring(0,imgNames.length() - 1), image[0],0);
 						dit.setUrl("http://cos.myqcloud.com/11000436/data/image/"
 								+ imageName);
 					}
@@ -1318,7 +1321,7 @@ public class LockerAction extends ActionSupport {
 			}else{//原单图文
 				if (image != null && image[0] != null) {//单图文改为多图文
 					//封面图
-					imageName=uploadImg(imgNames.substring(0,imgNames.length() - 1), image[0]);
+					imageName=uploadImg(imgNames.substring(0,imgNames.length() - 1), image[0],0);
 					Img img = new Img();
 					img.setContent(content1);
 					String img_id = lockerService.save(img);

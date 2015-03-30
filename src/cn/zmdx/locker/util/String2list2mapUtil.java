@@ -28,17 +28,21 @@ public class String2list2mapUtil {
                 // 如果值是list类型则调用自己  
                 if (list.get(i) instanceof List) {  
                     sb.append(ListToString((List<?>) list.get(i)));  
-                    sb.append(SEP1);  
+                    sb.append(SEP4);  
                 } else if (list.get(i) instanceof Map) {  
                     sb.append(MapToString((Map<?, ?>) list.get(i)));  
-                    sb.append(SEP1);  
+                    sb.append(SEP4);  
                 } else {  
                     sb.append(list.get(i));  
-                    sb.append(SEP1);  
+                    sb.append(SEP4);  
                 }  
             }  
-        }  
-        return "L" + sb.toString();  
+        }
+        if(sb.length()>1){
+        	return sb.substring(0,sb.length()-1);
+        }else{
+        	return sb.toString();  
+        }
     }  
      
     /** 

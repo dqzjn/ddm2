@@ -61,14 +61,14 @@ text-overflow : ellipsis;
 					{name:'url',index:'url', width:200, align:'center',
 							formatter: function(cellvalue, options, rowObject) {
 								if(rowObject.url.indexOf(".")!=-1){
-						  			return "<img src='"+rowObject.url+"' style='width:100px;' />" ;
+						  			return "<img src='"+rowObject.url+"' style='width:100px;' onerror=\"javascript:this.src='http://cos.myqcloud.com/11000436/data/image/98327AC0445D45F7D424240D7FDDB096.jpg'\"/>" ;
 								}else{
 						  			return "<img src='' style='width:100px;' />" ;
 								}
 			  				}
 			  			},
 			  		{name:'data_sub',index:'data_sub', width:270,align: 'center',hidden:true},
-			  		{name:'data_sub1',index:'data_sub1', width:80,align: 'center',
+			  		{name:'data_sub',index:'data_sub', width:80,align: 'center',
 						formatter: function(cellvalue, options, rowObject) {
 							if(rowObject.data_sub=='审核通过'){
 					  			return "<p style=\"color: #FFC125;font-size: 16px;\">审核通过</p>" ;
@@ -97,45 +97,45 @@ text-overflow : ellipsis;
 			altRows:true,//隔行变色
 			altclass:'altclass',//隔行变色样式
 			gridComplete: function () { 
-				var imgObjs=document.getElementsByTagName("img");
-				var ids="";
-				var table= document.getElementById("gridTable");
-				//alert(table.innerHTML);
-				//var n=((table.innerHTML.split('审核中')).length-1)/4;
-				for(var i=0;i<imgObjs.length;i++){
-					var img=imgObjs[i];
-					var image=new Image();
-					image.src=img.src;
-					if(image.height>2500){
-						var txt=img.parentNode.parentNode.innerHTML;
-						if(!+[1,]){//ie
-							var newStr=txt.substring(txt.indexOf("jqg_gridTable_")+4);
-							ids+=newStr.substring(10,newStr.indexOf(" class"))+",";
-						}else{//firefox、chrome
-							var newStr=txt.substring(txt.indexOf("id=\"jqg_gridTable_")+4);
-							ids+=newStr.substring(14,newStr.indexOf("\""))+",";
+				setTimeout(function(){
+					var imgObjs=document.getElementsByTagName("img");
+					var ids="";
+					var table= document.getElementById("gridTable");
+					for(var i=0;i<imgObjs.length;i++){
+						var img=imgObjs[i];
+						var image=new Image();
+						image.src=img.src;
+						if(image.height>2500){
+							var txt=img.parentNode.parentNode.innerHTML;
+							if(!+[1,]){//ie
+								var newStr=txt.substring(txt.indexOf("jqg_gridTable_")+4);
+								ids+=newStr.substring(10,newStr.indexOf(" class"))+",";
+							}else{//firefox、chrome
+								var newStr=txt.substring(txt.indexOf("id=\"jqg_gridTable_")+4);
+								ids+=newStr.substring(14,newStr.indexOf("\""))+",";
+							}
 						}
 					}
-				}
-				ids=ids.substring(0,ids.length-1);
-				if(ids.length>0){
-					var actionUrl = "<%=request.getContextPath()%>/locker_delDataImgTableByTooHeight.action?ids="+ids;  
-					$.ajax({  
-						  url : actionUrl,  
-					      type : "post", 
-					      dataType : "json",  
-					      cache : false,  
-					      error : function(textStatus, errorThrown) {  
-					          alert("系统ajax交互错误: " + textStatus.value);  
-					      },  
-					      success : function(data, textStatus) {
-					    	  if(data.result>0){
-					    		  gridSearch();
-					    		  alert("有"+data.result+"条数据，由于封面图过高未能通过审批！");
-					    	  }
-					      }  
-					});
-				}
+					ids=ids.substring(0,ids.length-1);
+					if(ids.length>0){
+						var actionUrl = "<%=request.getContextPath()%>/locker_delDataImgTableByTooHeight.action?ids="+ids;  
+						$.ajax({  
+							  url : actionUrl,  
+						      type : "post", 
+						      dataType : "json",  
+						      cache : false,  
+						      error : function(textStatus, errorThrown) {  
+						          alert("系统ajax交互错误: " + textStatus.value);  
+						      },  
+						      success : function(data, textStatus) {
+						    	  if(data.result>0){
+						    		  gridSearch();
+						    		  alert("有"+data.result+"条数据，由于封面图过高未能通过审批！");
+						    	  }
+						      }  
+						});
+					}
+				}, 2000);
 			},
 			jsonReader: {
 				root:"rows",		// 数据行（默认为：rows）

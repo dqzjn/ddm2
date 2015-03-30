@@ -213,4 +213,9 @@ public class LockerServiceImpl implements LockerService {
 	public int delDataImgTableByTooHeight(String ids) {
 		return lockerDAO.delDataImgTableByTooHeight(ids);
 	}
+
+	@Override
+	public String getIdsByEntity(String tableName) {
+		return lockerDAO.getIdsByEntity(tableName);
+	}
 }
