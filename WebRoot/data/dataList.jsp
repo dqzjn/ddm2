@@ -61,7 +61,7 @@ text-overflow : ellipsis;
 					{name:'url',index:'url', width:200, align:'center',
 							formatter: function(cellvalue, options, rowObject) {
 								if(rowObject.url.indexOf(".")!=-1){
-						  			return "<img src='"+rowObject.url+"' style='width:100px;' onerror=\"javascript:this.src='http://cos.myqcloud.com/11000436/data/image/98327AC0445D45F7D424240D7FDDB096.jpg'\"/>" ;
+						  			return "<img src='"+rowObject.url+"' style='width:100px;' onerror=\"javascript:this.src='<%=request.getContextPath()%>/css/img/error.png'\"/>" ;
 								}else{
 						  			return "<img src='' style='width:100px;' />" ;
 								}
