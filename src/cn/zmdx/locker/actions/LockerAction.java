@@ -568,7 +568,7 @@ public class LockerAction extends ActionSupport {
 				// || "".equals(dataImgTable.getData_type())) {
 				// dataImgTable.setData_type("singleImg");
 				// }
-				int top = (int) Math.round(Math.random() * 50 + 11);
+				int top = (int) Math.round(Math.random() * 50 );
 				int views = top + (int) Math.round(Math.random() * 1100 + 555);
 				dataImgTable.setViews(views);
 				dataImgTable.setTop(top);
@@ -677,7 +677,7 @@ public class LockerAction extends ActionSupport {
 					// || "".equals(dataImgTable.getData_type())) {
 					// dataImgTable.setData_type("singleImg");
 					// }
-					int top = (int) Math.round(Math.random() * 50 + 11);
+					int top = (int) Math.round(Math.random() * 50 );
 					int views = top
 							+ (int) Math.round(Math.random() * 1100 + 555);
 					dataImgTable.setViews(views);
