@@ -96,47 +96,47 @@ text-overflow : ellipsis;
 			toolbar: [false,"top"],
 			altRows:true,//隔行变色
 			altclass:'altclass',//隔行变色样式
-			gridComplete: function () { 
-				setTimeout(function(){
-					var imgObjs=document.getElementsByTagName("img");
-					var ids="";
-					var table= document.getElementById("gridTable");
-					for(var i=0;i<imgObjs.length;i++){
-						var img=imgObjs[i];
-						var image=new Image();
-						image.src=img.src;
-						if(image.height>2500){
-							var txt=img.parentNode.parentNode.innerHTML;
-							if(!+[1,]){//ie
-								var newStr=txt.substring(txt.indexOf("jqg_gridTable_")+4);
-								ids+=newStr.substring(10,newStr.indexOf(" class"))+",";
-							}else{//firefox、chrome
-								var newStr=txt.substring(txt.indexOf("id=\"jqg_gridTable_")+4);
-								ids+=newStr.substring(14,newStr.indexOf("\""))+",";
-							}
-						}
-					}
-					ids=ids.substring(0,ids.length-1);
-					if(ids.length>0){
-						var actionUrl = "<%=request.getContextPath()%>/locker_delDataImgTableByTooHeight.action?ids="+ids;  
-						$.ajax({  
-							  url : actionUrl,  
-						      type : "post", 
-						      dataType : "json",  
-						      cache : false,  
-						      error : function(textStatus, errorThrown) {  
-						          alert("系统ajax交互错误: " + textStatus.value);  
-						      },  
-						      success : function(data, textStatus) {
-						    	  if(data.result>0){
-						    		  gridSearch();
-						    		  alert("有"+data.result+"条数据，由于封面图过高未能通过审批！");
-						    	  }
-						      }  
-						});
-					}
-				}, 2000);
-			},
+<%--			gridComplete: function () { --%>
+<%--				setTimeout(function(){--%>
+<%--					var imgObjs=document.getElementsByTagName("img");--%>
+<%--					var ids="";--%>
+<%--					var table= document.getElementById("gridTable");--%>
+<%--					for(var i=0;i<imgObjs.length;i++){--%>
+<%--						var img=imgObjs[i];--%>
+<%--						var image=new Image();--%>
+<%--						image.src=img.src;--%>
+<%--						if(image.height>2500){--%>
+<%--							var txt=img.parentNode.parentNode.innerHTML;--%>
+<%--							if(!+[1,]){//ie--%>
+<%--								var newStr=txt.substring(txt.indexOf("jqg_gridTable_")+4);--%>
+<%--								ids+=newStr.substring(10,newStr.indexOf(" class"))+",";--%>
+<%--							}else{//firefox、chrome--%>
+<%--								var newStr=txt.substring(txt.indexOf("id=\"jqg_gridTable_")+4);--%>
+<%--								ids+=newStr.substring(14,newStr.indexOf("\""))+",";--%>
+<%--							}--%>
+<%--						}--%>
+<%--					}--%>
+<%--					ids=ids.substring(0,ids.length-1);--%>
+<%--					if(ids.length>0){--%>
+<%--						var actionUrl = "<%=request.getContextPath()%>/locker_delDataImgTableByTooHeight.action?ids="+ids;  --%>
+<%--						$.ajax({  --%>
+<%--							  url : actionUrl,  --%>
+<%--						      type : "post", --%>
+<%--						      dataType : "json",  --%>
+<%--						      cache : false,  --%>
+<%--						      error : function(textStatus, errorThrown) {  --%>
+<%--						          alert("系统ajax交互错误: " + textStatus.value);  --%>
+<%--						      },  --%>
+<%--						      success : function(data, textStatus) {--%>
+<%--						    	  if(data.result>0){--%>
+<%--						    		  gridSearch();--%>
+<%--						    		  alert("有"+data.result+"条数据，由于封面图过高未能通过审批！");--%>
+<%--						    	  }--%>
+<%--						      }  --%>
+<%--						});--%>
+<%--					}--%>
+<%--				}, 2000);--%>
+<%--			},--%>
 			jsonReader: {
 				root:"rows",		// 数据行（默认为：rows）
 				page: "page",  	// 当前页
