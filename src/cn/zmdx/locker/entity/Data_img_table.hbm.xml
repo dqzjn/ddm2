@@ -19,6 +19,7 @@
 		<property name="userid" column="userid" />
 		<property name="views" column="views" />
 		<property name="data_view" column="data_view" />
+		<property name="stick" column="stick" />
 	</class>
 
 </hibernate-mapping>

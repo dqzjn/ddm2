@@ -218,4 +218,14 @@ public class LockerServiceImpl implements LockerService {
 	public String getIdsByEntity(String tableName) {
 		return lockerDAO.getIdsByEntity(tableName);
 	}
+
+	@Override
+	public int stickByIds(String ids) {
+		return lockerDAO.stickByIds(ids);
+	}
+
+	@Override
+	public int cancelStickByIds(String ids) {
+		return lockerDAO.cancelStickByIds(ids);
+	}
 }

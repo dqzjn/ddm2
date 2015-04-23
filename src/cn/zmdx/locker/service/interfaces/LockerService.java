@@ -233,4 +233,22 @@ public interface LockerService {
 	 * @return
 	 */
 	public String getIdsByEntity(String tableName);
+
+	/**
+	 * 新闻置顶
+	 * @author louxiaojian
+	 * @date： 日期：2015-4-20 时间：下午4:22:05
+	 * @param ids
+	 * @return
+	 */
+	public int stickByIds(String ids);
+
+	/**
+	 * 取消新闻置顶
+	 * @author louxiaojian
+	 * @date： 日期：2015-4-20 时间：下午4:22:21
+	 * @param ids
+	 * @return
+	 */
+	public int cancelStickByIds(String ids);
 }

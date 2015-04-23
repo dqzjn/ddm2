@@ -470,9 +470,13 @@ html {
 					</tr>
 						<tr>
 							<td align="right">上传封面：</td>
-							<td align="left" colspan="3"><input type="file" id="image"
+							<td align="left"><input type="file" id="image"
 								name="image" value="${image}" onchange="uploadImg()"/>
 								<input type="hidden" name="cover" <c:if test="${fn:length(imgList)>0 }">value="${dataImgTable.url }"</c:if> />
+							</td>
+							<td align="right">是否置顶：</td>
+							<td align="left">
+								<input type="radio" id="stick"	name="stick" value="1" style="width: 20px;" />是<input type="radio" id="stick" name="stick" value="0" style="width: 20px;" checked="checked" />否
 							</td>
 						</tr>
 						<tr>

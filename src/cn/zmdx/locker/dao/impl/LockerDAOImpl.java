@@ -103,9 +103,9 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 		StringBuffer queryString = new StringBuffer();
 		StringBuffer queryCountString = new StringBuffer();
 		queryCountString
-				.append("select count(*) from (select dit.id,dit.title,dit.url,dit.imgUrl,dit.type,dit.collect_time,dit.collect_website,dit.data_sub,u.user_org,u.username,data_view from data_img_table dit left join user u on dit.userid = u.userid where 1=1  ");
+				.append("select count(*) from (select dit.id,dit.title,dit.url,dit.imgUrl,dit.type,dit.collect_time,dit.collect_website,dit.data_sub,u.user_org,u.username,data_view,stick from data_img_table dit left join user u on dit.userid = u.userid where 1=1  ");
 		queryString
-				.append("select dit.id,dit.title,dit.url,dit.imgUrl,dit.type,dit.collect_time,dit.collect_website,dit.data_sub,u.user_org,u.username,data_view from data_img_table dit left join user u on dit.userid = u.userid  where 1=1 ");
+				.append("select dit.id,dit.title,dit.url,dit.imgUrl,dit.type,dit.collect_time,dit.collect_website,dit.data_sub,u.user_org,u.username,data_view,stick from data_img_table dit left join user u on dit.userid = u.userid  where 1=1 ");
 		if (filterMap != null && !filterMap.isEmpty()) {
 			if (null != filterMap.get("title")
 					&& !"".equals(filterMap.get("title"))) {
@@ -155,6 +155,13 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 						+ filterMap.get("custom_user") + " ");
 				queryString.append("and u.userid = "
 						+ filterMap.get("custom_user") + " ");
+			}
+			if (null != filterMap.get("stick")
+					&& !"".equals(filterMap.get("stick"))) {
+				queryCountString.append("and dit.stick = "
+						+ filterMap.get("stick") + " ");
+				queryString.append("and dit.stick = "
+						+ filterMap.get("stick") + " ");
 			}
 			if (null != filterMap.get("collect_website")
 					&& !"".equals(filterMap.get("collect_website"))) {
@@ -299,7 +306,7 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 						+ dit.getId() + "','" + dit.getData_type() + "','"
 						+ dit.getCollect_time() + "','"
 						+ dit.getCollect_website() + "','" + dit.getType()+ "','"
-						+ dit.getTop() + "','" + dit.getViews()+ "','" + dit.getData_view()
+						+ dit.getTop() + "','" + dit.getViews()+ "','" + dit.getData_view()+ "','" + dit.getStick()
 						+ "'),");
 				if (diList.size() > 0) {
 					for (Data_img di : diList) {
@@ -379,7 +386,7 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 			StringBuffer data_img_sql = new StringBuffer();
 			StringBuffer img_sql = new StringBuffer();
 			StringBuffer data_tag_sql = new StringBuffer();
-			sql.append("insert into data_img_table(id,title,url,imgUrl,data_type,collect_time,collect_website,type,top,views,data_view) values");
+			sql.append("insert into data_img_table(id,title,url,imgUrl,data_type,collect_time,collect_website,type,top,views,data_view,stick) values");
 			data_img_sql
 					.append("insert into data_img(id,img_id,data_id) values");
 			img_sql.append("insert into img(id,imageUrl,content) values");
@@ -398,7 +405,7 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 						+ dit.getId() + "','" + dit.getData_type() + "','"
 						+ dit.getCollect_time() + "','"
 						+ dit.getCollect_website() + "','" + dit.getType()+ "','"
-						+ dit.getTop() + "','" + dit.getViews()+ "','" + dit.getData_view()
+						+ dit.getTop() + "','" + dit.getViews()+ "','" + dit.getData_view()+ "','" + dit.getStick()
 						+ "'),");
 //			} 
 //			else {
@@ -869,5 +876,17 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 			e.printStackTrace();
 			return "";
 		}
+	}
+
+	@Override
+	public int stickByIds(String ids) {
+		Query query=this.getSession().createSQLQuery("update data_img_table set stick='1' where id in ("+ids+")");
+		return query.executeUpdate();
+	}
+
+	@Override
+	public int cancelStickByIds(String ids) {
+		Query query=this.getSession().createSQLQuery("update data_img_table set stick='0' where id in ("+ids+")");
+		return query.executeUpdate();
 	}
 }

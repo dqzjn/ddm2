@@ -19,6 +19,7 @@ public class Data_img_table {
 	private int userid;
 	private int views;
 	private int data_view;
+	private String stick;
 
 	public int getId() {
 		return id;
@@ -138,6 +139,14 @@ public class Data_img_table {
 
 	public void setData_view(int data_view) {
 		this.data_view = data_view;
+	}
+
+	public String getStick() {
+		return stick;
+	}
+
+	public void setStick(String stick) {
+		this.stick = stick;
 	}
 
 }

@@ -49,7 +49,7 @@ text-overflow : ellipsis;
 			height: 500,
 			autoheight: true,
 			width: widthScroll/1.5, 
-			colNames:['ID','标题','类型','内容','发布日期','来源','url','图片','发布','发布状态','发布人','来源'<c:if test="${sessionScope.USER_ORG=='0'}">,'浏览量'</c:if>],
+			colNames:['ID','标题','类型','内容','发布日期','来源','url','图片','置顶','发布','发布状态','发布人','来源'<c:if test="${sessionScope.USER_ORG=='0'}">,'浏览量'</c:if>],
 			colModel:[
 					{name:'ID',index:'ID', width:60, key:true, sorttype:"int",hidden:true},								
 					{name:'title',index:'title', width:150}, 
@@ -58,15 +58,16 @@ text-overflow : ellipsis;
 					{name:'collect_time',index:'collect_time', width:80,align: 'center',formatter:"date",formatoptions: {srcformat:'Y-m-d',newformat:'Y-m-d'}},
 					{name:'collect_website',index:'collect_website', width:80,align: 'center'},
 					{name:'url',index:'url', width:150,align: 'center'}, 
-					{name:'url',index:'url', width:200, align:'center',
+					{name:'url',index:'url', width:150, align:'center',
 							formatter: function(cellvalue, options, rowObject) {
 								if(rowObject.url.indexOf(".")!=-1){
-						  			return "<img src='"+rowObject.url+"' style='width:100px;' onerror=\"javascript:this.src='<%=request.getContextPath()%>/css/img/error.png'\"/>" ;
+						  			return "<img src='"+rowObject.url+"' style='width:100px;'" ;
 								}else{
 						  			return "<img src='' style='width:100px;' />" ;
 								}
 			  				}
 			  			},
+				  	{name:'stick',index:'stick', width:50,align: 'center'},
 			  		{name:'data_sub',index:'data_sub', width:270,align: 'center',hidden:true},
 			  		{name:'data_sub',index:'data_sub', width:80,align: 'center',
 						formatter: function(cellvalue, options, rowObject) {
@@ -184,7 +185,9 @@ text-overflow : ellipsis;
 		    	  var custom_user = $("#custom_user");
 		    	  for(var i=0;i<result.length;i++){
 		    		  collect_website.append('<option value="'+result[i]+'">'+result[i]+'</option>');
-		    		  custom_user.append('<option value="'+cusUserResult[i][0]+'">'+cusUserResult[i][1]+'</option>');
+		    	  }
+		    	  for(var int=0;int<cusUserResult.length;int++){
+		    		  custom_user.append('<option value="'+cusUserResult[int][0]+'">'+cusUserResult[int][1]+'</option>');
 		    	  }
 		      }  
 		});
@@ -313,6 +316,7 @@ text-overflow : ellipsis;
 			var edit_date = jQuery("#edit_date").val();
 			var data_sub = jQuery("#data_sub").val();
 			var collect_website = jQuery("#collect_website").val();
+			var stick = jQuery("#stick").val();
 			var params = {  
 	            "data_title" : encodeURIComponent($.trim(data_title)),
 	            "start_date" : encodeURIComponent($.trim(start_date)),
@@ -321,7 +325,8 @@ text-overflow : ellipsis;
 	            "type" : encodeURIComponent($.trim(type)),
 	            "edit_date" : encodeURIComponent($.trim(edit_date)),
 	            "data_sub" : encodeURIComponent($.trim(data_sub)),
-	            "collect_website" : encodeURIComponent($.trim(collect_website))
+	            "collect_website" : encodeURIComponent($.trim(collect_website)),
+	            "stick" : encodeURIComponent($.trim(stick)),
 			};							 
 			 var postData = $("#gridTable").jqGrid("getGridParam", "postData");
 			 $.extend(postData, params);
@@ -343,6 +348,7 @@ text-overflow : ellipsis;
 		jQuery("#type").val("");
 		jQuery("#edit_date").val("");
 		jQuery("#data_sub").val("");
+		jQuery("#stick").val("");
 	}
 	//插入云数据库
 	function insertData(){
@@ -456,6 +462,78 @@ text-overflow : ellipsis;
 			return false; 
 		}
 	}
+	
+	//置顶
+	function sticks(){
+		var ids= $("#gridTable").jqGrid("getGridParam", "selarrrow") + "";
+		if (!ids) {
+		    alert("请先选择记录!");  
+		    return false;  
+		}
+		var idss=ids.split(',');
+		for(var i=0;i<idss.length;i++){
+			var row = jQuery("#gridTable").jqGrid('getRowData',idss[i]);
+			if(row.stick=='是'){
+				alert("置顶数据不允许重复置顶！");
+				return false;
+			}
+		}
+		var actionUrl = "<%=request.getContextPath()%>/locker_stickByIds.action?ids="+ids;  
+		$.ajax({
+			url : actionUrl,
+			type : "post",
+			dataType : "json",
+			cache : false,
+			error : function(textStatus, errorThrown) {
+				alert("系统ajax交互错误: " + textStatus.value);
+			},
+			success : function(data, textStatus) {
+				if (data.state == 'success') {
+					alert("操作成功！");
+					gridSearch();
+				} else {
+					alert("操作失败！");
+					gridSearch();
+				}
+			}
+		});
+	}
+	
+	//取消置顶
+	function cancelStick(){
+		var ids= $("#gridTable").jqGrid("getGridParam", "selarrrow") + "";
+		if (!ids) {
+		    alert("请先选择记录!");  
+		    return false;  
+		}
+		var idss=ids.split(',');
+		for(var i=0;i<idss.length;i++){
+			var row = jQuery("#gridTable").jqGrid('getRowData',idss[i]);
+			if(row.stick=='否'){
+				alert("未置顶数据不允许取消置顶！");
+				return false;
+			}
+		}
+		var actionUrl = "<%=request.getContextPath()%>/locker_cancelStickByIds.action?ids="+ids;  
+		$.ajax({
+			url : actionUrl,
+			type : "post",
+			dataType : "json",
+			cache : false,
+			error : function(textStatus, errorThrown) {
+				alert("系统ajax交互错误: " + textStatus.value);
+			},
+			success : function(data, textStatus) {
+				if (data.state == 'success') {
+					alert("操作成功！");
+					gridSearch();
+				} else {
+					alert("操作失败！");
+					gridSearch();
+				}
+			}
+		});
+	}
 </script>
 </head>
 <body>
@@ -500,6 +578,11 @@ text-overflow : ellipsis;
 								<option value="">全部</option>
 								<option value="0">自媒体</option>
 						</select></td></c:if>
+						<c:if test="${sessionScope.USER_ORG=='0'}"><td>&nbsp;&nbsp;置顶：<select id="stick" name="stick" style="width:150px;">
+							<option value="">请选择</option>
+							<option value="0">否</option>
+							<option value="1">是</option>
+						</select></td></c:if>
 			</tr>
 		</table>
 		<table style="width: 100%;" class="tableCont">
@@ -512,6 +595,8 @@ text-overflow : ellipsis;
 					<c:if test="${sessionScope.USER_ORG=='0'}"><input id="insertDB" type='button' value='插入数据库' onclick='insertData();' class='button_b1' /></c:if>
 					<c:if test="${sessionScope.USER_ORG=='0'}"><input id="refuse" type='button' value='审核不通过' onclick='exRefuse();' class='button_b1' /></c:if>
 					<c:if test="${sessionScope.USER_ORG=='0'}"><input id="delete" type='button' value='批量修改时间' onclick='updateTime();' class='button_b1'"/></c:if>
+<%--					<c:if test="${sessionScope.USER_ORG=='0'}"><input id="delete" type='button' value='置顶' onclick='sticks();' class='button_b'"/></c:if>--%>
+					<c:if test="${sessionScope.USER_ORG=='0'}"><input id="delete" type='button' value='取消置顶' onclick='cancelStick();' class='button_b1'"/></c:if>
 					<input id="refresh" type='button' value='刷 新' onclick='refreshIt()' class='button_b' />
 				</td>
 			</tr>
