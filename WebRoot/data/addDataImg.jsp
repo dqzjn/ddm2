@@ -88,8 +88,8 @@ body {
     	}};
       	$('#submitBtn').click(function(){
 	    	if(checkedForm()){
-	    		//$("#submitBtn").attr("disabled", true);  
-	    		//$("#saveInsert").attr("disabled", true);  
+	    		$("#submitBtn").attr("disabled", true);  
+	    		$("#saveInsert").attr("disabled", true);  
 	    		$("#exit").attr("disabled", true);  
 	    		$("#addHtml").attr("disabled", true);  
 	    		$("#delHtml").attr("disabled", true);  
