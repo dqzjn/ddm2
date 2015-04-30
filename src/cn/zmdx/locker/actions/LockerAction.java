@@ -417,7 +417,7 @@ public class LockerAction extends ActionSupport {
 			PrintWriter out = ServletActionContext.getResponse().getWriter();
 			Map<String, String> filterMap = getPagerMap();
 			String[] viewArray = { "ID", "title", "url", "imgUrl",
-					"type:[{'1':'头条','2':'八卦','3':'微精选','4':'美女','5':'搞笑'}]",
+					"type:[{'1':'头条','2':'八卦','3':'微精选','4':'美女','5':'搞笑','6':'财经','7':'体育','8':'时尚','9':'潮应用','10':'科技','11':'游戏','12':'创业'}]",
 					"collect_time", "collect_website",
 					"data_sub:[{'0':'审核中','1':'审核通过','2':'审核未通过'}]",
 					"user_org", "username", "data_view","stick:[{'0':'否','1':'是'}]" };

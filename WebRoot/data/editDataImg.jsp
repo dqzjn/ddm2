@@ -446,6 +446,13 @@ html {
 									<c:if test="${dataImgTable.type=='4'}">selected="selected"</c:if>>美女</option>
 								<option value="5"
 									<c:if test="${dataImgTable.type=='5'}">selected="selected"</c:if>>搞笑</option>
+								<option value="6" <c:if test="${dataImgTable.type=='6'}">selected="selected"</c:if>>财经</option>
+								<option value="7" <c:if test="${dataImgTable.type=='7'}">selected="selected"</c:if>>体育</option>
+								<option value="8" <c:if test="${dataImgTable.type=='8'}">selected="selected"</c:if>>时尚</option>
+								<option value="9" <c:if test="${dataImgTable.type=='9'}">selected="selected"</c:if>>潮应用</option>
+								<option value="10" <c:if test="${dataImgTable.type=='10'}">selected="selected"</c:if>>科技</option>
+								<option value="11" <c:if test="${dataImgTable.type=='11'}">selected="selected"</c:if>>游戏</option>
+								<option value="12" <c:if test="${dataImgTable.type=='12'}">selected="selected"</c:if>>创业</option>
 						</select>
 						</td>
 						<td align="right">发布时间：</td>

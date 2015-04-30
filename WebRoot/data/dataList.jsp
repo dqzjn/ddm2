@@ -567,6 +567,13 @@ text-overflow : ellipsis;
 								<option value="3">微精选</option>
 								<option value="4">美女</option>
 								<option value="5">搞笑</option>
+								<option value="6">财经</option>
+								<option value="7">体育</option>
+								<option value="8">时尚</option>
+								<option value="9">潮应用</option>
+								<option value="10">科技</option>
+								<option value="11">游戏</option>
+								<option value="12">创业</option>
 						</select>
 						<td>&nbsp;&nbsp;状态：<select id="data_sub" name="data_sub" style="width:150px;">
 								<option value="">全部</option>
