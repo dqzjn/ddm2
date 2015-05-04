@@ -1,4 +1,5 @@
 package cn.zmdx.locker.util;
+
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -13,7 +14,7 @@ import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
 
 public class StringUtil {
-	
+
 	private static Logger logger = Logger.getLogger(StringUtil.class);
 
 	/**
@@ -24,7 +25,8 @@ public class StringUtil {
 	 * @param replacement
 	 * @return String
 	 */
-	public static String replaceAll(String orig, String regex, String replacement) {
+	public static String replaceAll(String orig, String regex,
+			String replacement) {
 		StringBuffer sb = new StringBuffer();
 		int ti = 0;
 		int index = orig.indexOf(regex);
@@ -34,8 +36,7 @@ public class StringUtil {
 			ti = index + regex.length();
 			if (ti == orig.length()) {
 				index = -1;
-			}
-			else {
+			} else {
 				index = orig.indexOf(regex, ti);
 			}
 		}
@@ -51,7 +52,8 @@ public class StringUtil {
 	 * @param replacement
 	 * @return String
 	 */
-	public static String replaceFirst(String orig, String regex, String replacement) {
+	public static String replaceFirst(String orig, String regex,
+			String replacement) {
 		StringBuffer sb = new StringBuffer();
 		int ti = 0;
 		int index = orig.indexOf(regex);
@@ -82,8 +84,7 @@ public class StringUtil {
 			ti = index + regex.length();
 			if (ti == orig.length()) {
 				index = -1;
-			}
-			else {
+			} else {
 				index = orig.indexOf(regex, ti);
 			}
 		}
@@ -118,7 +119,7 @@ public class StringUtil {
 
 	/**
 	 * 判断一个字符串是否是空串
-
+	 * 
 	 * 
 	 * @param str
 	 * @return boolean
@@ -128,33 +129,30 @@ public class StringUtil {
 	}
 
 	/**
-	 * 处理字符串 如果是null则返回空，否则返回原来的值
-	 * String
-	 * 2011-5-11下午12:12:44
-	 * author：李数
+	 * 处理字符串 如果是null则返回空，否则返回原来的值 String 2011-5-11下午12:12:44 author：李数
 	 */
-	public static String dealNull(String str){
-		if(isNull(str)){
+	public static String dealNull(String str) {
+		if (isNull(str)) {
 			return "";
-		}else{
+		} else {
 			return str;
 		}
 	}
+
 	/**
 	 * 判断一个字符串时否为空 空串的条件：对象为null，"null",或者空串组合，除空白字符外，没有任何有效字符，如""," "
 	 * 
 	 * @param str
 	 *            String 待判断的字符串
-
+	 * 
 	 * @return boolean 是否为空串
-
 	 */
 	public static boolean isNull(String str) {
 		if (str == null) {
 			// 参数对象为null
 			return true;
-		}
-		else if (str.trim().length() == 0 || str.trim().equalsIgnoreCase("null")) {
+		} else if (str.trim().length() == 0
+				|| str.trim().equalsIgnoreCase("null")) {
 			// 去掉参数两边的空字符串后长度为0或者为"null"
 			return true;
 		}
@@ -163,28 +161,29 @@ public class StringUtil {
 
 	/**
 	 * 判断是否为空
+	 * 
 	 * @param str
 	 * @return
 	 */
 	public static boolean isMissing(String str) {
-		if (str == null || str.trim().equals("") || str.trim().equalsIgnoreCase("null")) {
+		if (str == null || str.trim().equals("")
+				|| str.trim().equalsIgnoreCase("null")) {
 			return true;
-		}
-		else {
+		} else {
 			return false;
 		}
 	}
+
 	/**
-	 * 参数字符转换
-	 * String
-	 * 2011-4-27下午04:54:27
-	 * author：李数
+	 * 参数字符转换 String 2011-4-27下午04:54:27 author：李数
 	 */
-	public static String encodingUrl(String str){
+	public static String encodingUrl(String str) {
 		try {
-			if(str != null){
-				return java.net.URLDecoder.decode(str,"UTF-8").trim(); 
-			}else{
+			if (str != null) {
+				str = str.replaceAll("%(?![0-9a-fA-F]{2})", "%25");
+				str = str.replaceAll("\\+", "%2B");
+				return java.net.URLDecoder.decode(str, "UTF-8").trim();
+			} else {
 				return null;
 			}
 		} catch (Exception e) {
@@ -192,16 +191,17 @@ public class StringUtil {
 			return null;
 		}
 	}
+
 	/**
 	 * 判断是否为空
+	 * 
 	 * @param str
 	 * @return
 	 */
 	public static boolean isMissing(Long value) {
 		if (value == null || value.equals(0L)) {
 			return true;
-		}
-		else {
+		} else {
 			return false;
 		}
 	}
@@ -211,16 +211,13 @@ public class StringUtil {
 	 * 
 	 * @param str1
 	 *            String 需要过滤得字符串
-
+	 * 
 	 * @return String 过滤后的字符串，即把null字符串处理
-
-
-		 */
+	 */
 	public static String filterNull(String str1) {
 		if (isNull(str1)) {
 			return "";
-		}
-		else {
+		} else {
 			return str1;
 		}
 	}
@@ -230,7 +227,7 @@ public class StringUtil {
 	 * 
 	 * @param str1
 	 *            String 原字符符串
-
+	 * 
 	 * @param n
 	 *            int 需要截取的字符数量
 	 * @return String 截取之后的字符串
@@ -242,8 +239,7 @@ public class StringUtil {
 			if (str1.length() > n) {
 				// 当长度>n时进行处理
 				retString = str1.substring(0, n);
-			}
-			else {
+			} else {
 				// 长度不够n，返回全部字符
 				retString = str1;
 			}
@@ -256,7 +252,7 @@ public class StringUtil {
 	 * 
 	 * @param str1
 	 *            String 原字符符串
-
+	 * 
 	 * @param n
 	 *            int 需要截取的字符数量
 	 * @return String 截取之后的字符串
@@ -268,8 +264,7 @@ public class StringUtil {
 			if (str1.length() > n) {
 				// 当长度>n时进行处理
 				retString = str1.substring(str1.length() - n);
-			}
-			else {
+			} else {
 				// 长度不够n，返回全部字符
 				retString = str1;
 			}
@@ -282,10 +277,10 @@ public class StringUtil {
 	 * 
 	 * @param c
 	 *            char 填充的字符
-
+	 * 
 	 * @param len
 	 *            int 字符串长度
-
+	 * 
 	 * @return String 失败返回""
 	 */
 	public static String fillString(char c, int len) {
@@ -306,7 +301,7 @@ public class StringUtil {
 	 *            char 前补字符
 	 * @param newLen
 	 *            int 格式化后的字符
-
+	 * 
 	 * @return String 失败返回""
 	 */
 	public static String formatString(String oldStr, char preChar, int newLen) {
@@ -320,7 +315,7 @@ public class StringUtil {
 
 	/**
 	 * 用指定格式,格式化当前日期,以字符串的形式返回
-
+	 * 
 	 * 
 	 * @param date
 	 * @param pattern
@@ -338,8 +333,7 @@ public class StringUtil {
 				// 格式化日期工具类
 				DateFormat df = new SimpleDateFormat(pattern);
 				formatString = df.format(date);
-			}
-			catch (Throwable t) {
+			} catch (Throwable t) {
 				// pattern不符合规定
 				logger.error("pattern of format date is invalid", t);
 			}
@@ -448,7 +442,7 @@ public class StringUtil {
 
 	/**
 	 * 过虑字符串，只保留字母和数字,且将小写字母转换为大写
-
+	 * 
 	 * 
 	 * @param str
 	 * @return String
@@ -495,7 +489,7 @@ public class StringUtil {
 
 	/**
 	 * 取代字符串的汉字自造字 当汉字为自造字时，该汉字用全角?来表示
-
+	 * 
 	 * 
 	 * @param str
 	 * @return String
@@ -514,11 +508,11 @@ public class StringUtil {
 				int t2 = tmp[1] & 0xFF;
 				if ((t1 >= 0xAA && t1 <= 0xAF) && (t2 >= 0xA1 && t2 <= 0xFE)) {
 					selfMade = true;
-				}
-				else if ((t1 >= 0xF8 && t1 <= 0xFE) && (t2 >= 0xA1 && t2 <= 0xFE)) {
+				} else if ((t1 >= 0xF8 && t1 <= 0xFE)
+						&& (t2 >= 0xA1 && t2 <= 0xFE)) {
 					selfMade = true;
-				}
-				else if ((t1 >= 0xA1 && t1 <= 0xA7) && (t2 >= 0x40 && t2 <= 0xA0) && (t2 != 0x7F)) {
+				} else if ((t1 >= 0xA1 && t1 <= 0xA7)
+						&& (t2 >= 0x40 && t2 <= 0xA0) && (t2 != 0x7F)) {
 					selfMade = true;
 				}
 				if (selfMade) {
@@ -542,11 +536,9 @@ public class StringUtil {
 		int oldLen = oldStr.length();
 		if (type == 1 && oldLen <= newLen) {
 			retString = oldStr + "000000";
-		}
-		else if (type == 2 && oldLen <= newLen) {
+		} else if (type == 2 && oldLen <= newLen) {
 			retString = oldStr + "235959";
-		}
-		else {
+		} else {
 			retString = oldStr;
 		}
 		return retString;
@@ -564,8 +556,7 @@ public class StringUtil {
 		try {
 			double temp = Double.parseDouble(value);
 			result = new Double(temp);
-		}
-		catch (NumberFormatException e) {
+		} catch (NumberFormatException e) {
 			logger.debug("double parse execption!");
 		}
 		return result;
@@ -583,8 +574,7 @@ public class StringUtil {
 		try {
 			int temp = Integer.parseInt(value);
 			result = new Integer(temp);
-		}
-		catch (NumberFormatException e) {
+		} catch (NumberFormatException e) {
 			logger.debug("double parse execption!");
 		}
 		return result;
@@ -596,8 +586,7 @@ public class StringUtil {
 	public static String hashMD5(String inputStr) {
 		if (inputStr == null || inputStr.length() == 0) {
 			return "00000000000000000000000000000000";
-		}
-		else {
+		} else {
 			StringBuffer str = new StringBuffer();
 			// try
 			// {
@@ -637,11 +626,11 @@ public class StringUtil {
 						if ((hcode[i] & 0xFF) < 0x10) {
 							str.append(0);
 						}
-						str.append(Integer.toHexString(hcode[i] & 0xFF).toUpperCase());
+						str.append(Integer.toHexString(hcode[i] & 0xFF)
+								.toUpperCase());
 					}
 				}
-			}
-			catch (NoSuchAlgorithmException e) {
+			} catch (NoSuchAlgorithmException e) {
 				logger.error("no 'MD5' algorithm.", e);
 				str.append(System.identityHashCode(inputStr));
 			}
@@ -651,7 +640,6 @@ public class StringUtil {
 
 	/**
 	 * 将年龄段转换成起始年限
-
 	 */
 	public static String getFirstYear(String age) {
 		String a1 = null;
@@ -664,8 +652,7 @@ public class StringUtil {
 			String year = StringUtil.getDateString(new Date(), pattern);
 			int year1 = Integer.parseInt(year);
 			a1 = (year1 - fir1 + 1) + "0000";
-		}
-		catch (NumberFormatException e) {
+		} catch (NumberFormatException e) {
 			logger.debug("first year execption!");
 		}
 		return a1;
@@ -673,7 +660,6 @@ public class StringUtil {
 
 	/**
 	 * 将年龄段转换成截止年限
-
 	 */
 	public static String getLastYear(String age) {
 		String a1 = null;
@@ -684,8 +670,7 @@ public class StringUtil {
 			String year = StringUtil.getDateString(new Date(), pattern);
 			int year1 = Integer.parseInt(year);
 			a1 = (year1 - las1) + "0000";
-		}
-		catch (NumberFormatException e) {
+		} catch (NumberFormatException e) {
 			logger.debug("last year execption!");
 		}
 		return a1;
@@ -693,7 +678,7 @@ public class StringUtil {
 
 	/**
 	 * 字符串的中英文判断
-
+	 * 
 	 * 
 	 */
 	public static int judgeCE(String name) {
@@ -703,15 +688,12 @@ public class StringUtil {
 			char a1 = a.charAt(0);
 			if (a1 >= 65 && a1 <= 90) {
 				result = 0;
-			}
-			else if (a1 >= 97 && a1 <= 122) {
+			} else if (a1 >= 97 && a1 <= 122) {
 				result = 0;
-			}
-			else {
+			} else {
 				result = 1;
 			}
-		}
-		catch (NumberFormatException e) {
+		} catch (NumberFormatException e) {
 			logger.debug("charAt parse execption!");
 		}
 		return result;
@@ -736,14 +718,12 @@ public class StringUtil {
 						temp = filterSelfMadeCHChar(mark);
 						name2.append(temp);
 					}
-				}
-				else {
+				} else {
 					name2.append(String.valueOf(name1[i]));
 				}
 			}
 			a1 = name2.toString();
-		}
-		catch (NumberFormatException e) {
+		} catch (NumberFormatException e) {
 			logger.debug("last year execption!");
 		}
 		return a1;
@@ -754,10 +734,10 @@ public class StringUtil {
 	 * 
 	 * @param c
 	 *            char 填充的字符
-
+	 * 
 	 * @param len
 	 *            int 字符串长度
-
+	 * 
 	 * @return String 失败返回""
 	 */
 	public static String fillStringLeft(String str) {
@@ -775,7 +755,7 @@ public class StringUtil {
 
 	/**
 	 * 过滤所有非字母的字符，只保留数字
-
+	 * 
 	 * 
 	 * @param str
 	 * @return String
@@ -802,8 +782,7 @@ public class StringUtil {
 		}
 		try {
 			Integer.parseInt(number.trim());
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			flag = false;
 			return flag;
 		}
@@ -812,7 +791,7 @@ public class StringUtil {
 
 	/**
 	 * 获取字符串的长度，汉字算2个
-
+	 * 
 	 * @author 张加宁
 	 * @return 返回数值，如果为空或null，返回0
 	 */
@@ -823,15 +802,15 @@ public class StringUtil {
 		try {
 			str = new String(str.getBytes("gb2312"), "iso-8859-1");
 			return str.length();
-		}
-		catch (UnsupportedEncodingException e) {
+		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
 		return 0;
 	}
 
 	/**
-	 *  获取字符串的长度，汉字算3个
+	 * 获取字符串的长度，汉字算3个
+	 * 
 	 * @param str
 	 * @return int
 	 * @author 张加宁
@@ -843,8 +822,7 @@ public class StringUtil {
 		try {
 			str = new String(str.getBytes("gb2312"), "iso-8859-1");
 			return str.length();
-		}
-		catch (UnsupportedEncodingException e) {
+		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
 		return 0;
@@ -852,8 +830,9 @@ public class StringUtil {
 
 	/**
 	 * 过滤字符串中的特殊字符
-
-	 * @param str 待过滤的字符串，rule 自定义的规则
+	 * 
+	 * @param str
+	 *            待过滤的字符串，rule 自定义的规则
 	 * @author 张加宁
 	 * @return 返回过滤后的字符串，如果为空或null，返回"",异常返回null
 	 */
@@ -875,8 +854,7 @@ public class StringUtil {
 				}
 			}
 			return b.toString();
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;
@@ -884,6 +862,7 @@ public class StringUtil {
 
 	/**
 	 * 判断字符串的内容是否是整形
+	 * 
 	 * @param str
 	 * @return boolean
 	 * @author 张加宁
@@ -895,59 +874,62 @@ public class StringUtil {
 		return mat.find();
 	}
 
-	/** 
+	/**
 	 * 功能：验证字符串长度是否符合要求，一个汉字等于三个字符
-	 * @param strParameter 要验证的字符串
-	 * @param limitLength 验证的长度
+	 * 
+	 * @param strParameter
+	 *            要验证的字符串
+	 * @param limitLength
+	 *            验证的长度
 	 * @return 符合长度ture 超出范围false
 	 */
-	public static boolean validateStrByLength(String strParameter, int limitLength) {
+	public static boolean validateStrByLength(String strParameter,
+			int limitLength) {
 		int temp_int = 0;
 		byte[] b = strParameter.getBytes();
 		for (int i = 0; i < b.length; i++) {
 			if (b[i] >= 0) {
 				temp_int = temp_int + 1;
-			}
-			else {
+			} else {
 				temp_int = temp_int + 3;
 				i++;
 			}
 		}
 		if (temp_int > limitLength) {
 			return false;
-		}
-		else {
+		} else {
 			return true;
 		}
 	}
 
 	/**
 	 * 判断str是否在数组strArr中
+	 * 
 	 * @param str
 	 * @param strArr
-	 * @return
-	 * 2011-6-16 下午01:53:11
-	 * 作者：夏明涛
+	 * @return 2011-6-16 下午01:53:11 作者：夏明涛
 	 */
-	public static boolean inStringArr(String str,String[] strArr){
-		if(str==null||strArr==null){
+	public static boolean inStringArr(String str, String[] strArr) {
+		if (str == null || strArr == null) {
 			return false;
 		}
-		for(String strInArr:strArr){
-			if(str.equals(strInArr)){
+		for (String strInArr : strArr) {
+			if (str.equals(strInArr)) {
 				return true;
 			}
 		}
 		return false;
 	}
+
 	/**
 	 * 过滤单引号字符
+	 * 
 	 * @param str
 	 * @return String
 	 * @author 张加宁
 	 * @date 2012-9-19 下午02:42:59
 	 */
-	public static String escapeString(String str){
+	public static String escapeString(String str) {
 		try {
 			return str.replaceAll("'", "''");
 		} catch (Exception e) {
@@ -955,26 +937,26 @@ public class StringUtil {
 			return str;
 		}
 	}
+
 	public static void main(String args[]) throws SQLException {
-		System.out.println(StringUtil.encodingUrl("德特乐福斯旅行车有限公司(Dethleffs GmbH)"));
-		System.out.println(1/3+1);
-		System.out.println(6%3);
+		System.out.println(StringUtil
+				.encodingUrl("德特乐福斯旅行车有限公司(Dethleffs GmbH)"));
+		System.out.println(1 / 3 + 1);
+		System.out.println(6 % 3);
 	}
-	
+
 	/**
-	 * @author 张加宁
-	 * 单词首字母小写
+	 * @author 张加宁 单词首字母小写
 	 */
-	public static String toFirstLow(String str){
-		return str.substring(0,1).toLowerCase()+str.substring(1); 
+	public static String toFirstLow(String str) {
+		return str.substring(0, 1).toLowerCase() + str.substring(1);
 	}
-	
+
 	/**
-	 * @author 张加宁
-	 * 单词首字母大写
+	 * @author 张加宁 单词首字母大写
 	 */
-	public static String toFirstUp(String str){
-		return str.substring(0,1).toUpperCase()+str.substring(1); 
+	public static String toFirstUp(String str) {
+		return str.substring(0, 1).toUpperCase() + str.substring(1);
 	}
- 
+
 }
