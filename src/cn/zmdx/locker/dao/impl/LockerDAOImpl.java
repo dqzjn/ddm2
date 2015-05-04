@@ -274,7 +274,7 @@ public class LockerDAOImpl extends ParentDAOImpl implements LockerDAO {
 			StringBuffer data_img_sql = new StringBuffer();
 			StringBuffer img_sql = new StringBuffer();
 			StringBuffer data_tag_sql = new StringBuffer();
-			sql.append("insert into data_img_table(id,title,url,imgUrl,data_type,collect_time,collect_website,type,top,views,data_view) values");
+			sql.append("insert into data_img_table(id,title,url,imgUrl,data_type,collect_time,collect_website,type,top,views,data_view,stick) values");
 			data_img_sql
 					.append("insert into data_img(id,img_id,data_id) values");
 			img_sql.append("insert into img(id,imageUrl,content) values");
