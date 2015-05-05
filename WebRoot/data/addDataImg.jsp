@@ -495,10 +495,12 @@ html {
 						<td align="left"><input type="file" id="image"
 							name="image" value="${image}" onchange="uploadImg()" />
 						</td>
-						<td align="right">是否置顶：</td>
-						<td align="left">
-							<input type="radio" id="stick"	name="stick" value="1" style="width: 20px;" />是<input type="radio" id="stick" name="stick" value="0" style="width: 20px;" checked="checked" />否
-						</td>
+						<c:if test="${sessionScope.USER_ORG=='0'}">
+							<td align="right">是否置顶：</td>
+							<td align="left">
+								<input type="radio" id="stick"	name="stick" value="1" style="width: 20px;" />是<input type="radio" id="stick" name="stick" value="0" style="width: 20px;" checked="checked" />否
+							</td>
+						</c:if>
 					</tr>
 					<tr>
 						<td colspan="4">

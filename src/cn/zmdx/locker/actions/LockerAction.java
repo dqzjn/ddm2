@@ -581,7 +581,11 @@ public class LockerAction extends ActionSupport {
 				int views = top + (int) Math.round(Math.random() * 1100 + 555);
 				dataImgTable.setViews(views);
 				dataImgTable.setTop(top);
-				dataImgTable.setStick(stick);
+				if("".equals(stick)||stick==null){
+					dataImgTable.setStick("0");
+				}else{
+					dataImgTable.setStick(stick);
+				}
 				String id = lockerService.save(dataImgTable);
 				// 添加标签
 				for (String ck : checks) {
@@ -678,6 +682,9 @@ public class LockerAction extends ActionSupport {
 					"content1"));
 			String stick = ServletActionContext.getRequest().getParameter(
 					"stick");
+			if("".equals(stick)||stick==null){
+				stick="0";
+			}
 			try {
 				if (null == dataImgId || "".equals(dataImgId)
 						|| "0".equals(dataImgId)) {
@@ -1306,6 +1313,9 @@ public class LockerAction extends ActionSupport {
 			// || "".equals(dataImgTable.getData_type())) {
 			// dataImgTable.setData_type("singleImg");
 			// }
+			if("".equals(stick)||stick==null){
+				stick=dit.getStick();
+			}
 			// 添加标签
 			for (String ck : checks) {
 				Data_tag dt = new Data_tag();
