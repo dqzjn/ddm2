@@ -104,14 +104,14 @@ body {
 				return false;
 			}
 			var d=/\.[^\.]+$/.exec($("#imgName").val())+'';
-			if (d.toLowerCase() != ".jpg"&&d.toLowerCase() != ".png") {
-				alert("上传图片格式不支持!");
+			if (d.toLowerCase() != ".jpg"&&d.toLowerCase() != ".jpeg") {
+				alert("上传图片格式不支持，只支持JPG、JPEG格式!");
 				return false;
 			}
 		}else{
 			var d=/\.[^\.]+$/.exec($("#imgName").val())+'';
-			if ($.trim($("#imgName").val()) != ""&&d.toLowerCase() != ".jpg"&&d.toLowerCase() != ".png") {
-				alert("上传图片格式不支持!");
+			if ($.trim($("#imgName").val()) != ""&&d.toLowerCase() != ".jpg"&&d.toLowerCase() != ".jpeg") {
+				alert("上传图片格式不支持，只支持JPG、JPEG格式!");
 				return false;
 			}
 		}
