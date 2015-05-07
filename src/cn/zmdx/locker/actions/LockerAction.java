@@ -1254,9 +1254,9 @@ public class LockerAction extends ActionSupport {
 		System.out.println(files3);
 		System.out.println(msg3);
 		//压缩 1080*850 缩略图
-		BufferedImage inputbig4 = new BufferedImage(1080/3, 850/3,BufferedImage.TYPE_INT_RGB);
-	    inputbig4.getGraphics().drawImage(jgp, 0, 0, 1080/3, 850/3, null); //画图
-	    ByteArrayOutputStream os4 = new ByteArrayOutputStream();  
+		BufferedImage inputbig4 = new BufferedImage(470,370 ,BufferedImage.TYPE_INT_RGB);
+	    inputbig4.getGraphics().drawImage(jgp, 0, 0, 470,370, null); //画图
+	    ByteArrayOutputStream os4 = new ByteArrayOutputStream();
 		ImageIO.write(inputbig4, "jpg", os4);
 		Message msg4 = new Message();
 		// System.out.println("----------------------uploadFileContent----------------------\n");
