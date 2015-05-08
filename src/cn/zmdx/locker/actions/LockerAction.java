@@ -1221,8 +1221,8 @@ public class LockerAction extends ActionSupport {
 		System.out.println(msg1);
 		
 		//压缩 1620*1280 缩略图
-		BufferedImage inputbig2 = new BufferedImage(1620/3, 1280/3,BufferedImage.TYPE_INT_RGB);
-	    inputbig2.getGraphics().drawImage(jgp, 0, 0, 1620/3, 1280/3, null); //画图
+		BufferedImage inputbig2 = new BufferedImage(704, 556,BufferedImage.TYPE_INT_RGB);
+	    inputbig2.getGraphics().drawImage(jgp, 0, 0, 704, 556, null); //画图
 	    ByteArrayOutputStream os2 = new ByteArrayOutputStream();  
 		ImageIO.write(inputbig2, "jpg", os2);
 		Message msg2 = new Message();
