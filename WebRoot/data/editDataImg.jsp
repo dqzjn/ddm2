@@ -484,7 +484,7 @@ html {
 							<c:if test="${sessionScope.USER_ORG=='0'}">
 								<td align="right">是否置顶：</td>
 								<td align="left">
-									<input type="radio" id="stick"	name="stick" value="1" style="width: 20px;" />是<input type="radio" id="stick" name="stick" value="0" style="width: 20px;" checked="checked" />否
+									<input type="radio" id="stick"	name="stick" value="1" style="width: 20px;" <c:if test="${dataImgTable.stick=='1'}">checked="checked"</c:if> />是<input type="radio" id="stick" name="stick" value="0" style="width: 20px;" <c:if test="${dataImgTable.stick=='0'}">checked="checked"</c:if> />否
 								</td>
 							</c:if>
 						</tr>
