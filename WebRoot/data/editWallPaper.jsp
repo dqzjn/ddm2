@@ -46,6 +46,12 @@ body {
 						alert("保存成功");
 						window.returnValue = data;
 						window.close();
+	    	      }else if(data.result=='illegal width'){
+	    	    	  $("#submitBtn").attr("disabled", false);  
+	  	    		  $("#saveInsert").attr("disabled", false);  
+	  	    		  $("#exit").attr("disabled", false);  
+	    	    	  window.returnValue = "error";
+	    	    	  alert("仅支持宽度为2000的图片！");
 	    	      }else{
 	    	      	window.returnValue = "error";
 	    	    	  alert("保存失败");
@@ -59,6 +65,12 @@ body {
 						alert("保存并插入成功!");
 						window.returnValue = data;
 						window.close();
+	    	      }else if(data.result=='illegal width'){
+	    	    	  $("#submitBtn").attr("disabled", false);  
+	  	    		  $("#saveInsert").attr("disabled", false);  
+	  	    		  $("#exit").attr("disabled", false);  
+	    	    	  window.returnValue = "error";
+	    	    	  alert("仅支持宽度为2000的图片！");
 	    	      }else{
 	    	      	window.returnValue = "error";
 	    	    	  alert("保存插入失败!");
