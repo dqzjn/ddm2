@@ -51,7 +51,7 @@ body {
 	  	    		  $("#saveInsert").attr("disabled", false);  
 	  	    		  $("#exit").attr("disabled", false);  
 	    	    	  window.returnValue = "error";
-	    	    	  alert("仅支持宽度为2000的图片！");
+	    	    	  alert("仅支持宽度大于2000的图片！");
 	    	      }else{
 	    	      	window.returnValue = "error";
 	    	    	  alert("保存失败");
@@ -70,7 +70,7 @@ body {
 	  	    		  $("#saveInsert").attr("disabled", false);  
 	  	    		  $("#exit").attr("disabled", false);  
 	    	    	  window.returnValue = "error";
-	    	    	  alert("仅支持宽度为2000的图片！");
+	    	    	  alert("仅支持宽度大于2000的图片！");
 	    	      }else{
 	    	      	window.returnValue = "error";
 	    	    	  alert("保存插入失败!");

@@ -1164,7 +1164,7 @@ public class LockerAction extends ActionSupport {
 	 */
 	public String uploadWallPaper() throws Exception {
 		BufferedImage jgp = ImageIO.read(new FileInputStream(image[0]));
-		if(jgp.getWidth()==2000){
+		if(jgp.getWidth()>=2000){
 			// 用户定义变量
 			int accessId = 11000436; // accessId
 			String accessKey = "7OgnLklEIptHNwZCS0RDNk1rUXrxXJfP"; // accessKey
@@ -1189,108 +1189,112 @@ public class LockerAction extends ActionSupport {
 	
 			String fileName = uploadImg + imgType;
 			float rate;
-			//上传 2000*1920原图
-			// 返回消息体, 包含错误码和错误消息
-			Message msg = new Message();
-			// System.out.println("----------------------uploadFileContent----------------------\n");
-			Map<String, Object> inParams = new HashMap<String, Object>();
-			// inParams.put("bucketId", bucketId);
-			inParams.put("compressBucketId", bucketId);
-			inParams.put("compressFilePath", "/image/" + fileName);
-			// inParams.put("compress", 0);
-			Map<String, CosFile> files = new HashMap<String, CosFile>();
-			files.put("compressFile", new CosFile());
-			cos.uploadFileContentWithCompress(inParams,
-					FileUtils.readFileToByteArray(image[0]), files, msg);
-			System.out.println(files);
-			System.out.println(msg);
-			//生成 2000*1920 缩略图
-			rate=(float)2000/(float)900;
-			BufferedImage inputbig0 = new BufferedImage(900, (int)(1920/rate),BufferedImage.TYPE_INT_RGB);
-		    inputbig0.getGraphics().drawImage(jgp, 0, 0, 900, (int)(1920/rate), null); //画图
-		    ByteArrayOutputStream os0 = new ByteArrayOutputStream();  
-			ImageIO.write(inputbig0, "jpg", os0);
-			Message msg0 = new Message();
-			// System.out.println("----------------------uploadFileContent----------------------\n");
-			Map<String, Object> inParams0 = new HashMap<String, Object>();
-			inParams0.put("compressBucketId", bucketId);
-			inParams0.put("compressFilePath", "/thumb/" + fileName);
-			Map<String, CosFile> files0 = new HashMap<String, CosFile>();
-			files0.put("compressFile", new CosFile());
-			cos.uploadFileContentWithCompress(inParams0,
-					os0.toByteArray(), files0, msg0);
-			System.out.println(files0);
-			System.out.println(msg0);
-			
-			//生成 h1280 原图
-			rate=(float)1920/(float)1280;
-			BufferedImage inputbig1 = new BufferedImage((int)(2000/rate), 1280,BufferedImage.TYPE_INT_RGB);
-		    inputbig1.getGraphics().drawImage(jgp, 0, 0, (int)(2000/rate), 1280, null); //画图
-		    ByteArrayOutputStream os1 = new ByteArrayOutputStream();  
-			ImageIO.write(inputbig1, "jpg", os1);
-			Message msg1 = new Message();
-			// System.out.println("----------------------uploadFileContent----------------------\n");
-			Map<String, Object> inParams1 = new HashMap<String, Object>();
-			inParams1.put("compressBucketId", bucketId);
-			inParams1.put("compressFilePath", "/h/" + fileName);
-			Map<String, CosFile> files1 = new HashMap<String, CosFile>();
-			files1.put("compressFile", new CosFile());
-			cos.uploadFileContentWithCompress(inParams1,
-					os1.toByteArray(), files1, msg1);
-			System.out.println(files1);
-			System.out.println(msg1);
-			//生成 h1280 缩略图 w700
-			rate=(float)2000/rate/(float)700;
-			BufferedImage inputbig2 = new BufferedImage(700, (int)(1280/rate),BufferedImage.TYPE_INT_RGB);
-		    inputbig2.getGraphics().drawImage(jgp, 0, 0, 700, (int)(1280/rate), null); //画图
-		    ByteArrayOutputStream os2 = new ByteArrayOutputStream();  
-			ImageIO.write(inputbig2, "jpg", os2);
-			Message msg2 = new Message();
-			// System.out.println("----------------------uploadFileContent----------------------\n");
-			Map<String, Object> inParams2 = new HashMap<String, Object>();
-			inParams2.put("compressBucketId", bucketId);
-			inParams2.put("compressFilePath", "/h_thumb/" + fileName);
-			Map<String, CosFile> files2 = new HashMap<String, CosFile>();
-			files2.put("compressFile", new CosFile());
-			cos.uploadFileContentWithCompress(inParams2,
-					os2.toByteArray(), files2, msg2);
-			System.out.println(files2);
-			System.out.println(msg2);
-	
-			//生成 h850 原图
-			rate=(float)1920/(float)850;
-			BufferedImage inputbig3 = new BufferedImage((int)(2000/rate), 850,BufferedImage.TYPE_INT_RGB);
-		    inputbig3.getGraphics().drawImage(jgp, 0, 0, (int)(2000/rate), 850, null); //画图
-		    ByteArrayOutputStream os3 = new ByteArrayOutputStream();  
-			ImageIO.write(inputbig3, "jpg", os3);
-			Message msg3 = new Message();
-			// System.out.println("----------------------uploadFileContent----------------------\n");
-			Map<String, Object> inParams3 = new HashMap<String, Object>();
-			inParams3.put("compressBucketId", bucketId);
-			inParams3.put("compressFilePath", "/m/" + fileName);
-			Map<String, CosFile> files3 = new HashMap<String, CosFile>();
-			files3.put("compressFile", new CosFile());
-			cos.uploadFileContentWithCompress(inParams3,
-					os3.toByteArray(), files3, msg3);
-			System.out.println(files3);
-			System.out.println(msg3);
-			//生成 h850 缩略图 w460
-			rate=(float)2000/rate/(float)460;
-			BufferedImage inputbig4 = new BufferedImage(460, (int)(850/rate),BufferedImage.TYPE_INT_RGB);
-		    inputbig4.getGraphics().drawImage(jgp, 0, 0, 460, (int)(850/rate), null); //画图
-		    ByteArrayOutputStream os4 = new ByteArrayOutputStream();  
-			ImageIO.write(inputbig4, "jpg", os4);
-			Message msg4 = new Message();
-			// System.out.println("----------------------uploadFileContent----------------------\n");
-			Map<String, Object> inParams4 = new HashMap<String, Object>();
-			inParams4.put("compressBucketId", bucketId);
-			inParams4.put("compressFilePath", "/m_thumb/" + fileName);
-			Map<String, CosFile> files4 = new HashMap<String, CosFile>();
-			files4.put("compressFile", new CosFile());
-			cos.uploadFileContentWithCompress(inParams4,
-					os4.toByteArray(), files4, msg4);
-			System.out.println(files4);
-			System.out.println(msg4);
+			int height=jgp.getHeight();
+			int width=jgp.getWidth();
+			int minusWidth=(jgp.getWidth()-2000)/2;
+    		//上传 xh 分辨率 原图
+    		BufferedImage inputbig = new BufferedImage(2000,height,BufferedImage.TYPE_INT_RGB);
+    	    inputbig.getGraphics().drawImage(jgp,0,0, 2000, height, minusWidth,0,width-minusWidth,height, null); //画图
+    	    ByteArrayOutputStream os = new ByteArrayOutputStream();
+    		ImageIO.write(inputbig, "jpg", os);
+    		Message msg = new Message();
+    		// System.out.println("----------------------uploadFileContent----------------------\n");
+    		Map<String, Object> inParams = new HashMap<String, Object>();
+    		inParams.put("compressBucketId", bucketId);
+    		inParams.put("compressFilePath", "/image/" + fileName);
+    		Map<String, CosFile> files = new HashMap<String, CosFile>();
+    		files.put("compressFile", new CosFile());
+    		cos.uploadFileContentWithCompress(inParams,
+    				os.toByteArray(), files, msg);
+    		System.out.println(files);
+    		System.out.println(msg);
+    		//生成 xh 分辨率 缩略图
+    		rate=(float)2000/(float)900;
+    		BufferedImage inputbig0 = new BufferedImage(900, (int)(height/rate),BufferedImage.TYPE_INT_RGB);
+    	    inputbig0.getGraphics().drawImage(jgp, 0, 0, 900, (int)(height/rate), null); //画图
+    	    ByteArrayOutputStream os0 = new ByteArrayOutputStream();  
+    		ImageIO.write(inputbig0, "jpg", os0);
+    		Message msg0 = new Message();
+    		// System.out.println("----------------------uploadFileContent----------------------\n");
+    		Map<String, Object> inParams0 = new HashMap<String, Object>();
+    		inParams0.put("compressBucketId", bucketId);
+    		inParams0.put("compressFilePath", "/thumb/" + fileName);
+    		Map<String, CosFile> files0 = new HashMap<String, CosFile>();
+    		files0.put("compressFile", new CosFile());
+    		cos.uploadFileContentWithCompress(inParams0,
+    				os0.toByteArray(), files0, msg0);
+    		System.out.println(files0);
+    		System.out.println(msg0);
+
+    		//生成 h 分辨率 原图
+    		rate=(float)1920/(float)1280;
+    		BufferedImage inputbig1 = new BufferedImage((int)(2000/rate), 1280,BufferedImage.TYPE_INT_RGB);
+    	    inputbig1.getGraphics().drawImage(jgp, 0, 0, (int)(2000/rate), 1280, null); //画图
+    	    ByteArrayOutputStream os1 = new ByteArrayOutputStream();  
+    		ImageIO.write(inputbig1, "jpg", os1);
+    		Message msg1 = new Message();
+    		// System.out.println("----------------------uploadFileContent----------------------\n");
+    		Map<String, Object> inParams1 = new HashMap<String, Object>();
+    		inParams1.put("compressBucketId", bucketId);
+    		inParams1.put("compressFilePath", "/h/" + fileName);
+    		Map<String, CosFile> files1 = new HashMap<String, CosFile>();
+    		files1.put("compressFile", new CosFile());
+    		cos.uploadFileContentWithCompress(inParams1,
+    				os1.toByteArray(), files1, msg1);
+    		System.out.println(files1);
+    		System.out.println(msg1);
+    		//压缩 h 分辨率 缩略图
+    		rate=(float)2000/rate/(float)700;
+    		BufferedImage inputbig2 = new BufferedImage(700, (int)(1280/rate),BufferedImage.TYPE_INT_RGB);
+    	    inputbig2.getGraphics().drawImage(jgp, 0, 0, 700, (int)(1280/rate), null); //画图
+    	    ByteArrayOutputStream os2 = new ByteArrayOutputStream();  
+    		ImageIO.write(inputbig2, "jpg", os2);
+    		Message msg2 = new Message();
+    		// System.out.println("----------------------uploadFileContent----------------------\n");
+    		Map<String, Object> inParams2 = new HashMap<String, Object>();
+    		inParams2.put("compressBucketId", bucketId);
+    		inParams2.put("compressFilePath", "/h_thumb/" + fileName);
+    		Map<String, CosFile> files2 = new HashMap<String, CosFile>();
+    		files2.put("compressFile", new CosFile());
+    		cos.uploadFileContentWithCompress(inParams2,
+    				os2.toByteArray(), files2, msg2);
+    		System.out.println(files2);
+    		System.out.println(msg2);
+    		
+    		//生成 m 小分辨率 原图
+    		rate=(float)1920/(float)850;
+    		BufferedImage inputbig3 = new BufferedImage((int)(2000/rate), 850,BufferedImage.TYPE_INT_RGB);
+    	    inputbig3.getGraphics().drawImage(jgp, 0, 0, (int)(2000/rate), 850, null); //画图
+    	    ByteArrayOutputStream os3 = new ByteArrayOutputStream();  
+    		ImageIO.write(inputbig3, "jpg", os3);
+    		Message msg3 = new Message();
+    		// System.out.println("----------------------uploadFileContent----------------------\n");
+    		Map<String, Object> inParams3 = new HashMap<String, Object>();
+    		inParams3.put("compressBucketId", bucketId);
+    		inParams3.put("compressFilePath", "/m/" + fileName);
+    		Map<String, CosFile> files3 = new HashMap<String, CosFile>();
+    		files3.put("compressFile", new CosFile());
+    		cos.uploadFileContentWithCompress(inParams3,
+    				os3.toByteArray(), files3, msg3);
+    		System.out.println(files3);
+    		System.out.println(msg3);
+    		//生成 m 小分辨率 缩略图
+    		rate=(float)2000/rate/(float)460;
+    		BufferedImage inputbig4 = new BufferedImage(460, (int)(850/rate),BufferedImage.TYPE_INT_RGB);
+    	    inputbig4.getGraphics().drawImage(jgp, 0, 0, 460, (int)(850/rate), null); //画图
+    	    ByteArrayOutputStream os4 = new ByteArrayOutputStream();  
+    		ImageIO.write(inputbig4, "jpg", os4);
+    		Message msg4 = new Message();
+    		// System.out.println("----------------------uploadFileContent----------------------\n");
+    		Map<String, Object> inParams4 = new HashMap<String, Object>();
+    		inParams4.put("compressBucketId", bucketId);
+    		inParams4.put("compressFilePath", "/m_thumb/" + fileName);
+    		Map<String, CosFile> files4 = new HashMap<String, CosFile>();
+    		files4.put("compressFile", new CosFile());
+    		cos.uploadFileContentWithCompress(inParams4,
+    				os4.toByteArray(), files4, msg4);
+    		System.out.println(files4);
+    		System.out.println(msg4);
 					
 			return fileName;
 		}else{
