@@ -72,18 +72,23 @@ body {
 			var ifm= document.getElementById("mainframe"); 
 			var subWeb = document.frames ? document.frames["mainframe"].document : ifm.contentDocument; 
 			if(ifm != null && subWeb != null) { 
-				ifm.height = subWeb.body.scrollHeight; 
+				//ifm.height = subWeb.body.scrollHeight; 
 			} 
 		} 
 	function li(id){
-		if(id=='id1')
-			document.getElementById("mainframe").src = '<%=request.getContextPath()%>/data/dataList.jsp'
-		else if(id=='id2')
-			document.getElementById("mainframe").src = '<%=request.getContextPath()%>/data/tagList.jsp'
-		else if(id=='id3')
-			document.getElementById("mainframe").src = '<%=request.getContextPath()%>/data/wallPaperList.jsp'
-		else if(id=='id4')
-			document.getElementById("mainframe").src = '<%=request.getContextPath()%>/data/notifyList.jsp'
+		if(id=='id1'){
+			document.getElementById("mainframe").src = '<%=request.getContextPath()%>/data/dataList.jsp';
+		}
+		else if(id=='id2'){
+			document.getElementById("mainframe").src = '<%=request.getContextPath()%>/data/tagList.jsp';
+		}
+		else if(id=='id3'){
+			document.getElementById("mainframe").src = '<%=request.getContextPath()%>/data/wallPaperList.jsp';
+		}
+		else if(id=='id4'){
+			document.getElementById("mainframe").src = '<%=request.getContextPath()%>/data/notifyList.jsp';
+			//document.getElementById("mainframe").scrolling='no';
+		}
 	}
 	function logout(){
 		if(!confirm("是否确认退出 ？")){
@@ -117,7 +122,7 @@ body {
 	</div>
 	<div id="rightside">
 		<div id="contentside">
-			<iframe scrolling="no" src="<%=request.getContextPath()%>/data/dataList.jsp" width="100%" height="600px;" frameborder="0"
+			<iframe scrolling="no" src="<%=request.getContextPath()%>/data/dataList.jsp" width="100%" height="90%" frameborder="0"
 				id="mainframe" onLoad="iFrameHeight()"> </iframe>
 		</div>
 		<div id="contentdetail" style="display: none;"></div>

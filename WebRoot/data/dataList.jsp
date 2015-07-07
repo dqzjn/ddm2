@@ -455,7 +455,7 @@ text-overflow : ellipsis;
 		var row = jQuery("#gridTable").jqGrid('getRowData',ids);//获取选中行.
 		var id = row.ID;//获取选中行的id属性
 		if(row.imgUrl.indexOf("http://")!=-1){
-			OpenWindow('http://nb.hdlocker.com/pandora/locker!viewDataImg.action?id='+id,window.screen.availWidth-10,window.screen.availHeight-30,'newwindow');
+			OpenWindow(row.imgUrl,window.screen.availWidth-10,window.screen.availHeight-30,'newwindow');
 		}else{
 			alert("数据无法查看!");
 			refreshIt();
@@ -574,6 +574,7 @@ text-overflow : ellipsis;
 								<option value="10">科技</option>
 								<option value="11">游戏</option>
 								<option value="12">创业</option>
+								<option value="13">旅行</option>
 						</select>
 						<td>&nbsp;&nbsp;状态：<select id="data_sub" name="data_sub" style="width:150px;">
 								<option value="">全部</option>

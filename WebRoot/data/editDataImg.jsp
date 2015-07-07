@@ -453,6 +453,7 @@ html {
 								<option value="10" <c:if test="${dataImgTable.type=='10'}">selected="selected"</c:if>>科技</option>
 								<option value="11" <c:if test="${dataImgTable.type=='11'}">selected="selected"</c:if>>游戏</option>
 								<option value="12" <c:if test="${dataImgTable.type=='12'}">selected="selected"</c:if>>创业</option>
+								<option value="13" <c:if test="${dataImgTable.type=='13'}">selected="selected"</c:if>>旅行</option>
 						</select>
 						</td>
 						<td align="right">发布时间：</td>
