@@ -1,10 +1,15 @@
 package cn.zmdx.locker.actions;
 
 import java.awt.image.BufferedImage;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.sql.Timestamp;
 import java.util.Date;
@@ -39,6 +44,7 @@ import cn.zmdx.locker.service.impl.LockerServiceImpl;
 import cn.zmdx.locker.util.FileUtil;
 import cn.zmdx.locker.util.MD5;
 import cn.zmdx.locker.util.StringUtil;
+import cn.zmdx.locker.util.newCos.CosCloud;
 
 import com.alibaba.fastjson.JSON;
 import com.opensymphony.xwork2.ActionSupport;
@@ -600,7 +606,7 @@ public class LockerAction extends ActionSupport {
 				}
 				if (image != null && image[0] != null) {// 多图文
 					// 封面图
-					imageName = uploadImg(
+					imageName = newUploadImg(
 							imgNames.substring(0, imgNames.length() - 1),
 							image[0], 0,stick);
 					Img img = new Img();
@@ -613,9 +619,11 @@ public class LockerAction extends ActionSupport {
 					dataImg.setData_id(Integer.parseInt(id));
 					dataImg.setImg_id(Integer.parseInt(img_id));
 					lockerService.save(dataImg);
+//					dataImgTable
+//							.setUrl("http://cos.myqcloud.com/11000436/data/image/"
+//									+ imageName);
 					dataImgTable
-							.setUrl("http://cos.myqcloud.com/11000436/data/image/"
-									+ imageName);
+					.setUrl(imageName);
 					if (content1.startsWith("http")) {
 						dataImgTable.setData_type("html");
 					} else {
@@ -717,7 +725,7 @@ public class LockerAction extends ActionSupport {
 					}
 					if (image != null && image[0] != null) {// 多图文
 						// 封面图
-						imageName = uploadImg(
+						imageName = newUploadImg(
 								imgNames.substring(0, imgNames.length() - 1),
 								image[0], 0,stick);
 						Img img = new Img();
@@ -728,9 +736,11 @@ public class LockerAction extends ActionSupport {
 						dataImg.setData_id(Integer.parseInt(id));
 						dataImg.setImg_id(Integer.parseInt(img_id));
 						lockerService.save(dataImg);
+//						dataImgTable
+//								.setUrl("http://cos.myqcloud.com/11000436/data/image/"
+//										+ imageName);
 						dataImgTable
-								.setUrl("http://cos.myqcloud.com/11000436/data/image/"
-										+ imageName);
+						.setUrl(imageName);
 						if (content1.startsWith("http")) {
 							dataImgTable.setData_type("html");
 						} else {
@@ -1029,17 +1039,22 @@ public class LockerAction extends ActionSupport {
 		try {
 			String imageName = "";
 			if (image[0] != null) {
-				imageName = uploadWallPaper();
+//				imageName = uploadWallPaper();
+				imageName = newUploadWallPaper();
 			}
 			if(!"".equals(imageName)){
 				if (0 == wallPaper.getId()) {
 					if (image[0] != null) {
+//						wallPaper
+//								.setImageURL("http://cos.myqcloud.com/11000436/wallpaper/image/"
+//										+ imageName);
+//						wallPaper
+//								.setThumbURL("http://cos.myqcloud.com/11000436/wallpaper/thumb/"
+//										+ imageName);
 						wallPaper
-								.setImageURL("http://cos.myqcloud.com/11000436/wallpaper/image/"
-										+ imageName);
+						.setImageURL("http://wallpaper-10002468.file.myqcloud.com/image/"+imageName);
 						wallPaper
-								.setThumbURL("http://cos.myqcloud.com/11000436/wallpaper/thumb/"
-										+ imageName);
+						.setThumbURL("http://wallpaper-10002468.file.myqcloud.com/thumb/"+imageName);
 						String imageNAME = imgName.substring(0,
 								imgName.lastIndexOf("."));
 						wallPaper.setImageNAME(imageNAME);
@@ -1055,10 +1070,12 @@ public class LockerAction extends ActionSupport {
 					WallPaper wPaper = (WallPaper) lockerService.getObjectById(
 							WallPaper.class, wallPaper.getId());
 					if (image[0] != null) {
-						wPaper.setImageURL("http://cos.myqcloud.com/11000436/wallpaper/image/"
-								+ imageName);
-						wPaper.setThumbURL("http://cos.myqcloud.com/11000436/wallpaper/thumb/"
-								+ imageName);
+//						wPaper.setImageURL("http://cos.myqcloud.com/11000436/wallpaper/image/"
+//								+ imageName);
+//						wPaper.setThumbURL("http://cos.myqcloud.com/11000436/wallpaper/thumb/"
+//								+ imageName);
+						wPaper.setImageURL("http://wallpaper-10002468.file.myqcloud.com/image/"+imageName);
+						wPaper.setThumbURL("http://wallpaper-10002468.file.myqcloud.com/thumb/"+imageName);
 						wPaper.setImageNAME(imgName);
 						wPaper.setImageEXT(imgName.substring(imgName
 								.lastIndexOf(".")));
@@ -1094,18 +1111,23 @@ public class LockerAction extends ActionSupport {
 		try {
 			String imageName = "";
 			if (image[0] != null) {
-				imageName = uploadWallPaper();
+//				imageName = uploadWallPaper();
+				imageName = newUploadWallPaper();
 			}
 			if(!"".equals(imageName)){
 				int flag = 0;
 				if (0 == wallPaper.getId()) {
 					if (image[0] != null) {
+//						wallPaper
+//								.setImageURL("http://cos.myqcloud.com/11000436/wallpaper/image/"
+//										+ imageName);
+//						wallPaper
+//								.setThumbURL("http://cos.myqcloud.com/11000436/wallpaper/thumb/"
+//										+ imageName);
 						wallPaper
-								.setImageURL("http://cos.myqcloud.com/11000436/wallpaper/image/"
-										+ imageName);
+						.setImageURL("http://wallpaper-10002468.file.myqcloud.com/image/"+imageName);
 						wallPaper
-								.setThumbURL("http://cos.myqcloud.com/11000436/wallpaper/thumb/"
-										+ imageName);
+						.setThumbURL("http://wallpaper-10002468.file.myqcloud.com/thumb/"+imageName);
 						String imageNAME = imgName.substring(0,
 								imgName.lastIndexOf("."));
 						wallPaper.setImageNAME(imageNAME);
@@ -1122,10 +1144,12 @@ public class LockerAction extends ActionSupport {
 					WallPaper wPaper = (WallPaper) lockerService.getObjectById(
 							WallPaper.class, wallPaper.getId());
 					if (image[0] != null) {
-						wPaper.setImageURL("http://cos.myqcloud.com/11000436/wallpaper/image/"
-								+ imageName);
-						wPaper.setThumbURL("http://cos.myqcloud.com/11000436/wallpaper/thumb/"
-								+ imageName);
+//						wPaper.setImageURL("http://cos.myqcloud.com/11000436/wallpaper/image/"
+//								+ imageName);
+//						wPaper.setThumbURL("http://cos.myqcloud.com/11000436/wallpaper/thumb/"
+//								+ imageName);
+						wPaper.setImageURL("http://wallpaper-10002468.file.myqcloud.com/image/"+imageName);
+						wPaper.setThumbURL("http://wallpaper-10002468.file.myqcloud.com/thumb/"+imageName);
 						wPaper.setImageNAME(imgName);
 						wPaper.setImageEXT(imgName.substring(imgName
 								.lastIndexOf(".")));
@@ -1461,11 +1485,12 @@ public class LockerAction extends ActionSupport {
 					lockerService.save(dataImg);
 					if (imgNames != null && !"".equals(imgNames)) {
 						// 封面图
-						imageName = uploadImg(
+						imageName = newUploadImg(
 								imgNames.substring(0, imgNames.length() - 1),
 								image[0], 0,stick);
-						dit.setUrl("http://cos.myqcloud.com/11000436/data/image/"
-								+ imageName);
+//						dit.setUrl("http://cos.myqcloud.com/11000436/data/image/"
+//								+ imageName);
+						dit.setUrl(imageName);
 					}
 					if (content1.startsWith("http")) {
 						dit.setData_type("html");
@@ -1478,7 +1503,7 @@ public class LockerAction extends ActionSupport {
 			} else {// 原单图文
 				if (image != null && image[0] != null) {// 单图文改为多图文
 					// 封面图
-					imageName = uploadImg(
+					imageName = newUploadImg(
 							imgNames.substring(0, imgNames.length() - 1),
 							image[0], 0,stick);
 					Img img = new Img();
@@ -1489,8 +1514,9 @@ public class LockerAction extends ActionSupport {
 					dataImg.setData_id(Integer.parseInt(dataImgId));
 					dataImg.setImg_id(Integer.parseInt(img_id));
 					lockerService.save(dataImg);
-					dit.setUrl("http://cos.myqcloud.com/11000436/data/image/"
-							+ imageName);
+//					dit.setUrl("http://cos.myqcloud.com/11000436/data/image/"
+//							+ imageName);
+					dit.setUrl(imageName);
 					if (content1.startsWith("http")) {
 						dit.setData_type("html");
 					} else {
@@ -1878,5 +1904,162 @@ public class LockerAction extends ActionSupport {
 		}
 		out.flush();
 		out.close();
+	}
+
+	/**
+	 * 新版本cos云上传
+	 * @author louxiaojian
+	 * @date： 日期：2015-8-3 时间：下午12:16:00
+	 * @param imageNameStr
+	 * @param imageFile
+	 * @param type 0封面，1内容
+	 * @param stick 0不置顶，1置顶
+	 * @return
+	 * @throws Exception
+	 */
+	public String newUploadImg(String imageNameStr, File imageFile, int type,String stick)
+			throws Exception {
+		// 用户定义变量
+		int APP_ID = 10002468;
+		String SECRET_ID = "AKIDo26nbKDLWZA6xpPXzRUaYVPgf5wqqlp6";
+		String SECRET_KEY = "upfmsUJgzOitvj0pCzSy4tV9ihdGeZMV";
+		String bucketName = "apk";
+		String result = "";
+		CosCloud cos = null;
+		try {
+			cos = new CosCloud(APP_ID, SECRET_ID, SECRET_KEY);
+		} catch (Exception e) {
+			logger.error(e);
+			e.printStackTrace();
+		}
+		String imgType = "";
+		String uploadImg = "";
+		if (imageFile != null && imageNameStr != null) {
+			imgType = imageNameStr.substring(imageNameStr.lastIndexOf("."));
+			uploadImg = imageNameStr.substring(0,imageNameStr.lastIndexOf(".")) + new Date().getTime();
+			MD5 md5 = new MD5();
+			uploadImg = md5.getMD5ofStr(uploadImg)+imgType;
+			BufferedImage jpg = ImageIO.read(new FileInputStream(imageFile));
+			if (type == 0) {
+				if("1".equals(stick)){
+					BufferedImage inputbig0 = new BufferedImage(700, (int)(jpg.getHeight()/(jpg.getWidth()/700)),BufferedImage.TYPE_INT_RGB);
+		    	    inputbig0.getGraphics().drawImage(jpg, 0, 0, 700, (int)(jpg.getHeight()/(jpg.getWidth()/700)), null); //画图
+		    	    ByteArrayOutputStream os = new ByteArrayOutputStream();
+		    		ImageIO.write(inputbig0, "jpg", os);
+		    		
+		    		result=cos.uploadFile(bucketName, uploadImg,os.toByteArray());
+				}else{
+					BufferedImage inputbig0 = new BufferedImage(400, (int)(jpg.getHeight()/(jpg.getWidth()/400)),BufferedImage.TYPE_INT_RGB);
+		    	    inputbig0.getGraphics().drawImage(jpg, 0, 0, 400, (int)(jpg.getHeight()/(jpg.getWidth()/400)), null); //画图
+		    	    ByteArrayOutputStream os = new ByteArrayOutputStream();
+		    		ImageIO.write(inputbig0, "jpg", os);
+		    		
+					result=cos.uploadFile(bucketName, uploadImg,os.toByteArray());
+				}
+			}else{
+				result=cos.uploadFile(bucketName, uploadImg, new FileInputStream(imageFile));
+			}
+			System.out.println(result);
+			org.json.JSONObject jo =new org.json.JSONObject(result);
+			if("0".equals(jo.get("code").toString())){
+				org.json.JSONObject jo1 =new org.json.JSONObject(jo.get("data").toString());
+	            return jo1.get("access_url").toString();
+			}else{
+				return null;
+			}
+		}
+		return null;
+	}
+	/**
+	 * 新版本cos云上传壁纸
+	 * @author louxiaojian
+	 * @date： 日期：2015-8-4 时间：下午3:55:58
+	 * @return
+	 * @throws Exception
+	 */
+	public String newUploadWallPaper() throws Exception {
+		BufferedImage jgp = ImageIO.read(new FileInputStream(image[0]));
+		if(jgp.getWidth()>=2000){
+			// 用户定义变量
+			int APP_ID = 10002468;
+			String SECRET_ID = "AKIDo26nbKDLWZA6xpPXzRUaYVPgf5wqqlp6";
+			String SECRET_KEY = "upfmsUJgzOitvj0pCzSy4tV9ihdGeZMV";
+			String bucketName = "wallpaper";
+			CosCloud cos = null;
+			try {
+				cos = new CosCloud(APP_ID, SECRET_ID, SECRET_KEY);
+			} catch (Exception e) {
+				logger.error(e);
+				e.printStackTrace();
+			}
+			String imgType = "";
+			String uploadImg = "";
+			if (null != imgName && !"".equals(imgName)) {
+				imgType = imgName.substring(imgName.lastIndexOf("."));
+				uploadImg = imgName + new Date().getTime();
+				MD5 md5 = new MD5();
+				uploadImg = md5.getMD5ofStr(uploadImg);
+			}
+	
+			String fileName = uploadImg + imgType;
+			float rate;
+			int height=jgp.getHeight();
+			int width=jgp.getWidth();
+			int minusWidth=(jgp.getWidth()-2000)/2;
+    		//上传 xh 分辨率 原图
+    		BufferedImage inputbig = new BufferedImage(2000,height,BufferedImage.TYPE_INT_RGB);
+    	    inputbig.getGraphics().drawImage(jgp,0,0, 2000, height, minusWidth,0,width-minusWidth,height, null); //画图
+    	    ByteArrayOutputStream os = new ByteArrayOutputStream();
+    		ImageIO.write(inputbig, "jpg", os);
+    		String result=cos.uploadFile(bucketName, "/image/"+fileName,os.toByteArray());
+    		System.out.println(result);
+			org.json.JSONObject jo =new org.json.JSONObject(result);
+    		//生成 xh 分辨率 缩略图
+    		rate=(float)2000/(float)900;
+    		BufferedImage inputbig0 = new BufferedImage(900, (int)(height/rate),BufferedImage.TYPE_INT_RGB);
+    	    inputbig0.getGraphics().drawImage(jgp, 0, 0, 900, (int)(height/rate), null); //画图
+    	    ByteArrayOutputStream os0 = new ByteArrayOutputStream();  
+    		ImageIO.write(inputbig0, "jpg", os0);
+    		String result0=cos.uploadFile(bucketName, "/thumb/"+fileName,os0.toByteArray());
+    		System.out.println(result0);
+
+    		//生成 h 分辨率 原图
+    		rate=(float)1920/(float)1280;
+    		BufferedImage inputbig1 = new BufferedImage((int)(2000/rate), 1280,BufferedImage.TYPE_INT_RGB);
+    	    inputbig1.getGraphics().drawImage(jgp, 0, 0, (int)(2000/rate), 1280, null); //画图
+    	    ByteArrayOutputStream os1 = new ByteArrayOutputStream();  
+    		ImageIO.write(inputbig1, "jpg", os1);
+    		String result1=cos.uploadFile(bucketName, "/h/"+fileName,os1.toByteArray());
+    		System.out.println(result1);
+    		//压缩 h 分辨率 缩略图
+    		rate=(float)2000/rate/(float)700;
+    		BufferedImage inputbig2 = new BufferedImage(700, (int)(1280/rate),BufferedImage.TYPE_INT_RGB);
+    	    inputbig2.getGraphics().drawImage(jgp, 0, 0, 700, (int)(1280/rate), null); //画图
+    	    ByteArrayOutputStream os2 = new ByteArrayOutputStream();  
+    		ImageIO.write(inputbig2, "jpg", os2);
+    		String result2=cos.uploadFile(bucketName, "/h_thumb/"+fileName,os2.toByteArray());
+    		System.out.println(result2);
+    		
+    		//生成 m 小分辨率 原图
+    		rate=(float)1920/(float)850;
+    		BufferedImage inputbig3 = new BufferedImage((int)(2000/rate), 850,BufferedImage.TYPE_INT_RGB);
+    	    inputbig3.getGraphics().drawImage(jgp, 0, 0, (int)(2000/rate), 850, null); //画图
+    	    ByteArrayOutputStream os3 = new ByteArrayOutputStream();  
+    		ImageIO.write(inputbig3, "jpg", os3);
+    		String result3=cos.uploadFile(bucketName, "/m/"+fileName,os3.toByteArray());
+    		System.out.println(result3);
+    		//生成 m 小分辨率 缩略图
+    		rate=(float)2000/rate/(float)460;
+    		BufferedImage inputbig4 = new BufferedImage(460, (int)(850/rate),BufferedImage.TYPE_INT_RGB);
+    	    inputbig4.getGraphics().drawImage(jgp, 0, 0, 460, (int)(850/rate), null); //画图
+    	    ByteArrayOutputStream os4 = new ByteArrayOutputStream();  
+    		ImageIO.write(inputbig4, "jpg", os4);
+    		String result4=cos.uploadFile(bucketName, "/h_thumb/"+fileName,os4.toByteArray());
+    		System.out.println(result4);
+					
+			return fileName;
+		}else{
+			return "";
+		}
 	}
 }

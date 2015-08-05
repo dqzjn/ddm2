@@ -134,8 +134,10 @@ if (file.length() > maxSize) {
 
 //上传图片云存储
 LockerAction lockerAction=new LockerAction();
-String imgName=lockerAction.uploadImg(fileName, file,1,"0");
-String yunUrl="http://cos.myqcloud.com/11000436/data/image/"+imgName;
+String imgName=lockerAction.newUploadImg(fileName, file,1,"0");
+//String yunUrl="http://cos.myqcloud.com/11000436/data/image/"+imgName;
+String yunUrl=imgName;
+System.out.println(yunUrl);
 
 /**
 //重构上传图片的名称 
