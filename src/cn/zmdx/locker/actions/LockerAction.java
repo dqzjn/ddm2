@@ -1923,7 +1923,7 @@ public class LockerAction extends ActionSupport {
 		int APP_ID = 10002468;
 		String SECRET_ID = "AKIDo26nbKDLWZA6xpPXzRUaYVPgf5wqqlp6";
 		String SECRET_KEY = "upfmsUJgzOitvj0pCzSy4tV9ihdGeZMV";
-		String bucketName = "apk";
+		String bucketName = "data";
 		String result = "";
 		CosCloud cos = null;
 		try {
@@ -1947,17 +1947,17 @@ public class LockerAction extends ActionSupport {
 		    	    ByteArrayOutputStream os = new ByteArrayOutputStream();
 		    		ImageIO.write(inputbig0, "jpg", os);
 		    		
-		    		result=cos.uploadFile(bucketName, uploadImg,os.toByteArray());
+		    		result=cos.uploadFile(bucketName, "/cover/"+uploadImg,os.toByteArray());
 				}else{
 					BufferedImage inputbig0 = new BufferedImage(400, (int)(jpg.getHeight()/(jpg.getWidth()/400)),BufferedImage.TYPE_INT_RGB);
 		    	    inputbig0.getGraphics().drawImage(jpg, 0, 0, 400, (int)(jpg.getHeight()/(jpg.getWidth()/400)), null); //画图
 		    	    ByteArrayOutputStream os = new ByteArrayOutputStream();
 		    		ImageIO.write(inputbig0, "jpg", os);
 		    		
-					result=cos.uploadFile(bucketName, uploadImg,os.toByteArray());
+					result=cos.uploadFile(bucketName, "/cover/"+uploadImg,os.toByteArray());
 				}
 			}else{
-				result=cos.uploadFile(bucketName, uploadImg, new FileInputStream(imageFile));
+				result=cos.uploadFile(bucketName, "/content/"+uploadImg, new FileInputStream(imageFile));
 			}
 			System.out.println(result);
 			org.json.JSONObject jo =new org.json.JSONObject(result);
